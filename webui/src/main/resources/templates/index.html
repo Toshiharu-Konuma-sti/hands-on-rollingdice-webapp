@@ -1,0 +1,28 @@
+<html>
+<head th:replace="~{include/head}"></head>
+<body th:classappend="${dice} == '0' ? 'shake' : ''">
+<div th:replace="~{include/title}">title</div>
+<div class="main">
+	<div class="menu">
+		<div class="menu-title">
+			<h2>Roll a dice</h2>
+		</div>
+<th:block th:if="${dice} != '0'">
+		<div th:replace="~{include/menu-item}">title</div>
+</th:block>
+<th:block th:if="${dice} == '0'">
+		<div th:replace="~{include/menu-item-error}">title</div>
+</th:block>
+	</div>
+	<div class="content">
+		<div class="content-title">
+			<h2>Report card</h2>
+		</div>
+		<div class="content-body">
+			<div th:replace="~{include/content-body-dice}">title</div>
+			<div th:replace="~{include/content-body-history}">title</div>
+		</div>
+	</div>
+</div>
+<script th:replace="~{include/script-faro}"></script>
+</body>

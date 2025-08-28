@@ -1,0 +1,3 @@
+
+- The URL from which the configuration file was obtained is as follows:
+ - https://github.com/checkstyle/checkstyle/blob/master/src/main/resources/google_checks.xml

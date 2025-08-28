@@ -1,0 +1,13 @@
+# Use Eclipse Temurin JDK 21 as the base image
+FROM eclipse-temurin:21
+
+# Copy the webui directory from the source location
+COPY ./webui/ /webui/
+
+# Set the working directory to /webui
+WORKDIR /webui
+
+# Execute Gradle commands in order
+RUN ./gradlew clean && \
+    ./gradlew build
+# RUN ./gradlew build -x test

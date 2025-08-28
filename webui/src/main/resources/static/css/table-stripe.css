@@ -1,0 +1,10 @@
+table th {
+	background: darkcyan;
+	color: white;
+}
+.content-body-history table td {
+	background: #eee;
+}
+.content-body-history table tr:nth-child(odd) td {
+	background: #fff;
+}

@@ -1,0 +1,47 @@
+body {
+	font-family: 'Cascadia Code', sans-serif;
+}
+.main {
+
+	display: flex;
+}
+.menu {
+	margin-right: 16px;
+}
+.content-body {
+	display: flex;
+}
+table {
+	border-spacing: 5px;
+}
+table th {
+	padding: 5px;
+}
+table td {
+	padding: 5px;
+	text-align: center;
+}
+.li-spacing {
+	margin-bottom: 10px;
+}
+
+.disabled-link {
+	pointer-events: none;
+	color: gray;
+	text-decoration: none;
+}
+@keyframes rumble {
+	0%   { transform:translate(0); }
+	25%  { transform:translate(6px); }
+	50%  { transform:translate(0); }
+	75%  { transform:translate(-6px); }
+	100% { transform:translate(0); }
+}
+.shake {
+	animation:rumble 0.1s linear 4;
+	background-color: lightpink;
+}
+.negation {
+	text-decoration: line-through;
+	color: gray;
+}
