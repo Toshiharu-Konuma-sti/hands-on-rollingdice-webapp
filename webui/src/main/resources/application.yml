@@ -1,0 +1,49 @@
+server:
+  port: 8181
+
+spring:
+  application:
+    name: webui-app-yml
+
+# variables for spring-boot-starter-actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http.server.requests: true
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    metrics:
+      export:
+        url: http://otel-collector:4318/v1/metrics
+        step: 5s
+        resourceAttributes:
+          service.name: webapp-webui
+          service.instance.id: webapp-webui:8181
+#    logging:
+#      endpoint: http://otel-collector:4318/v1/logs
+#    tracing:
+#      endpoint: http://otel-collector:4318/v1/traces
+
+# variables for 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'
+otel:
+  exporter:
+    otlp:
+      endpoint: http://otel-collector:4318
+  service:
+    name: webapp-webui
+  log:
+    level: debug
+
+# variables for hands-on training(if you develop and test the webapi, rewrite 'localhost:8182' to the host section.)
+handson:
+  webapp:
+    webapi:
+      host: webapp-webapi:8182
+#      host: localhost:8182

@@ -1,0 +1,10 @@
+			<div class="content-body-history">
+				<table>
+					<tr><th>Times</th><th>Value</th><th>Updated at</th><tr>
+					<tr th:each="json : ${list}">
+						<td th:text="${json.get('id')}"></td>
+						<td><img th:src="'/image/dice32_' + ${json.get('value')} + '.png'"></td>
+						<td th:text="${json.get('updateAt')}"></td>
+					</tr>
+				</table>
+			</div>
