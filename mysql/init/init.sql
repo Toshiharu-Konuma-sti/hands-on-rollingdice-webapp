@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS mytest;
-USE mytest;
+CREATE DATABASE IF NOT EXISTS hands_on_db;
+USE hands_on_db;
 
 DROP TABLE IF EXISTS user;
 
@@ -9,4 +9,4 @@ CREATE TABLE dice(
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) DEFAULT CHARACTER SET=utf8mb4;
 
-GRANT select,insert,update,delete ON mytest.* TO 'myuser'@'%';
+GRANT select,insert,update,delete ON hands_on_db.* TO 'myuser'@'%';
