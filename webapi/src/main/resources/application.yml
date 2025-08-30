@@ -6,8 +6,8 @@ spring:
     name: webapi-app-yml
 
   datasource:
-    url: jdbc:mysql://webapp-mysql:3306/mytest
-#    url: jdbc:mysql://localhost:3306/mytest
+    url: jdbc:mysql://webapp-mysql:3306/hands_on_db
+#    url: jdbc:mysql://localhost:3306/hands_on_db
     username: myuser
     password: mypass
     driver-class-name: com.mysql.cj.jdbc.Driver
