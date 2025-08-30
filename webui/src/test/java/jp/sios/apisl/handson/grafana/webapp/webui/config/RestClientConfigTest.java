@@ -24,7 +24,7 @@ public class RestClientConfigTest {
   @Test
   public void testRestClientBeanExists() {
     // Verify that the RestClient bean is created and available in the application context
-    RestClient restClient = applicationContext.getBean(RestClient.class);
+    final RestClient restClient = applicationContext.getBean(RestClient.class);
     assertNotNull(restClient, "RestClient bean should not be null");
   }
 }

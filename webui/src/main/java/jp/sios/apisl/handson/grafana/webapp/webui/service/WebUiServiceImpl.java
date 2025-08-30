@@ -31,7 +31,7 @@ import org.springframework.web.client.RestClient;
 @Service
 public class WebUiServiceImpl implements WebUiService {
 
-  private static final Logger logger = LoggerFactory.getLogger(WebUiServiceImpl.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebUiServiceImpl.class);
   private final RestClient restClient;
 
   @Value("${handson.webapp.webapi.host}")
@@ -43,7 +43,7 @@ public class WebUiServiceImpl implements WebUiService {
    *
    * @param restClient Web UIサービスで利用するRestClientのインスタンス
    */
-  public WebUiServiceImpl(RestClient restClient) {
+  public WebUiServiceImpl(final RestClient restClient) {
     this.restClient = restClient;
   }
   // }}}
@@ -62,11 +62,11 @@ public class WebUiServiceImpl implements WebUiService {
    * @return APIからのレスポンスボディ（文字列）
    */
   public String callRollDiceApi(
-      Optional<String> optSleep, Optional<String> optLoop,  Optional<String> optError) {
+      final Optional<String> optSleep, final Optional<String> optLoop,  final Optional<String> optError) {
     UtilEnvInfo.logStartClassMethod();
-    logger.info("The received request parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info("The received request parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
-    List<String> paramList = new ArrayList<String>();
+    final List<String> paramList = new ArrayList<String>();
     optSleep.ifPresent(sleep -> paramList.add("sleep=" + sleep));
     optLoop.ifPresent(loop -> paramList.add("loop=" + loop));
     optError.ifPresent(error -> paramList.add("error=" + error));
@@ -75,7 +75,7 @@ public class WebUiServiceImpl implements WebUiService {
       path += "?" + String.join("&", paramList);
     }
 
-    String body = this.callApi(path, "0");
+    final String body = this.callApi(path, "0");
 
     return body;
   }
@@ -94,11 +94,11 @@ public class WebUiServiceImpl implements WebUiService {
   public JSONArray callListDiceApi() {
     UtilEnvInfo.logStartClassMethod();
 
-    String path = "/api/dice/v1/list";
-    String body = this.callApi(path, "");
+    final String path = "/api/dice/v1/list";
+    final String body = this.callApi(path, "");
 
-    JSONArray jsonList = new JSONArray(body);
-    logger.info("The object converted to json is {}", jsonList);
+    final JSONArray jsonList = new JSONArray(body);
+    LOGGER.info("The object converted to json is {}", jsonList);
 
     return jsonList;
   }
@@ -106,25 +106,24 @@ public class WebUiServiceImpl implements WebUiService {
 
   // {{{ private String callApi(String path, String body)
   /**
-   * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。.
+   * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。
    *
    * @param path APIのエンドポイントパス
-   * @param body APIリクエストで例外発生時にデフォルトで返すレスポンスボディに該当する値
-   * @return APIから取得したレスポンスボディの文字列
-   * @throws HttpClientErrorException クライアントエラーが発生した場合
-   * @throws HttpServerErrorException サーバーエラーが発生した場合
+   * @param defaultBody APIリクエストで例外発生時に返すデフォルトのレスポンスボディ
+   * @return APIから取得したレスポンスボディの文字列。例外発生時はdefaultBodyを返します。
    */
-  private String callApi(String path, String body) {
+  private String callApi(final String path, String defaultBody) {
     UtilEnvInfo.logStartClassMethod();
 
-    String url = "http://" + this.webapiHost + path;
-    logger.info("The URL to call the API is: '{}'", url);
+    final String url = "http://" + this.webapiHost + path;
+    LOGGER.info("The URL to call the API is: '{}'", url);
 
+    String body = defaultBody;
     try {
       body = this.restClient.get().uri(url).retrieve().body(String.class);
-      logger.info("The value recieved from the rolldice api is: '{}'", body);
+      LOGGER.info("The value recieved from the rolldice api is: '{}'", body);
     } catch (HttpClientErrorException | HttpServerErrorException ex) {
-      logger.error("!!! Could not get a response from the API, because an exception was happened: '{}' !!!", (Object[]) ex.getStackTrace());
+      LOGGER.error("!!! Could not get a response from the API, because an exception was happened: '{}' !!!", (Object[]) ex.getStackTrace());
     }
 
     return body;
@@ -138,11 +137,11 @@ public class WebUiServiceImpl implements WebUiService {
    * @param request 現在のHTTPリクエスト
    * @return 現在のURL文字列
    */
-  public String getCurrentUrl(HttpServletRequest request) {
+  public String getCurrentUrl(final HttpServletRequest request) {
     UtilEnvInfo.logStartClassMethod();
 
-    String currentUrl = UtilEnvInfo.getCurrentUrl(request);
-    logger.info("The current URL is: {}", currentUrl);
+    final String currentUrl = UtilEnvInfo.getCurrentUrl(request);
+    LOGGER.info("The current URL is: {}", currentUrl);
 
     return currentUrl;
   }

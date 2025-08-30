@@ -14,13 +14,13 @@ class UtilEnvInfoTest {
 
   @Test
   void testUtilEnvInfoBeanExists() {
-    var utilEnvInfo = new UtilEnvInfo();
+    final var utilEnvInfo = new UtilEnvInfo();
     assertNotNull(utilEnvInfo, "UtilEnvInfo bean should not be null");
   }
 
   @Test
   void testLogStartRequestDoesNotThrow() {
-    HttpServletRequest request = mock(HttpServletRequest.class);
+    final HttpServletRequest request = mock(HttpServletRequest.class);
     when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost/start"));
 
     assertDoesNotThrow(() -> UtilEnvInfo.logStartRequest(request));
@@ -28,7 +28,7 @@ class UtilEnvInfoTest {
 
   @Test
   void testLogFinishRequestDoesNotThrow() {
-    HttpServletRequest request = mock(HttpServletRequest.class);
+    final HttpServletRequest request = mock(HttpServletRequest.class);
     when(request.getRequestURL()).thenReturn(new StringBuffer("http://localhost/finish"));
 
     assertDoesNotThrow(() -> UtilEnvInfo.logFinishRequest(request));
@@ -36,21 +36,21 @@ class UtilEnvInfoTest {
 
   @Test
   void testGetCurrentUrl() {
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    StringBuffer url = new StringBuffer("http://localhost/test/path");
+    final HttpServletRequest request = mock(HttpServletRequest.class);
+    final StringBuffer url = new StringBuffer("http://localhost/test/path");
     when(request.getRequestURL()).thenReturn(url);
 
-    String result = UtilEnvInfo.getCurrentUrl(request);
+    final String result = UtilEnvInfo.getCurrentUrl(request);
 
-    assertEquals("http://localhost/test/path", result);
+    assertEquals("http://localhost/test/path", result, "getCurrentUrl should return the correct URL");
   }
 
   @Test
   void testGetCurrentUrlWithEmptyUrl() {
-    HttpServletRequest request = mock(HttpServletRequest.class);
+    final HttpServletRequest request = mock(HttpServletRequest.class);
     when(request.getRequestURL()).thenReturn(new StringBuffer(""));
-    String result = UtilEnvInfo.getCurrentUrl(request);
-    assertEquals("", result);
+    final String result = UtilEnvInfo.getCurrentUrl(request);
+    assertEquals("", result, "getCurrentUrl should return an empty string when request URL is empty");
   }
 
   @Test

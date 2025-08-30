@@ -31,8 +31,8 @@ public class RestClientConfig {
    * @return 構築されたRestClientインスタンス
    */
   @Bean
-  public RestClient restClient(RestClient.Builder restClientBuilder) {
-    RestClient restClient = restClientBuilder.build();
+  public RestClient restClient(final RestClient.Builder restClientBuilder) {
+    final RestClient restClient = restClientBuilder.build();
     return restClient;
   }
   // }}}
