@@ -15,6 +15,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.servlet.ModelAndView;
 
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 class WebUiControllerTest {
 
   @Mock

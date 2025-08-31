@@ -62,7 +62,7 @@ public class WebUiController {
    * @param optError  "error" パラメータ（オプション）
    * @return          "index" ビュー名を持つModelAndViewオブジェクト
    */
-  @RequestMapping(value = {"/"})
+  @RequestMapping({"/"})
   public ModelAndView index(
       final HttpServletRequest request,
       final ModelAndView model,

@@ -61,12 +61,13 @@ public class WebUiServiceImpl implements WebUiService {
    * @param optError エラー発生を示すオプショナルな文字列
    * @return APIからのレスポンスボディ（文字列）
    */
+  @Override
   public String callRollDiceApi(
       final Optional<String> optSleep, final Optional<String> optLoop,  final Optional<String> optError) {
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info("The received request parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
-    final List<String> paramList = new ArrayList<String>();
+    final List<String> paramList = new ArrayList<>();
     optSleep.ifPresent(sleep -> paramList.add("sleep=" + sleep));
     optLoop.ifPresent(loop -> paramList.add("loop=" + loop));
     optError.ifPresent(error -> paramList.add("error=" + error));
@@ -75,9 +76,7 @@ public class WebUiServiceImpl implements WebUiService {
       path += "?" + String.join("&", paramList);
     }
 
-    final String body = this.callApi(path, "0");
-
-    return body;
+    return this.callApi(path, "0");
   }
   // }}}
 
@@ -91,6 +90,7 @@ public class WebUiServiceImpl implements WebUiService {
    *
    * @return Dice APIから取得したリスト情報のJSONArray
    */
+  @Override
   public JSONArray callListDiceApi() {
     UtilEnvInfo.logStartClassMethod();
 
@@ -112,7 +112,7 @@ public class WebUiServiceImpl implements WebUiService {
    * @param defaultBody APIリクエストで例外発生時に返すデフォルトのレスポンスボディ
    * @return APIから取得したレスポンスボディの文字列。例外発生時はdefaultBodyを返します。
    */
-  private String callApi(final String path, String defaultBody) {
+  private String callApi(final String path, final String defaultBody) {
     UtilEnvInfo.logStartClassMethod();
 
     final String url = "http://" + this.webapiHost + path;
@@ -123,7 +123,7 @@ public class WebUiServiceImpl implements WebUiService {
       body = this.restClient.get().uri(url).retrieve().body(String.class);
       LOGGER.info("The value recieved from the rolldice api is: '{}'", body);
     } catch (HttpClientErrorException | HttpServerErrorException ex) {
-      LOGGER.error("!!! Could not get a response from the API, because an exception was happened: '{}' !!!", (Object[]) ex.getStackTrace());
+      LOGGER.error("!!! Could not get a response from the API, because an exception was happened !!!", ex);
     }
 
     return body;
@@ -137,6 +137,7 @@ public class WebUiServiceImpl implements WebUiService {
    * @param request 現在のHTTPリクエスト
    * @return 現在のURL文字列
    */
+  @Override
   public String getCurrentUrl(final HttpServletRequest request) {
     UtilEnvInfo.logStartClassMethod();
 

@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UtilEnvInfo {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(UtilEnvInfo.getClassName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 
   // {{{ public UtilEnvInfo() {
   /**
@@ -34,7 +34,7 @@ public class UtilEnvInfo {
    * @param request ログ出力対象のHTTPリクエスト
    */
   public static void logStartRequest(final HttpServletRequest request) {
-    UtilEnvInfo.logRequestWithLabel("START", request);
+    logRequestWithLabel("START", request);
   }
 
   /**
@@ -43,11 +43,11 @@ public class UtilEnvInfo {
    * @param request ログ出力対象のHTTPリクエスト
    */
   public static void logFinishRequest(final HttpServletRequest request) {
-    UtilEnvInfo.logRequestWithLabel("FINISH", request);
+    logRequestWithLabel("FINISH", request);
   }
 
   private static void logRequestWithLabel(final String label, final HttpServletRequest request) {
-    final String url = UtilEnvInfo.getCurrentUrl(request);
+    final String url = getCurrentUrl(request);
     LOGGER.info("### {} ### {} ###", label, url);
   }
 
@@ -58,27 +58,24 @@ public class UtilEnvInfo {
    * @return リクエストされたURLの文字列
    */
   public static String getCurrentUrl(final HttpServletRequest request) {
-    final String currentUrl = request.getRequestURL().toString();
-    return currentUrl;
+    return request.getRequestURL().toString();
   }
 
   /**
    * 現在実行中のクラス名とメソッド名をログに出力します。.
    */
   public static void logStartClassMethod() {
-    final String className = UtilEnvInfo.getClassName();
-    final String methodName = UtilEnvInfo.getMethodName();
+    final String className = getClassName();
+    final String methodName = getMethodName();
     LOGGER.info(">>> calling: {}#{}()", className, methodName);
   }
 
   private static String getClassName() {
-    final String className = Thread.currentThread().getStackTrace()[3].getClassName();
-    return className;
+    return Thread.currentThread().getStackTrace()[3].getClassName();
   }
 
   private static String getMethodName() {
-    final String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
-    return methodName;
+    return Thread.currentThread().getStackTrace()[3].getMethodName();
   }
 
 }

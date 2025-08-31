@@ -7,17 +7,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 class ApplicationTest {
 
   @Test
   void contextLoads() {
+    // This method is intentionally empty.
+    // The test passes if the application context loads successfully.
   }
 
   @Test
   void testMainRunsSpringApplication() {
     // Arrange
-    final String[] args = new String[] {};
-    try (var mocked = mockStatic(SpringApplication.class)) {
+    final String[] args = {};
+    try (org.mockito.MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
       // Act
       Application.main(args);
 
@@ -29,7 +32,7 @@ class ApplicationTest {
   @Test
   void mainRunsWithoutArguments() {
     final String[] args = {};
-    try (var mocked = mockStatic(SpringApplication.class)) {
+    try (org.mockito.MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
       Application.main(args);
       mocked.verify(() -> SpringApplication.run(Application.class, args));
     }
@@ -38,7 +41,7 @@ class ApplicationTest {
   @Test
   void mainRunsWithArguments() {
     final String[] args = {"--spring.profiles.active=test"};
-    try (var mocked = mockStatic(SpringApplication.class)) {
+    try (org.mockito.MockedStatic<SpringApplication> mocked = mockStatic(SpringApplication.class)) {
       Application.main(args);
       mocked.verify(() -> SpringApplication.run(Application.class, args));
     }

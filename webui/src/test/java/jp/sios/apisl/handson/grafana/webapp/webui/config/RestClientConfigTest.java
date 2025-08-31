@@ -16,13 +16,14 @@ import org.springframework.web.client.RestClient;
  * </p>
  */
 @SpringBootTest
-public class RestClientConfigTest {
+@SuppressWarnings("PMD.AtLeastOneConstructor")
+class RestClientConfigTest {
 
   @Autowired
   private ApplicationContext applicationContext;
 
   @Test
-  public void testRestClientBeanExists() {
+  void testRestClientBeanExists() {
     // Verify that the RestClient bean is created and available in the application context
     final RestClient restClient = applicationContext.getBean(RestClient.class);
     assertNotNull(restClient, "RestClient bean should not be null");

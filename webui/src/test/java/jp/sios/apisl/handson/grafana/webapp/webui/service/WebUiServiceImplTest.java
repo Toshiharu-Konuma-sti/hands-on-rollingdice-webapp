@@ -11,6 +11,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,6 +22,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 class WebUiServiceImplTest {
 
   @Mock
@@ -32,7 +34,7 @@ class WebUiServiceImplTest {
   private WebUiServiceImpl webUiService;
 
   @Value("${handson.webapp.webapi.host}")
-  private String webapiHost = "localhost";
+  final private String webapiHost = "localhost";
 
   @BeforeEach
   void setUp() {
@@ -140,11 +142,10 @@ class WebUiServiceImplTest {
 
     // Use reflection or a static mock for UtilEnvInfo if possible
     // Here, we simulate the static method
-    try (var mocked = mockStatic(
-        jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo.class)) {
+    try (org.mockito.MockedStatic<UtilEnvInfo> mocked = mockStatic(UtilEnvInfo.class)) {
       mocked.when(() ->
-          jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo.getCurrentUrl(mockRequest))
-          .thenReturn(expectedUrl);
+        UtilEnvInfo.getCurrentUrl(mockRequest))
+        .thenReturn(expectedUrl);
 
       final String result = webUiService.getCurrentUrl(mockRequest);
 

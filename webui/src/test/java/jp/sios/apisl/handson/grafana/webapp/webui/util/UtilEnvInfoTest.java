@@ -10,11 +10,12 @@ import static org.mockito.Mockito.when;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 class UtilEnvInfoTest {
 
   @Test
   void testUtilEnvInfoBeanExists() {
-    final var utilEnvInfo = new UtilEnvInfo();
+    final UtilEnvInfo utilEnvInfo = new UtilEnvInfo();
     assertNotNull(utilEnvInfo, "UtilEnvInfo bean should not be null");
   }
 
