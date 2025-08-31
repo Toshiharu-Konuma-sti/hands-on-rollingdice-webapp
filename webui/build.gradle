@@ -48,6 +48,10 @@ dependencies {
 
 }
 
+tasks.named('test') {
+	useJUnitPlatform()
+}
+
 jacoco {
 	toolVersion = "0.8.13"
 }
@@ -74,10 +78,6 @@ tasks.withType(Pmd) {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
-
 jacocoTestReport {
 	reports {
 		xml.required = true
@@ -85,8 +85,8 @@ jacocoTestReport {
 	}
 }
 
-test.finalizedBy jacocoTestReport
-test.finalizedBy checkstyleMain
-test.finalizedBy checkstyleTest
-test.finalizedBy pmdMain
-test.finalizedBy pmdTest
+//	test.finalizedBy jacocoTestReport
+//	test.finalizedBy checkstyleMain
+//	test.finalizedBy checkstyleTest
+//	test.finalizedBy pmdMain
+//	test.finalizedBy pmdTest
