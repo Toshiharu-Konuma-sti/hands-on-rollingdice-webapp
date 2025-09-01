@@ -2,15 +2,15 @@ package jp.sios.apisl.handson.grafana.webapp.webapi.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import jp.sios.apisl.handson.grafana.webapp.webapi.entity.Dice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -35,11 +35,11 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDice() {
-    Optional<String> optSleep = Optional.empty();
-    Optional<String> optLoop = Optional.empty();
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.empty();
+    final Optional<String> optLoop = Optional.empty();
+    final Optional<String> optError = Optional.empty();
 
-    ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
     assertEquals(200, response.getStatusCode().value());
     assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
@@ -47,11 +47,11 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDice_WithSleep() {
-    Optional<String> optSleep = Optional.of("100");
-    Optional<String> optLoop = Optional.empty();
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.of("100");
+    final Optional<String> optLoop = Optional.empty();
+    final Optional<String> optError = Optional.empty();
 
-    ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
     assertEquals(200, response.getStatusCode().value());
     assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
@@ -59,11 +59,11 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDice_WithInvalidSleep() {
-    Optional<String> optSleep = Optional.of("invalid");
-    Optional<String> optLoop = Optional.empty();
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.of("invalid");
+    final Optional<String> optLoop = Optional.empty();
+    final Optional<String> optError = Optional.empty();
 
-    ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
     assertEquals(200, response.getStatusCode().value());
     assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
@@ -71,11 +71,11 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDice_WithLoop() {
-    Optional<String> optSleep = Optional.empty();
-    Optional<String> optLoop = Optional.of("100");
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.empty();
+    final Optional<String> optLoop = Optional.of("100");
+    final Optional<String> optError = Optional.empty();
 
-    ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
     assertEquals(200, response.getStatusCode().value());
     assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
@@ -83,11 +83,11 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDice_WithInvalidLoop() {
-    Optional<String> optSleep = Optional.empty();
-    Optional<String> optLoop = Optional.of("invalid");
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.empty();
+    final Optional<String> optLoop = Optional.of("invalid");
+    final Optional<String> optError = Optional.empty();
 
-    ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
     assertEquals(200, response.getStatusCode().value());
     assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
@@ -95,11 +95,11 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDice_WithError() {
-    Optional<String> optSleep = Optional.empty();
-    Optional<String> optLoop = Optional.empty();
-    Optional<String> optError = Optional.of("true");
+    final Optional<String> optSleep = Optional.empty();
+    final Optional<String> optLoop = Optional.empty();
+    final Optional<String> optError = Optional.of("true");
 
-    ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
     assertEquals(500, response.getStatusCode().value());
     assertEquals(0, response.getBody());
@@ -107,16 +107,16 @@ class WebApiServiceImplTest {
 
   @Test
   void testListDice() {
-    Map<String, Object> record = new HashMap<>();
+    final Map<String, Object> record = new ConcurrentHashMap<>();
     record.put("id", 1);
     record.put("value", 5);
     record.put("updated_at", LocalDateTime.now());
-    List<Map<String, Object>> mockResult = new ArrayList<>();
+    final List<Map<String, Object>> mockResult = new ArrayList<>();
     mockResult.add(record);
 
     when(jdbcTemplate.queryForList(anyString())).thenReturn(mockResult);
 
-    List<Dice> diceList = webApiService.listDice();
+    final List<Dice> diceList = webApiService.listDice();
 
     assertEquals(1, diceList.size());
     assertEquals(5, diceList.get(0).value());

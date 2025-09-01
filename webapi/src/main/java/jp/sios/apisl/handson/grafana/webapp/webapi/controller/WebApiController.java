@@ -40,7 +40,7 @@ public class WebApiController {
    *
    * @param service WebApiServiceのインスタンス
    */
-  public WebApiController(WebApiService service) {
+  public WebApiController(final WebApiService service) {
     this.service = service;
   }
   // }}}
@@ -61,15 +61,15 @@ public class WebApiController {
    */
   @GetMapping(value = {"/roll"})
   public ResponseEntity<Integer> rollDice(
-      HttpServletRequest request,
-      @RequestParam("sleep") Optional<String> optSleep,
-      @RequestParam("loop") Optional<String> optLoop,
-      @RequestParam("error") Optional<String> optError) {
+      final HttpServletRequest request,
+      final @RequestParam("sleep") Optional<String> optSleep,
+      final @RequestParam("loop") Optional<String> optLoop,
+      final @RequestParam("error") Optional<String> optError) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
     logger.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
-    ResponseEntity<Integer> entity = service.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> entity = service.rollDice(optSleep, optLoop, optError);
 
     UtilEnvInfo.logFinishRequest(request);
     return entity;
@@ -87,11 +87,11 @@ public class WebApiController {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @GetMapping(value = {"/list"})
-  public List<Dice> listDice(HttpServletRequest request) {
+  public List<Dice> listDice(final HttpServletRequest request) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
 
-    List<Dice> list = service.listDice();
+    final List<Dice> list = service.listDice();
 
     UtilEnvInfo.logFinishRequest(request);
     return list;

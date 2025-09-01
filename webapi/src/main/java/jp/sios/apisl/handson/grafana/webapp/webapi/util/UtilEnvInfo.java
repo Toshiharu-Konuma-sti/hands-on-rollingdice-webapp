@@ -27,7 +27,7 @@ public class UtilEnvInfo {
    *
    * @param request ログ記録対象のHTTPリクエスト
    */
-  public static void logStartRequest(HttpServletRequest request) {
+  public static void logStartRequest(final HttpServletRequest request) {
     UtilEnvInfo.logRequestWithLabel("START", request);
   }
   // }}}
@@ -38,14 +38,14 @@ public class UtilEnvInfo {
    *
    * @param request ログ出力対象のHTTPリクエスト
    */
-  public static void logFinishRequest(HttpServletRequest request) {
+  public static void logFinishRequest(final HttpServletRequest request) {
     UtilEnvInfo.logRequestWithLabel("FINISH", request);
   }
   // }}}
 
   // {{{ private static void logRequestWithLabel(String label, HttpServletRequest request)
-  private static void logRequestWithLabel(String label, HttpServletRequest request) {
-    String url = UtilEnvInfo.getCurrentUrl(request);
+  private static void logRequestWithLabel(final String label, final HttpServletRequest request) {
+    final String url = UtilEnvInfo.getCurrentUrl(request);
     logger.info("### {} ### {} ###", label, url);
   }
   // }}}
@@ -57,9 +57,8 @@ public class UtilEnvInfo {
    * @param request 現在のHTTPリクエスト
    * @return リクエストされたURLの文字列
    */
-  public static String getCurrentUrl(HttpServletRequest request) {
-    String currentUrl = request.getRequestURL().toString();
-    return currentUrl;
+  public static String getCurrentUrl(final HttpServletRequest request) {
+    return request.getRequestURL().toString();
   }
   // }}}
 
@@ -71,23 +70,21 @@ public class UtilEnvInfo {
    * 主にデバッグやトレース目的で、メソッドの開始時に呼び出してください。</p>
    */
   public static void logStartClassMethod() {
-    String className = UtilEnvInfo.getClassName();
-    String methodName = UtilEnvInfo.getMethodName();
+    final String className = UtilEnvInfo.getClassName();
+    final String methodName = UtilEnvInfo.getMethodName();
     logger.info(">>> calling: {}#{}()", className, methodName);
   }
   // }}}
 
   // {{{ private static String getClassName()
   private static String getClassName() {
-    String className = Thread.currentThread().getStackTrace()[3].getClassName();
-    return className;
+    return Thread.currentThread().getStackTrace()[3].getClassName();
   }
   // }}}
 
   // {{{ private static String getMethodName()
   private static String getMethodName() {
-    String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
-    return methodName;
+    return Thread.currentThread().getStackTrace()[3].getMethodName();
   }
   // }}}
 

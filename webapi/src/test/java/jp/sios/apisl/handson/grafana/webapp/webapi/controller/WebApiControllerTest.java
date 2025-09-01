@@ -38,18 +38,18 @@ class WebApiControllerTest {
   @Test
   void testRollDice() {
     // Arrange
-    String mockCurrentUrl = "http://localhost:8080";
-    Optional<String> optSleep = Optional.of("1000");
-    Optional<String> optLoop = Optional.of("5");
-    Optional<String> optError = Optional.empty();
-    Integer mockDice = 6;
-    ResponseEntity<Integer> mockResponse = ResponseEntity.ok(mockDice);
+    final String mockCurrentUrl = "http://localhost:8080";
+    final Optional<String> optSleep = Optional.of("1000");
+    final Optional<String> optLoop = Optional.of("5");
+    final Optional<String> optError = Optional.empty();
+    final Integer mockDice = 6;
+    final ResponseEntity<Integer> mockResponse = ResponseEntity.ok(mockDice);
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
     when(service.rollDice(optSleep, optLoop, optError)).thenReturn(mockResponse);
 
     // Act
-    ResponseEntity<Integer> response = controller.rollDice(request, optSleep, optLoop, optError);
+    final ResponseEntity<Integer> response = controller.rollDice(request, optSleep, optLoop, optError);
 
     // Assert
     assertNotNull(response);
@@ -60,14 +60,14 @@ class WebApiControllerTest {
   @Test
   void testListDice() {
     // Arrange
-    String mockCurrentUrl = "http://localhost:8080";
-    List<Dice> mockDiceList = List.of(new Dice(3, 1, LocalDateTime.of(2025, 3, 1, 12, 34, 56)), new Dice(2, 3, LocalDateTime.of(2025, 2, 1, 12, 34, 56)), new Dice(1, 5, LocalDateTime.of(2025, 1, 1, 12, 34, 56)));
+    final String mockCurrentUrl = "http://localhost:8080";
+    final List<Dice> mockDiceList = List.of(new Dice(3, 1, LocalDateTime.of(2025, 3, 1, 12, 34, 56)), new Dice(2, 3, LocalDateTime.of(2025, 2, 1, 12, 34, 56)), new Dice(1, 5, LocalDateTime.of(2025, 1, 1, 12, 34, 56)));
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
     when(service.listDice()).thenReturn(mockDiceList);
 
     // Act
-    List<Dice> result = controller.listDice(request);
+    final List<Dice> result = controller.listDice(request);
 
     // Assert
     assertNotNull(result);

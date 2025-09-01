@@ -8,7 +8,7 @@ class UtilEnvInfoTest {
 
   @Test
   void testUtilEnvInfoBeanExists() {
-    var utilEnvInfo = new UtilEnvInfo();
+    final UtilEnvInfo utilEnvInfo = new UtilEnvInfo();
     assertNotNull(utilEnvInfo, "UtilEnvInfo bean should not be null");
   }
 
