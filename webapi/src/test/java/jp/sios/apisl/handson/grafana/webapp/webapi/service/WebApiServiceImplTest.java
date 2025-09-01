@@ -41,8 +41,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value());
-    assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
+    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 on success");
+    assertTrue(response.getBody() >= 1 && response.getBody() <= 6, "Dice value should be between 1 and 6");
   }
 
   @Test
@@ -53,8 +53,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value());
-    assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
+    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when sleep parameter is provided");
+    assertTrue(response.getBody() >= 1 && response.getBody() <= 6, "Dice value should be between 1 and 6 when sleep parameter is provided");
   }
 
   @Test
@@ -65,8 +65,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value());
-    assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
+    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when invalid sleep parameter is provided");
+    assertTrue(response.getBody() >= 1 && response.getBody() <= 6, "Dice value should be between 1 and 6 when invalid sleep parameter is provided");
   }
 
   @Test
@@ -77,8 +77,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value());
-    assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
+    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when loop parameter is provided");
+    assertTrue(response.getBody() >= 1 && response.getBody() <= 6, "Dice value should be between 1 and 6 when loop parameter is provided");
   }
 
   @Test
@@ -89,8 +89,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value());
-    assertTrue(response.getBody() >= 1 && response.getBody() <= 6);
+    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when invalid loop parameter is provided");
+    assertTrue(response.getBody() >= 1 && response.getBody() <= 6, "Dice value should be between 1 and 6 when invalid loop parameter is provided");
   }
 
   @Test
@@ -101,8 +101,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<Integer> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(500, response.getStatusCode().value());
-    assertEquals(0, response.getBody());
+    assertEquals(500, response.getStatusCode().value(), "Status code should be 500 when error parameter is provided");
+    assertEquals(0, response.getBody(), "Dice value should be 0 when error parameter is provided");
   }
 
   @Test
@@ -118,8 +118,8 @@ class WebApiServiceImplTest {
 
     final List<Dice> diceList = webApiService.listDice();
 
-    assertEquals(1, diceList.size());
-    assertEquals(5, diceList.get(0).value());
+    assertEquals(1, diceList.size(), "Dice list size should be 1");
+    assertEquals(5, diceList.get(0).value(), "Dice value should be 5");
   }
 
 }

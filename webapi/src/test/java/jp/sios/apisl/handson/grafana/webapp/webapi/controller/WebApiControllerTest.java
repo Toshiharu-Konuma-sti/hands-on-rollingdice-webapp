@@ -52,8 +52,8 @@ class WebApiControllerTest {
     final ResponseEntity<Integer> response = controller.rollDice(request, optSleep, optLoop, optError);
 
     // Assert
-    assertNotNull(response);
-    assertEquals(mockDice, response.getBody());
+    assertNotNull(response, "Response should not be null");
+    assertEquals(mockDice, response.getBody(), "The response body should match the expected dice value");
     verify(service, times(1)).rollDice(optSleep, optLoop, optError);
   }
 
@@ -70,8 +70,8 @@ class WebApiControllerTest {
     final List<Dice> result = controller.listDice(request);
 
     // Assert
-    assertNotNull(result);
-    assertEquals(3, result.size());
+    assertNotNull(result, "The result list should not be null");
+    assertEquals(3, result.size(), "The result list size should be 3");
     verify(service, times(1)).listDice();
   }
 }
