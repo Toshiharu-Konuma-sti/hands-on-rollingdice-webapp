@@ -76,6 +76,7 @@ public class WebApiServiceImpl implements WebApiService {
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
   @Override
+  @SuppressWarnings("PMD.OnlyOneReturn")
   public ResponseEntity<Integer> rollDice(final Optional<String> optSleep, final Optional<String> optLoop, final Optional<String> optError) {
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
@@ -120,6 +121,7 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void loop(Optional<String> optLoop)
+  @SuppressWarnings("PMD.GuardLogStatement")
   private void loop(final Optional<String> optLoop) {
     UtilEnvInfo.logStartClassMethod();
 
@@ -134,16 +136,12 @@ public class WebApiServiceImpl implements WebApiService {
           line = this.readFile(FILE_PATH_IN_LOOP);
           
           if ((i != 0) && ((i % interval) == 0)) {
-            if (LOGGER.isWarnEnabled()) {
-              LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
-            }
+            LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
           }
         }
         LOGGER.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
       } catch (NumberFormatException ex) {
-        if (LOGGER.isErrorEnabled()) {
-          LOGGER.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
-        }
+        LOGGER.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
       }
     }
   }

@@ -20,6 +20,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+@SuppressWarnings("PMD.LawOfDemeter")
 class WebApiServiceImplTest {
 
   @Mock
@@ -34,7 +35,6 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDice() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.empty();
@@ -47,7 +47,6 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDiceWithSleep() {
     final Optional<String> optSleep = Optional.of("100");
     final Optional<String> optLoop = Optional.empty();
@@ -60,7 +59,6 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDiceWithInvalidSleep() {
     final Optional<String> optSleep = Optional.of("invalid");
     final Optional<String> optLoop = Optional.empty();
@@ -73,7 +71,6 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDiceWithLoop() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.of("100");
@@ -86,7 +83,6 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDiceWithInvalidLoop() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.of("invalid");
@@ -99,7 +95,6 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDiceWithError() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.empty();

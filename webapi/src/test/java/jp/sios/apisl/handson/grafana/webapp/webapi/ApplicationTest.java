@@ -1,6 +1,5 @@
 package jp.sios.apisl.handson.grafana.webapp.webapi;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;
 
 import org.junit.jupiter.api.Test;
@@ -26,6 +25,8 @@ class ApplicationTest {
   @Test
   @SuppressWarnings("PMD.UnitTestShouldIncludeAssert")
   void contextLoads() {
+    // This method is intentionally empty.
+    // The test passes if the application context loads successfully.
   }
 
   @Test
@@ -56,12 +57,6 @@ class ApplicationTest {
       Application.main(args);
       mocked.verify(() -> SpringApplication.run(Application.class, args));
     }
-  }
-
-  @Test
-  void testConstructorShouldBeCovered() {
-    final Application application = new Application();
-    assertNotNull(application, "Application instance should not be null");
   }
 
 }

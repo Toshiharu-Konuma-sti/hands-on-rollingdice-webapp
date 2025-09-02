@@ -11,7 +11,11 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class Application {
-
+/*
+  private Application() {
+    // Prevents instantiation.
+  }
+*/
   // {{{ public static void main(String[] args)
   /**
    * アプリケーションのエントリーポイントとなるメインメソッドです。.

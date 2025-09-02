@@ -21,6 +21,10 @@ public class UtilEnvInfo {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 
+  private UtilEnvInfo() {
+    // Prevents instantiation.
+  }
+
   // {{{ public static void logStartRequest(HttpServletRequest request)
   /**
    * リクエストの開始をログに記録します。.
