@@ -34,6 +34,7 @@ class WebApiServiceImplTest {
   }
 
   @Test
+  @SuppressWarnings("PMD.LawOfDemeter")
   void testRollDice() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.empty();
@@ -46,7 +47,8 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  void testRollDice_WithSleep() {
+  @SuppressWarnings("PMD.LawOfDemeter")
+  void testRollDiceWithSleep() {
     final Optional<String> optSleep = Optional.of("100");
     final Optional<String> optLoop = Optional.empty();
     final Optional<String> optError = Optional.empty();
@@ -58,7 +60,8 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  void testRollDice_WithInvalidSleep() {
+  @SuppressWarnings("PMD.LawOfDemeter")
+  void testRollDiceWithInvalidSleep() {
     final Optional<String> optSleep = Optional.of("invalid");
     final Optional<String> optLoop = Optional.empty();
     final Optional<String> optError = Optional.empty();
@@ -70,7 +73,8 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  void testRollDice_WithLoop() {
+  @SuppressWarnings("PMD.LawOfDemeter")
+  void testRollDiceWithLoop() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.of("100");
     final Optional<String> optError = Optional.empty();
@@ -82,7 +86,8 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  void testRollDice_WithInvalidLoop() {
+  @SuppressWarnings("PMD.LawOfDemeter")
+  void testRollDiceWithInvalidLoop() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.of("invalid");
     final Optional<String> optError = Optional.empty();
@@ -94,7 +99,8 @@ class WebApiServiceImplTest {
   }
 
   @Test
-  void testRollDice_WithError() {
+  @SuppressWarnings("PMD.LawOfDemeter")
+  void testRollDiceWithError() {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.empty();
     final Optional<String> optError = Optional.of("true");

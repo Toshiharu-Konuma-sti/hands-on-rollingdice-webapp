@@ -19,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+@SuppressWarnings("PMD.TooManyStaticImports")
 class WebApiControllerTest {
 
   @Mock

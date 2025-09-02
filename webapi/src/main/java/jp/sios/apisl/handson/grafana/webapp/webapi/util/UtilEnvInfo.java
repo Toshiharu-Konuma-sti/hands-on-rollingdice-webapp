@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  */
 public class UtilEnvInfo {
 
-  private static final Logger logger = LoggerFactory.getLogger(UtilEnvInfo.getClassName());
+  private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 
   // {{{ public static void logStartRequest(HttpServletRequest request)
   /**
@@ -28,7 +28,7 @@ public class UtilEnvInfo {
    * @param request ログ記録対象のHTTPリクエスト
    */
   public static void logStartRequest(final HttpServletRequest request) {
-    UtilEnvInfo.logRequestWithLabel("START", request);
+    logRequestWithLabel("START", request);
   }
   // }}}
 
@@ -39,14 +39,14 @@ public class UtilEnvInfo {
    * @param request ログ出力対象のHTTPリクエスト
    */
   public static void logFinishRequest(final HttpServletRequest request) {
-    UtilEnvInfo.logRequestWithLabel("FINISH", request);
+    logRequestWithLabel("FINISH", request);
   }
   // }}}
 
   // {{{ private static void logRequestWithLabel(String label, HttpServletRequest request)
   private static void logRequestWithLabel(final String label, final HttpServletRequest request) {
-    final String url = UtilEnvInfo.getCurrentUrl(request);
-    logger.info("### {} ### {} ###", label, url);
+    final String url = getCurrentUrl(request);
+    LOGGER.info("### {} ### {} ###", label, url);
   }
   // }}}
 
@@ -70,19 +70,21 @@ public class UtilEnvInfo {
    * 主にデバッグやトレース目的で、メソッドの開始時に呼び出してください。</p>
    */
   public static void logStartClassMethod() {
-    final String className = UtilEnvInfo.getClassName();
-    final String methodName = UtilEnvInfo.getMethodName();
-    logger.info(">>> calling: {}#{}()", className, methodName);
+    final String className = getClassName();
+    final String methodName = getMethodName();
+    LOGGER.info(">>> calling: {}#{}()", className, methodName);
   }
   // }}}
 
   // {{{ private static String getClassName()
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getClassName() {
     return Thread.currentThread().getStackTrace()[3].getClassName();
   }
   // }}}
 
   // {{{ private static String getMethodName()
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getMethodName() {
     return Thread.currentThread().getStackTrace()[3].getMethodName();
   }

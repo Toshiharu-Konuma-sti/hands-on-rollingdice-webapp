@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dice/v1")
 public class WebApiController {
 
-  private static final Logger logger = LoggerFactory.getLogger(WebApiController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebApiController.class);
   private final WebApiService service;
 
   // {{{ public WebApiController(WebApiService service)
@@ -59,7 +59,7 @@ public class WebApiController {
    * @param optError  エラー発生フラグ（オプション）
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
-  @GetMapping(value = {"/roll"})
+  @GetMapping({"/roll"})
   public ResponseEntity<Integer> rollDice(
       final HttpServletRequest request,
       final @RequestParam("sleep") Optional<String> optSleep,
@@ -67,7 +67,7 @@ public class WebApiController {
       final @RequestParam("error") Optional<String> optError) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
-    logger.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
     final ResponseEntity<Integer> entity = service.rollDice(optSleep, optLoop, optError);
 
@@ -86,7 +86,7 @@ public class WebApiController {
    * @param request HTTPリクエスト情報
    * @return サイコロ（Dice）オブジェクトのリスト
    */
-  @GetMapping(value = {"/list"})
+  @GetMapping({"/list"})
   public List<Dice> listDice(final HttpServletRequest request) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();

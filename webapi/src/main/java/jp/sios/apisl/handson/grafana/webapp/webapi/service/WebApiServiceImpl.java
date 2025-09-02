@@ -44,8 +44,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class WebApiServiceImpl implements WebApiService {
 
-  private static final String READ_FILE_PATH_IN_LOOP = "application.yml";
-  private static final Logger logger = LoggerFactory.getLogger(WebApiServiceImpl.class);
+  private static final String FILE_PATH_IN_LOOP = "application.yml";
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebApiServiceImpl.class);
   private final JdbcTemplate jdbcTemplate;
 
   // {{{ public WebApiServiceImpl(JdbcTemplate jdbcTemplate)
@@ -78,14 +78,14 @@ public class WebApiServiceImpl implements WebApiService {
   @Override
   public ResponseEntity<Integer> rollDice(final Optional<String> optSleep, final Optional<String> optLoop, final Optional<String> optError) {
     UtilEnvInfo.logStartClassMethod();
-    logger.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
     this.sleep(optSleep);
     this.loop(optLoop);
     try {
       this.error(optError);
     } catch (HandsOnException ex) {
-      logger.error("The exception was happened with error(): '{}'", (Object[]) ex.getStackTrace());
+      LOGGER.error("The exception was happened with error()", ex);
       return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
@@ -96,21 +96,24 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void sleep(Optional<String> optSleep)
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private void sleep(final Optional<String> optSleep) {
     UtilEnvInfo.logStartClassMethod();
 
     if (optSleep.isPresent()) {
       try {
         final int milliSecond = Integer.parseInt(optSleep.get());
-        logger.warn("!!! The sleep is: {} ms !!!", milliSecond);
+        LOGGER.warn("!!! The sleep is: {} ms !!!", milliSecond);
         try {
           Thread.sleep(milliSecond);
-          logger.warn("!!! The sleep has finnished !!!");
+          LOGGER.warn("!!! The sleep has finnished !!!");
         } catch (InterruptedException ex) {
-          logger.error("The exception was happened with sleep(): '{}'", (Object[]) ex.getStackTrace());
+          LOGGER.error("The exception was happened with sleep()", ex);
         }
       } catch (NumberFormatException ex) {
-        logger.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
+        if (LOGGER.isErrorEnabled()) {
+          LOGGER.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
+        }
       }
     }
   }
@@ -125,18 +128,22 @@ public class WebApiServiceImpl implements WebApiService {
         final int loopCount = Integer.parseInt(optLoop.get());
         final int interval = loopCount / 5;
         String line = null;
-        logger.warn("!!! The loop is: {} count !!!", loopCount);
+        LOGGER.warn("!!! The loop is: {} count !!!", loopCount);
         for (int i = 1; i <= loopCount; i++) {
 
-          line = this.readFile(WebApiServiceImpl.READ_FILE_PATH_IN_LOOP);
+          line = this.readFile(FILE_PATH_IN_LOOP);
           
           if ((i != 0) && ((i % interval) == 0)) {
-            logger.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
+            if (LOGGER.isWarnEnabled()) {
+              LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
+            }
           }
         }
-        logger.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
+        LOGGER.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
       } catch (NumberFormatException ex) {
-        logger.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
+        if (LOGGER.isErrorEnabled()) {
+          LOGGER.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
+        }
       }
     }
   }
@@ -145,13 +152,15 @@ public class WebApiServiceImpl implements WebApiService {
   // {{{ private String readFile(String filePath)
   private String readFile(final String filePath) {
     String line = null;
-    try (InputStream inputStream = new ClassPathResource(filePath).getInputStream()) {
-      logger.debug("Successfully loaded a file.");
-      final BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+    try (InputStream inputStream = new ClassPathResource(filePath).getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+      LOGGER.debug("Successfully loaded a file.");
       line = reader.readLine();
-      logger.debug("Read line: {}", line);
+      LOGGER.debug("Read line: {}", line);
     } catch (IOException ex) {
-      logger.error("Failed to load a file: '{}'", ex.getMessage());
+      if (LOGGER.isErrorEnabled()) {
+        LOGGER.error("Failed to load a file: '{}'", ex.getMessage());
+      }
     }
     
     return line;
@@ -163,7 +172,7 @@ public class WebApiServiceImpl implements WebApiService {
     UtilEnvInfo.logStartClassMethod();
 
     if (optError.isPresent()) {
-      logger.error("!!! It received a direction to occur an exception: '{}' !!!", "HandsOnException");
+      LOGGER.error("!!! It received a direction to occur an exception: '{}' !!!", "HandsOnException");
       throw new HandsOnException("It received a direction to occur an exception.");
     }
   }
@@ -174,7 +183,7 @@ public class WebApiServiceImpl implements WebApiService {
     UtilEnvInfo.logStartClassMethod();
 
     final int value = this.getRandomNumber(1, 6);
-    logger.info("The value of dice is: '{}'", value);
+    LOGGER.info("The value of dice is: '{}'", value);
 
     return value;
   }
@@ -192,9 +201,9 @@ public class WebApiServiceImpl implements WebApiService {
     UtilEnvInfo.logStartClassMethod();
 
     final String sql = "INSERT INTO dice(value) VALUES(?)";
-    logger.info("The sql to execute is: '{}'. And the value to give is: '{}'", sql, value);
+    LOGGER.info("The sql to execute is: '{}'. And the value to give is: '{}'", sql, value);
     final int number = this.jdbcTemplate.update(sql, value);
-    logger.info("The record count of the executed sql is: '{}'", number);
+    LOGGER.info("The record count of the executed sql is: '{}'", number);
   }
   // }}}
 
@@ -209,11 +218,12 @@ public class WebApiServiceImpl implements WebApiService {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @Override
+  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
   public List<Dice> listDice() {
     UtilEnvInfo.logStartClassMethod();
 
     final String sql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
-    logger.info("The sql to execute is '{}'", sql);
+    LOGGER.info("The sql to execute is '{}'", sql);
 
     final List<Map<String, Object>> recordSets = this.jdbcTemplate.queryForList(sql);
     final List<Dice> list = new ArrayList<>();
@@ -226,7 +236,9 @@ public class WebApiServiceImpl implements WebApiService {
       );
       list.add(dice);
     }
-    logger.info("The record count of the executed sql is: '{}'", list.size());
+    if (LOGGER.isInfoEnabled()) {
+      LOGGER.info("The record count of the executed sql is: '{}'", list.size());
+    }
 
     return list;
   }
