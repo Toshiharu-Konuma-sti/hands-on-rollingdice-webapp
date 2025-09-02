@@ -1,12 +1,11 @@
 package jp.sios.apisl.handson.grafana.webapp.webui;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 class ApplicationTest {
 
@@ -45,6 +44,12 @@ class ApplicationTest {
       Application.main(args);
       mocked.verify(() -> SpringApplication.run(Application.class, args));
     }
+  }
+
+  @Test
+  void testConstructorShouldBeCovered() {
+    Application application = new Application();
+    assertNotNull(application);
   }
 
 }

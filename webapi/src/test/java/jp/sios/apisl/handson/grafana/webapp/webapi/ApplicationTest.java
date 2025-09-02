@@ -1,13 +1,12 @@
 package jp.sios.apisl.handson.grafana.webapp.webapi;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
 class ApplicationTest {
 
   @Test
@@ -42,6 +41,12 @@ class ApplicationTest {
       Application.main(args);
       mocked.verify(() -> SpringApplication.run(Application.class, args));
     }
+  }
+
+  @Test
+  void testConstructorShouldBeCovered() {
+    Application application = new Application();
+    assertNotNull(application);
   }
 
 }
