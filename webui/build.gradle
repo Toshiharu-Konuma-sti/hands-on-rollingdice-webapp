@@ -50,6 +50,10 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+	jvmArgs '-Djava.security.egd=file:/dev/./urandom'
+	testLogging {
+		events "started", "passed", "skipped", "failed"
+	}
 }
 
 jacoco {
