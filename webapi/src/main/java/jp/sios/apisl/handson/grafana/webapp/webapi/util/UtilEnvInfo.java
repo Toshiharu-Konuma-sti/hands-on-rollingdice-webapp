@@ -21,7 +21,7 @@ public final class UtilEnvInfo {
 
   /**
    * ログ出力を行うためのLoggerインスタンス。
-   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録するために使用されます。
+   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録するために使用されます。.
    */
   private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 

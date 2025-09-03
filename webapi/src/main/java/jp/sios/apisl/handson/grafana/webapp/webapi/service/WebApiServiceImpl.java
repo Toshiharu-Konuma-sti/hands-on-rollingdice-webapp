@@ -45,19 +45,19 @@ import org.springframework.stereotype.Service;
 public class WebApiServiceImpl implements WebApiService {
 
   /**
-   * ループ内で使用される設定ファイル「application.yml」のパスを表す定数です。
+   * ループ内で使用される設定ファイル「application.yml」のパスを表す定数です。.
    */
   private static final String FILE_PATH_IN_LOOP = "application.yml";
 
   /**
    * ログ出力を行うためのロガーインスタンスです。
-   * このサービスクラス内の処理状況やエラー情報を記録します。
+   * このサービスクラス内の処理状況やエラー情報を記録します。.
    */
   private static final Logger LOGGER = LoggerFactory.getLogger(WebApiServiceImpl.class);
 
   /**
    * データベース操作を行うためのJdbcTemplateインスタンス。
-   * SQLクエリの実行やデータの取得・更新などに使用します。
+   * SQLクエリの実行やデータの取得・更新などに使用します。.
    */
   private final JdbcTemplate jdbcTemplate;
 
@@ -110,7 +110,7 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void sleep(Optional<String> optSleep)
-  @SuppressWarnings("PMD.DoNotUseThreads")
+  @SuppressWarnings({"PMD.DoNotUseThreads", "PMD.GuardLogStatement"})
   private void sleep(final Optional<String> optSleep) {
     UtilEnvInfo.logStartClassMethod();
 
@@ -125,9 +125,7 @@ public class WebApiServiceImpl implements WebApiService {
           LOGGER.error("The exception was happened with sleep()", ex);
         }
       } catch (NumberFormatException ex) {
-        if (LOGGER.isErrorEnabled()) {
-          LOGGER.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
-        }
+        LOGGER.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
       }
     }
   }
