@@ -22,9 +22,9 @@ import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
 /**
- * WebUiServiceImplのユニットテストクラスです。
- * <p>
- * このクラスでは、WebUiServiceImplの各種API呼び出しメソッドの動作検証を行います。
+ * WebUiServiceImplのユニットテストクラスです。.
+ * 
+ * <p>このクラスでは、WebUiServiceImplの各種API呼び出しメソッドの動作検証を行います。
  * RestClientやHttpServletRequestのモックを利用し、APIの正常系・異常系のレスポンスや
  * パラメータ付与時の挙動、ユーティリティメソッドの動作確認などを網羅的にテストします。
  * </p>
@@ -33,29 +33,29 @@ import org.springframework.web.client.RestClient;
  *   <li>サイコロリストAPIの呼び出し</li>
  *   <li>現在のURL取得メソッドの検証</li>
  * </ul>
- * <p>
- * モックサーバやMockitoの静的モック機能を活用し、外部依存を排除したテストを実現しています。
+ * 
+ * <p>モックサーバやMockitoの静的モック機能を活用し、外部依存を排除したテストを実現しています。
  * </p>
  */
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.TooManyStaticImports"})
 class WebUiServiceImplTest {
 
   /**
-   * REST APIとの通信を行うためのクライアント。
+   * REST APIとの通信を行うためのクライアント。.
    */
   @Mock
   private RestClient restClient;
 
   /**
    * HTTPリクエスト情報を保持するためのフィールドです。
-   * テストケース内でリクエストのモックや検証に使用されます。
+   * テストケース内でリクエストのモックや検証に使用されます。.
    */
   @Mock
   private HttpServletRequest request;
 
   /**
    * Web UIサービスの実装クラスのインスタンス。
-   * テスト対象となるWebUiServiceImplを保持します。
+   * テスト対象となるWebUiServiceImplを保持します。.
    */
   private WebUiServiceImpl webUiService;
 
@@ -89,7 +89,7 @@ class WebUiServiceImplTest {
   }
 
   @Test
-  void testCallRollDiceApi_SleepAndLoop() {
+  void testCallRollDiceApiSleepAndLoop() {
 
     final String testUrl = "http://null/api/dice/v1/roll?sleep=1000&loop=5";
     final String testResponse = "2";
@@ -136,7 +136,7 @@ class WebUiServiceImplTest {
   }
 
   @Test
-  void testCallRollDiceApi_WhenApiReturnsServerError() {
+  void testCallRollDiceApiWhenApiReturnsServerError() {
     // reproduce the situation where the API returns a server error (500)
     final String testUrl = "http://null/api/dice/v1/roll";
 
@@ -158,7 +158,7 @@ class WebUiServiceImplTest {
   }
 
   @Test
-  void testGetCurrentUrl_WithQueryString() {
+  void testGetCurrentUrlWithQueryString() {
     // Mock UtilEnvInfo.getCurrentUrl to return expected value
     final String expectedUrl = "http://localhost:8080/test?param=value";
     final HttpServletRequest mockRequest = mock(HttpServletRequest.class);
@@ -168,7 +168,7 @@ class WebUiServiceImplTest {
     try (org.mockito.MockedStatic<UtilEnvInfo> mocked = mockStatic(UtilEnvInfo.class)) {
       mocked.when(() ->
         UtilEnvInfo.getCurrentUrl(mockRequest))
-        .thenReturn(expectedUrl);
+          .thenReturn(expectedUrl);
 
       final String result = webUiService.getCurrentUrl(mockRequest);
 

@@ -7,9 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.SpringApplication;
 
 /**
- * <p>
- * {@code ApplicationTest} クラスは、{@link Application} クラスの単体テストを提供します。
- * Spring Boot アプリケーションの起動や、コンストラクタのカバレッジ確認など、
+ * {@code ApplicationTest} クラスは、{@link Application} クラスの単体テストを提供します。.
+ * 
+ * <p>Spring Boot アプリケーションの起動や、コンストラクタのカバレッジ確認など、
  * アプリケーションの基本的な動作を検証するためのテストケースを含みます。
  * </p>
  *
@@ -20,8 +20,7 @@ import org.springframework.boot.SpringApplication;
  *   <li>コンストラクタのカバレッジ確保</li>
  * </ul>
  *
- * <p>
- * モックには Mockito を利用しています。
+ * <p>モックには Mockito を利用しています。
  * </p>
  *
  * @author Toshiharu Konuma

@@ -15,11 +15,11 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * ログ出力にはSLF4JのLoggerを利用しています。
  */
-public class UtilEnvInfo {
+public final class UtilEnvInfo {
 
   /**
    * ログ出力を行うためのLoggerインスタンス。
-   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録します。
+   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録します。.
    */
   private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 

@@ -33,17 +33,17 @@ public class WebUiServiceImpl implements WebUiService {
 
   /**
    * ログ出力を行うためのロガーインスタンス。
-   * このサービスクラス内の各種処理における情報、警告、エラーなどのログを記録します。
+   * このサービスクラス内の各種処理における情報、警告、エラーなどのログを記録します。.
    */
   private static final Logger LOGGER = LoggerFactory.getLogger(WebUiServiceImpl.class);
 
   /**
-   * REST APIとの通信を行うためのRestClientインスタンス。
+   * REST APIとの通信を行うためのRestClientインスタンス。.
    */
   private final RestClient restClient;
 
   /**
-   * Web APIのホスト名またはアドレスを保持するフィールドです。
+   * Web APIのホスト名またはアドレスを保持するフィールドです。.
    */
   @Value("${handson.webapp.webapi.host}")
   private String webapiHost;
@@ -83,7 +83,7 @@ public class WebUiServiceImpl implements WebUiService {
     optLoop.ifPresent(loop -> paramList.add("loop=" + loop));
     optError.ifPresent(error -> paramList.add("error=" + error));
     String path = "/api/dice/v1/roll";
-    if (paramList.size() > 0) {
+    if (!paramList.isEmpty()) {
       path += "?" + String.join("&", paramList);
     }
 
@@ -117,7 +117,7 @@ public class WebUiServiceImpl implements WebUiService {
 
   // {{{ private String callApi(String path, String body)
   /**
-   * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。
+   * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。.
    *
    * @param path APIのエンドポイントパス
    * @param defaultBody APIリクエストで例外発生時に返すデフォルトのレスポンスボディ

@@ -12,16 +12,8 @@ import org.springframework.web.client.RestClient;
  * </p>
  */
 @Configuration
+@SuppressWarnings("PMD.AtLeastOneConstructor")
 public class RestClientConfig {
-
-  // {{{ public RestClientConfig() {
-  /**
-   * ユーティリティクラスのため、インスタンス化は行いません。.
-   */
-  public RestClientConfig() {
-    // A default constructor.
-  }
-  // }}}
 
   // {{{ public RestClient restClient(RestClient.Builder restClientBuilder)
   /**

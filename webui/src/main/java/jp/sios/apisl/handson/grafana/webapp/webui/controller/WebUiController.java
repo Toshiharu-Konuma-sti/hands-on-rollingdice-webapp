@@ -34,12 +34,12 @@ public class WebUiController {
 
   /**
    * ログ出力を行うためのロガーインスタンス。
-   * このコントローラークラス内の処理状況やエラー情報を記録します。
+   * このコントローラークラス内の処理状況やエラー情報を記録します。.
    */
   private static final Logger LOGGER = LoggerFactory.getLogger(WebUiController.class);
   
   /**
-   * Web UIのサービスロジックを提供するWebUiServiceのインスタンス。
+   * Web UIのサービスロジックを提供するWebUiServiceのインスタンス。.
    */
   private final WebUiService service;
 

@@ -2,7 +2,6 @@ package jp.sios.apisl.handson.grafana.webapp.webui.util;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -11,9 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 
 /**
- * <p>
- * UtilEnvInfoクラスのユーティリティメソッドに対する単体テストを提供するテストクラスです。
- * 主に、リクエストのURL取得やログ出力処理が例外を投げずに正常に動作することを検証します。
+ * UtilEnvInfoクラスのユーティリティメソッドに対する単体テストを提供するテストクラスです。.
+ * 
+ * <p>主に、リクエストのURL取得やログ出力処理が例外を投げずに正常に動作することを検証します。
  * </p>
  * <ul>
  *   <li>UtilEnvInfoインスタンスの生成確認</li>
@@ -21,19 +20,13 @@ import org.junit.jupiter.api.Test;
  *   <li>現在のリクエストURL取得メソッドの正常系・異常系動作確認</li>
  *   <li>クラスメソッドのログ出力メソッドの例外発生有無</li>
  * </ul>
- * <p>
- * モックを利用してHttpServletRequestの挙動を再現し、各メソッドの堅牢性をテストします。
+ * 
+ * <p>モックを利用してHttpServletRequestの挙動を再現し、各メソッドの堅牢性をテストします。
  * </p>
  */
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.TooManyStaticImports"})
 class UtilEnvInfoTest {
-/*
-  @Test
-  void testUtilEnvInfoBeanExists() {
-    final UtilEnvInfo utilEnvInfo = new UtilEnvInfo();
-    assertNotNull(utilEnvInfo, "UtilEnvInfo bean should not be null");
-  }
-*/
+
   @Test
   void testLogStartRequestDoesNotThrow() {
     final HttpServletRequest request = mock(HttpServletRequest.class);

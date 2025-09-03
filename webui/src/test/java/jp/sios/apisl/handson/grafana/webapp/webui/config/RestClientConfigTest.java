@@ -21,7 +21,7 @@ class RestClientConfigTest {
 
   /**
    * Springのアプリケーションコンテキストを保持するフィールドです。
-   * テスト実行時に依存関係の注入やBeanの管理を行うために使用されます。
+   * テスト実行時に依存関係の注入やBeanの管理を行うために使用されます。.
    */
   @Autowired
   private ApplicationContext applicationContext;
