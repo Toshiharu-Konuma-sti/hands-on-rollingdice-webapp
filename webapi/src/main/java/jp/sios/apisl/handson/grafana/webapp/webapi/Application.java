@@ -10,12 +10,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * </p>
  */
 @SpringBootApplication
+@SuppressWarnings("PMD.UseUtilityClass")
 public class Application {
-/*
-  private Application() {
-    // Prevents instantiation.
-  }
-*/
+
   // {{{ public static void main(String[] args)
   /**
    * アプリケーションのエントリーポイントとなるメインメソッドです。.

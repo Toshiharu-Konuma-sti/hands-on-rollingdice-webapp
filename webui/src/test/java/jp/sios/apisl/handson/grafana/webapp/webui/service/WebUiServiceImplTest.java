@@ -17,24 +17,47 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
-@SuppressWarnings("PMD.AtLeastOneConstructor")
+/**
+ * WebUiServiceImplのユニットテストクラスです。
+ * <p>
+ * このクラスでは、WebUiServiceImplの各種API呼び出しメソッドの動作検証を行います。
+ * RestClientやHttpServletRequestのモックを利用し、APIの正常系・異常系のレスポンスや
+ * パラメータ付与時の挙動、ユーティリティメソッドの動作確認などを網羅的にテストします。
+ * </p>
+ * <ul>
+ *   <li>サイコロAPIの呼び出し（通常・パラメータ付き・サーバエラー時）</li>
+ *   <li>サイコロリストAPIの呼び出し</li>
+ *   <li>現在のURL取得メソッドの検証</li>
+ * </ul>
+ * <p>
+ * モックサーバやMockitoの静的モック機能を活用し、外部依存を排除したテストを実現しています。
+ * </p>
+ */
+@SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.TooManyStaticImports"})
 class WebUiServiceImplTest {
 
+  /**
+   * REST APIとの通信を行うためのクライアント。
+   */
   @Mock
   private RestClient restClient;
 
+  /**
+   * HTTPリクエスト情報を保持するためのフィールドです。
+   * テストケース内でリクエストのモックや検証に使用されます。
+   */
   @Mock
   private HttpServletRequest request;
 
+  /**
+   * Web UIサービスの実装クラスのインスタンス。
+   * テスト対象となるWebUiServiceImplを保持します。
+   */
   private WebUiServiceImpl webUiService;
-
-  @Value("${handson.webapp.webapi.host}")
-  final private String webapiHost = "localhost";
 
   @BeforeEach
   void setUp() {

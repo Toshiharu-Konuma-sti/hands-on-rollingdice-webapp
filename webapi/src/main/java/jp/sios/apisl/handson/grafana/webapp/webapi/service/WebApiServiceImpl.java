@@ -44,8 +44,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class WebApiServiceImpl implements WebApiService {
 
+  /**
+   * ループ内で使用される設定ファイル「application.yml」のパスを表す定数です。
+   */
   private static final String FILE_PATH_IN_LOOP = "application.yml";
+
+  /**
+   * ログ出力を行うためのロガーインスタンスです。
+   * このサービスクラス内の処理状況やエラー情報を記録します。
+   */
   private static final Logger LOGGER = LoggerFactory.getLogger(WebApiServiceImpl.class);
+
+  /**
+   * データベース操作を行うためのJdbcTemplateインスタンス。
+   * SQLクエリの実行やデータの取得・更新などに使用します。
+   */
   private final JdbcTemplate jdbcTemplate;
 
   // {{{ public WebApiServiceImpl(JdbcTemplate jdbcTemplate)
@@ -216,7 +229,7 @@ public class WebApiServiceImpl implements WebApiService {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @Override
-  @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
+  @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.GuardLogStatement"})
   public List<Dice> listDice() {
     UtilEnvInfo.logStartClassMethod();
 
@@ -234,9 +247,7 @@ public class WebApiServiceImpl implements WebApiService {
       );
       list.add(dice);
     }
-    if (LOGGER.isInfoEnabled()) {
-      LOGGER.info("The record count of the executed sql is: '{}'", list.size());
-    }
+    LOGGER.info("The record count of the executed sql is: '{}'", list.size());
 
     return list;
   }

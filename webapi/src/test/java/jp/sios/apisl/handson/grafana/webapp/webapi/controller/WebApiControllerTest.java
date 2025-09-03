@@ -19,17 +19,51 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * <p>
+ * {@link WebApiController} の単体テストを行うクラスです。
+ * モックを利用して、コントローラの各メソッドが期待通りに動作するかを検証します。
+ * </p>
+ * <ul>
+ *   <li>rollDiceメソッドの正常系動作の検証</li>
+ *   <li>listDiceメソッドの正常系動作の検証</li>
+ * </ul>
+ * <p>
+ * 各テストケースでは、依存するサービスやリクエストをモック化し、コントローラの振る舞いを確認します。
+ * </p>
+ * 
+ * @author Toshiharu Konuma
+ */
 @SuppressWarnings("PMD.TooManyStaticImports")
 class WebApiControllerTest {
 
+  /**
+   * Web API サービスのインスタンス。
+   * コントローラのテストで利用されるモックやスタブのサービスを格納します。
+   */
   @Mock
   private WebApiService service;
 
+  /**
+   * テストで使用するHTTPリクエストオブジェクト。
+   * モック化してコントローラのリクエスト処理を検証するために利用します。
+   */
   @Mock
   private HttpServletRequest request;
 
+  /**
+   * テスト対象となるWebApiControllerのインスタンス。
+   */
   @InjectMocks
   private WebApiController controller;
+
+  /**
+   * WebApiControllerTestのコンストラクタです。
+   * このクラスのテストインスタンスを初期化します。
+   */
+  public WebApiControllerTest() {
+    // Constructor for WebApiControllerTest
+  }
 
   @BeforeEach
   void setUp() {

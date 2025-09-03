@@ -17,16 +17,15 @@ import org.slf4j.LoggerFactory;
  */
 public class UtilEnvInfo {
 
+  /**
+   * ログ出力を行うためのLoggerインスタンス。
+   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録します。
+   */
   private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 
-  // {{{ public UtilEnvInfo() {
-  /**
-   * ユーティリティクラスのため、インスタンス化は行いません。.
-   */
-  public UtilEnvInfo() {
-    // A default constructor.
+  private UtilEnvInfo() {
+    // Prevents instantiation.
   }
-  // }}}
 
   /**
    * リクエストの処理開始時に、"START"ラベル付きでリクエスト情報をログ出力します。.
@@ -70,10 +69,12 @@ public class UtilEnvInfo {
     LOGGER.info(">>> calling: {}#{}()", className, methodName);
   }
 
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getClassName() {
     return Thread.currentThread().getStackTrace()[3].getClassName();
   }
 
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getMethodName() {
     return Thread.currentThread().getStackTrace()[3].getMethodName();
   }

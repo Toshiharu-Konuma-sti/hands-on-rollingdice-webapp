@@ -20,14 +20,44 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+/**
+ * <p>
+ * {@code WebApiServiceImplTest} クラスは、{@link WebApiServiceImpl} のユニットテストを提供します。
+ * ダイスを振るAPIの正常系・異常系の動作や、DBからダイス情報を取得する処理のテストを行います。
+ * </p>
+ * <ul>
+ *   <li>rollDiceメソッドの各種パラメータ（sleep, loop, error）に対する挙動を検証します。</li>
+ *   <li>listDiceメソッドがDBから正しくデータを取得できるかを検証します。</li>
+ * </ul>
+ * <p>
+ * Mockitoを利用して依存コンポーネント（JdbcTemplate）のモック化を行い、テストの独立性を保っています。
+ * </p>
+ * 
+ * @author Toshiharu Konuma
+ */
 @SuppressWarnings("PMD.LawOfDemeter")
 class WebApiServiceImplTest {
 
+  /**
+   * データベース操作を行うためのJdbcTemplateインスタンス。
+   * SQLクエリの実行やデータ取得などに使用します。
+   */
   @Mock
   private JdbcTemplate jdbcTemplate;
 
+  /**
+   * テスト対象となるWebApiServiceImplのインスタンス。
+   */
   @InjectMocks
   private WebApiServiceImpl webApiService;
+
+  /**
+   * WebApiServiceImplTestのコンストラクタです。
+   * このクラスのテストインスタンスを初期化します。
+   */
+  public WebApiServiceImplTest() {
+    // Constructor for WebApiServiceImplTest
+  }
 
   @BeforeEach
   void setUp() {

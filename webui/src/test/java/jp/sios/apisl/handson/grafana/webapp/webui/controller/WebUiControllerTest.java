@@ -15,15 +15,38 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * <p>
+ * WebUiControllerの単体テストを行うクラスです。
+ * </p>
+ * <p>
+ * 主にWebUiControllerのindexメソッドの動作検証を目的とし、依存するWebUiServiceやHttpServletRequestをモック化して
+ * コントローラの振る舞いをテストします。
+ * </p>
+ * <p>
+ * Mockitoを利用して依存オブジェクトの挙動を制御し、ModelAndViewの内容やサービス呼び出しの検証を行います。
+ * </p>
+ */
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 class WebUiControllerTest {
 
+  /**
+   * Web UIのサービス層を表すフィールドです。
+   * コントローラからサービス層のメソッドを呼び出すために使用します。
+   */
   @Mock
   private WebUiService service;
 
+  /**
+   * テストで使用するHTTPリクエストオブジェクト。
+   * モック化されたリクエスト情報を保持します。
+   */
   @Mock
   private HttpServletRequest request;
 
+  /**
+   * テスト対象となるWebUiControllerのインスタンス。
+   */
   @InjectMocks
   private WebUiController controller;
 

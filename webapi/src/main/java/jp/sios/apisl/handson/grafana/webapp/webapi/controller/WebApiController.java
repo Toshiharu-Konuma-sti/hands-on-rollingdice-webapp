@@ -31,7 +31,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dice/v1")
 public class WebApiController {
 
+  /**
+   * ロガーインスタンス。WebApiControllerクラスのログ出力に使用します。
+   */
   private static final Logger LOGGER = LoggerFactory.getLogger(WebApiController.class);
+
+  /**
+   * WebApiServiceのインスタンスを保持するフィールドです。
+   * このサービスを利用してWeb APIの各種処理を実行します。
+   */
   private final WebApiService service;
 
   // {{{ public WebApiController(WebApiService service)

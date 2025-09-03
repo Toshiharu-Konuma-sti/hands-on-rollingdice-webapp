@@ -31,9 +31,20 @@ import org.springframework.web.client.RestClient;
 @Service
 public class WebUiServiceImpl implements WebUiService {
 
+  /**
+   * ログ出力を行うためのロガーインスタンス。
+   * このサービスクラス内の各種処理における情報、警告、エラーなどのログを記録します。
+   */
   private static final Logger LOGGER = LoggerFactory.getLogger(WebUiServiceImpl.class);
+
+  /**
+   * REST APIとの通信を行うためのRestClientインスタンス。
+   */
   private final RestClient restClient;
 
+  /**
+   * Web APIのホスト名またはアドレスを保持するフィールドです。
+   */
   @Value("${handson.webapp.webapi.host}")
   private String webapiHost;
 

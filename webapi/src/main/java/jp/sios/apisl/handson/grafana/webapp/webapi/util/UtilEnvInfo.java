@@ -17,8 +17,12 @@ import org.slf4j.LoggerFactory;
  *
  * <p>このクラスはインスタンス化せず、すべてのメソッドはstaticとして利用します。</p>
  */
-public class UtilEnvInfo {
+public final class UtilEnvInfo {
 
+  /**
+   * ログ出力を行うためのLoggerインスタンス。
+   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録するために使用されます。
+   */
   private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
 
   private UtilEnvInfo() {
