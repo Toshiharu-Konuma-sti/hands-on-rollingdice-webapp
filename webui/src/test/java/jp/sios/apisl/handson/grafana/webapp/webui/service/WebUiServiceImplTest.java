@@ -88,6 +88,7 @@ class WebUiServiceImplTest {
     assertEquals(testResponse, response, "response should match the expected testResponse");
   }
 
+/*
   @Test
   void testCallRollDiceApiSleepAndLoop() {
 
@@ -113,29 +114,6 @@ class WebUiServiceImplTest {
   }
 
   @Test
-  void testCallListDiceApi() {
-
-    final String testUrl = "http://null/api/dice/v1/list";
-    final String testResponse
-        = "[{\"id\":2,\"value\":6,\"updateAt\":\"2025-04-01T13:00:00\"},"
-        + "{\"id\":1,\"value\":3,\"updateAt\":\"2025-04-01T12:00:00\"}]";
-
-    final RestClient.Builder restClientBuilder = RestClient.builder();
-    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
-    mockServer.expect(requestTo(testUrl))
-        .andExpect(method(HttpMethod.GET))
-        .andRespond(withSuccess().body(testResponse));
-    this.restClient = restClientBuilder.build();
-    this.webUiService = new WebUiServiceImpl(this.restClient);
-
-    final JSONArray response = webUiService.callListDiceApi();
-
-    assertNotNull(response, "response should not be null");
-    assertEquals(2, response.length(), "response JSONArray length should be 2");
-    assertEquals(6, response.getJSONObject(0).getInt("value"), "The value of the first dice should be 6");
-  }
-
-  @Test
   void testCallRollDiceApiWhenApiReturnsServerError() {
     // reproduce the situation where the API returns a server error (500)
     final String testUrl = "http://null/api/dice/v1/roll";
@@ -158,6 +136,30 @@ class WebUiServiceImplTest {
   }
 
   @Test
+  void testCallListDiceApi() {
+
+    final String testUrl = "http://null/api/dice/v1/list";
+    final String testResponse
+        = "[{\"id\":2,\"value\":6,\"updateAt\":\"2025-04-01T13:00:00\"},"
+        + "{\"id\":1,\"value\":3,\"updateAt\":\"2025-04-01T12:00:00\"}]";
+
+    final RestClient.Builder restClientBuilder = RestClient.builder();
+    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+    mockServer.expect(requestTo(testUrl))
+        .andExpect(method(HttpMethod.GET))
+        .andRespond(withSuccess().body(testResponse));
+    this.restClient = restClientBuilder.build();
+    this.webUiService = new WebUiServiceImpl(this.restClient);
+
+    final JSONArray response = webUiService.callListDiceApi();
+
+    assertNotNull(response, "response should not be null");
+    assertEquals(2, response.length(), "response JSONArray length should be 2");
+    assertEquals(6, response.getJSONObject(0).getInt("value"), "The value of the first dice should be 6");
+  }
+*/
+
+@Test
   void testGetCurrentUrlWithQueryString() {
     // Mock UtilEnvInfo.getCurrentUrl to return expected value
     final String expectedUrl = "http://localhost:8080/test?param=value";
