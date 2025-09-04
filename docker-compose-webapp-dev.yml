@@ -6,33 +6,6 @@ services:
 # monitored servers
 ##############################
 
-  webapp-webui:
-    container_name: webapp-webui
-    hostname: webapp-webui
-    build:
-      context: .
-      dockerfile: Dockerfile-webui
-    image: webapp/webui:latest
-    ports:
-      - 8181:8181
-    networks:
-      - internal
-      - external
-    working_dir: /webui
-    command:
-      - /bin/bash
-      - -c
-      - |
-        wget -O ./pyroscope.jar https://github.com/grafana/pyroscope-java/releases/download/v2.0.0/pyroscope.jar
-        java -javaagent:pyroscope.jar -jar build/libs/apisl.handson.grafana.webapp.webui-0.0.1-SNAPSHOT.jar
-    environment:
-      PYROSCOPE_APPLICATION_NAME: webapp-webui
-      PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
-      PYROSCOPE_FORMAT: jfr
-      PYROSCOPE_PROFILER_ALLOC: 512k
-      PYROSCOPE_PROFILER_LOCK: 10ms
-    tty: true
-
   webapp-webapi:
     container_name: webapp-webapi
     hostname: webapp-webapi
@@ -50,10 +23,41 @@ services:
       - /bin/bash
       - -c
       - |
-        wget -O ./pyroscope.jar https://github.com/grafana/pyroscope-java/releases/download/v2.0.0/pyroscope.jar
-        java -javaagent:pyroscope.jar -jar build/libs/apisl.handson.grafana.webapp.webapi-0.0.1-SNAPSHOT.jar
+        java \
+          -jar build/libs/apisl.handson.grafana.webapp.webapi-0.0.1-SNAPSHOT.jar \
+          --management.otlp.metrics.export.enabled=false \
+          --otel.sdk.disabled=true
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webapi
+      PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
+      PYROSCOPE_FORMAT: jfr
+      PYROSCOPE_PROFILER_ALLOC: 512k
+      PYROSCOPE_PROFILER_LOCK: 10ms
+    tty: true
+
+  webapp-webui:
+    container_name: webapp-webui
+    hostname: webapp-webui
+    build:
+      context: .
+      dockerfile: Dockerfile-webui
+    image: webapp/webui:latest
+    ports:
+      - 8181:8181
+    networks:
+      - internal
+      - external
+    working_dir: /webui
+    command:
+      - /bin/bash
+      - -c
+      - |
+        java \
+          -jar build/libs/apisl.handson.grafana.webapp.webui-0.0.1-SNAPSHOT.jar \
+          --management.otlp.metrics.export.enabled=false \
+          --otel.sdk.disabled=true
+    environment:
+      PYROSCOPE_APPLICATION_NAME: webapp-webui
       PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
       PYROSCOPE_FORMAT: jfr
       PYROSCOPE_PROFILER_ALLOC: 512k
