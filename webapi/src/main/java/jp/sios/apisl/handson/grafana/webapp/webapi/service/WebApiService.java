@@ -19,13 +19,13 @@ public interface WebApiService {
    * @param optError エラーを発生させるかどうかを指定するオプションの文字列
    * @return サイコロの出目を含むレスポンスエンティティ
    */
-  public ResponseEntity<Integer> rollDice(Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError);
+  ResponseEntity<Integer> rollDice(Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError);
 
   /**
    * サイコロ出目の一覧を取得します。.
    *
    * @return Diceオブジェクトのリスト
    */
-  public List<Dice> listDice();
+  List<Dice> listDice();
 
 }

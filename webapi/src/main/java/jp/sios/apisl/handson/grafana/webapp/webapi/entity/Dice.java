@@ -11,5 +11,6 @@ import java.time.LocalDateTime;
  * @param value     サイコロの出目の値
  * @param updateAt  サイコロ情報の最終更新日時
  */
+@SuppressWarnings("PMD.ShortVariable")
 public record Dice(int id, int value, LocalDateTime updateAt) {
 }

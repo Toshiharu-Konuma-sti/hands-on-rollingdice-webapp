@@ -31,7 +31,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/dice/v1")
 public class WebApiController {
 
-  private static final Logger logger = LoggerFactory.getLogger(WebApiController.class);
+  /**
+   * ロガーインスタンス。WebApiControllerクラスのログ出力に使用します。.
+   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebApiController.class);
+
+  /**
+   * WebApiServiceのインスタンスを保持するフィールドです。
+   * このサービスを利用してWeb APIの各種処理を実行します。.
+   */
   private final WebApiService service;
 
   // {{{ public WebApiController(WebApiService service)
@@ -40,7 +48,7 @@ public class WebApiController {
    *
    * @param service WebApiServiceのインスタンス
    */
-  public WebApiController(WebApiService service) {
+  public WebApiController(final WebApiService service) {
     this.service = service;
   }
   // }}}
@@ -59,17 +67,17 @@ public class WebApiController {
    * @param optError  エラー発生フラグ（オプション）
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
-  @GetMapping(value = {"/roll"})
+  @GetMapping({"/roll"})
   public ResponseEntity<Integer> rollDice(
-      HttpServletRequest request,
-      @RequestParam("sleep") Optional<String> optSleep,
-      @RequestParam("loop") Optional<String> optLoop,
-      @RequestParam("error") Optional<String> optError) {
+      final HttpServletRequest request,
+      final @RequestParam("sleep") Optional<String> optSleep,
+      final @RequestParam("loop") Optional<String> optLoop,
+      final @RequestParam("error") Optional<String> optError) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
-    logger.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
-    ResponseEntity<Integer> entity = service.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<Integer> entity = service.rollDice(optSleep, optLoop, optError);
 
     UtilEnvInfo.logFinishRequest(request);
     return entity;
@@ -86,12 +94,12 @@ public class WebApiController {
    * @param request HTTPリクエスト情報
    * @return サイコロ（Dice）オブジェクトのリスト
    */
-  @GetMapping(value = {"/list"})
-  public List<Dice> listDice(HttpServletRequest request) {
+  @GetMapping({"/list"})
+  public List<Dice> listDice(final HttpServletRequest request) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
 
-    List<Dice> list = service.listDice();
+    final List<Dice> list = service.listDice();
 
     UtilEnvInfo.logFinishRequest(request);
     return list;

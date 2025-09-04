@@ -15,26 +15,25 @@ import org.slf4j.LoggerFactory;
  * </ul>
  * ログ出力にはSLF4JのLoggerを利用しています。
  */
-public class UtilEnvInfo {
+public final class UtilEnvInfo {
 
-  private static final Logger logger = LoggerFactory.getLogger(UtilEnvInfo.getClassName());
-
-  // {{{ public UtilEnvInfo() {
   /**
-   * ユーティリティクラスのため、インスタンス化は行いません。.
+   * ログ出力を行うためのLoggerインスタンス。
+   * クラス名を指定して初期化され、アプリケーションの動作状況やエラー情報を記録します。.
    */
-  public UtilEnvInfo() {
-    // A default constructor.
+  private static final Logger LOGGER = LoggerFactory.getLogger(getClassName());
+
+  private UtilEnvInfo() {
+    // Prevents instantiation.
   }
-  // }}}
 
   /**
    * リクエストの処理開始時に、"START"ラベル付きでリクエスト情報をログ出力します。.
    *
    * @param request ログ出力対象のHTTPリクエスト
    */
-  public static void logStartRequest(HttpServletRequest request) {
-    UtilEnvInfo.logRequestWithLabel("START", request);
+  public static void logStartRequest(final HttpServletRequest request) {
+    logRequestWithLabel("START", request);
   }
 
   /**
@@ -42,13 +41,13 @@ public class UtilEnvInfo {
    *
    * @param request ログ出力対象のHTTPリクエスト
    */
-  public static void logFinishRequest(HttpServletRequest request) {
-    UtilEnvInfo.logRequestWithLabel("FINISH", request);
+  public static void logFinishRequest(final HttpServletRequest request) {
+    logRequestWithLabel("FINISH", request);
   }
 
-  private static void logRequestWithLabel(String label, HttpServletRequest request) {
-    String url = UtilEnvInfo.getCurrentUrl(request);
-    logger.info("### {} ### {} ###", label, url);
+  private static void logRequestWithLabel(final String label, final HttpServletRequest request) {
+    final String url = getCurrentUrl(request);
+    LOGGER.info("### {} ### {} ###", label, url);
   }
 
   /**
@@ -57,28 +56,27 @@ public class UtilEnvInfo {
    * @param request 現在のHTTPリクエスト
    * @return リクエストされたURLの文字列
    */
-  public static String getCurrentUrl(HttpServletRequest request) {
-    String currentUrl = request.getRequestURL().toString();
-    return currentUrl;
+  public static String getCurrentUrl(final HttpServletRequest request) {
+    return request.getRequestURL().toString();
   }
 
   /**
    * 現在実行中のクラス名とメソッド名をログに出力します。.
    */
   public static void logStartClassMethod() {
-    String className = UtilEnvInfo.getClassName();
-    String methodName = UtilEnvInfo.getMethodName();
-    logger.info(">>> calling: {}#{}()", className, methodName);
+    final String className = getClassName();
+    final String methodName = getMethodName();
+    LOGGER.info(">>> calling: {}#{}()", className, methodName);
   }
 
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getClassName() {
-    String className = Thread.currentThread().getStackTrace()[3].getClassName();
-    return className;
+    return Thread.currentThread().getStackTrace()[3].getClassName();
   }
 
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getMethodName() {
-    String methodName = Thread.currentThread().getStackTrace()[3].getMethodName();
-    return methodName;
+    return Thread.currentThread().getStackTrace()[3].getMethodName();
   }
 
 }

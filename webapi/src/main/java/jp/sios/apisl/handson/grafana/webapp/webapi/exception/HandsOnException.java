@@ -16,7 +16,7 @@ public class HandsOnException extends Exception {
    *
    * @param message 例外の詳細メッセージ
    */
-  public HandsOnException(String message) {
+  public HandsOnException(final String message) {
     super(message);
   }
   // }}}

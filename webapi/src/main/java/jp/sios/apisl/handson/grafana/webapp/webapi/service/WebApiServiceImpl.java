@@ -44,8 +44,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class WebApiServiceImpl implements WebApiService {
 
-  private static final String READ_FILE_PATH_IN_LOOP = "application.yml";
-  private static final Logger logger = LoggerFactory.getLogger(WebApiServiceImpl.class);
+  /**
+   * ループ内で使用される設定ファイル「application.yml」のパスを表す定数です。.
+   */
+  private static final String FILE_PATH_IN_LOOP = "application.yml";
+
+  /**
+   * ログ出力を行うためのロガーインスタンスです。
+   * このサービスクラス内の処理状況やエラー情報を記録します。.
+   */
+  private static final Logger LOGGER = LoggerFactory.getLogger(WebApiServiceImpl.class);
+
+  /**
+   * データベース操作を行うためのJdbcTemplateインスタンス。
+   * SQLクエリの実行やデータの取得・更新などに使用します。.
+   */
   private final JdbcTemplate jdbcTemplate;
 
   // {{{ public WebApiServiceImpl(JdbcTemplate jdbcTemplate)
@@ -55,7 +68,7 @@ public class WebApiServiceImpl implements WebApiService {
    *
    * @param jdbcTemplate データベース操作に使用するJdbcTemplate
    */
-  public WebApiServiceImpl(JdbcTemplate jdbcTemplate) {
+  public WebApiServiceImpl(final JdbcTemplate jdbcTemplate) {
     this.jdbcTemplate = jdbcTemplate;
   }
   // }}}
@@ -75,87 +88,88 @@ public class WebApiServiceImpl implements WebApiService {
    * @param optError エラー発生有無を表すオプションの文字列
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
-  public ResponseEntity<Integer> rollDice(Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError) {
+  @Override
+  @SuppressWarnings("PMD.OnlyOneReturn")
+  public ResponseEntity<Integer> rollDice(final Optional<String> optSleep, final Optional<String> optLoop, final Optional<String> optError) {
     UtilEnvInfo.logStartClassMethod();
-    logger.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
     this.sleep(optSleep);
     this.loop(optLoop);
     try {
       this.error(optError);
     } catch (HandsOnException ex) {
-      logger.error("The exception was happened with error(): '{}'", (Object[]) ex.getStackTrace());
-      ResponseEntity<Integer> entity = new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
-      return entity;
+      LOGGER.error("The exception was happened with error()", ex);
+      return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    int value = this.roll();
+    final int value = this.roll();
     this.insertDice(value);
-    ResponseEntity<Integer> entity = new ResponseEntity<>(value, HttpStatus.OK);
-
-    return entity;
+    return new ResponseEntity<>(value, HttpStatus.OK);
   }
   // }}}
 
   // {{{ private void sleep(Optional<String> optSleep)
-  private void sleep(Optional<String> optSleep) {
+  @SuppressWarnings({"PMD.DoNotUseThreads", "PMD.GuardLogStatement"})
+  private void sleep(final Optional<String> optSleep) {
     UtilEnvInfo.logStartClassMethod();
 
     if (optSleep.isPresent()) {
       try {
-        int milliSecond = Integer.parseInt(optSleep.get());
-        logger.warn("!!! The sleep is: {} ms !!!", milliSecond);
+        final int milliSecond = Integer.parseInt(optSleep.get());
+        LOGGER.warn("!!! The sleep is: {} ms !!!", milliSecond);
         try {
           Thread.sleep(milliSecond);
-          logger.warn("!!! The sleep has finnished !!!");
+          LOGGER.warn("!!! The sleep has finnished !!!");
         } catch (InterruptedException ex) {
-          logger.error("The exception was happened with sleep(): '{}'", (Object[]) ex.getStackTrace());
+          LOGGER.error("The exception was happened with sleep()", ex);
         }
       } catch (NumberFormatException ex) {
-        logger.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
+        LOGGER.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
       }
     }
-    return;
   }
   // }}}
 
   // {{{ private void loop(Optional<String> optLoop)
-  private void loop(Optional<String> optLoop) {
+  @SuppressWarnings("PMD.GuardLogStatement")
+  private void loop(final Optional<String> optLoop) {
     UtilEnvInfo.logStartClassMethod();
 
     if (optLoop.isPresent()) {
       try {
-        int loopCount = Integer.parseInt(optLoop.get());
-        int interval = loopCount / 5;
+        final int loopCount = Integer.parseInt(optLoop.get());
+        final int interval = loopCount / 5;
         String line = null;
-        logger.warn("!!! The loop is: {} count !!!", loopCount);
+        LOGGER.warn("!!! The loop is: {} count !!!", loopCount);
         for (int i = 1; i <= loopCount; i++) {
 
-          line = this.readFile(WebApiServiceImpl.READ_FILE_PATH_IN_LOOP);
+          line = this.readFile(FILE_PATH_IN_LOOP);
           
           if ((i != 0) && ((i % interval) == 0)) {
-            logger.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
+            LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
           }
         }
-        logger.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
+        LOGGER.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
       } catch (NumberFormatException ex) {
-        logger.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
+        LOGGER.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
       }
     }
-    return;
   }
   // }}}
 
   // {{{ private String readFile(String filePath)
-  private String readFile(String filePath) {
+  private String readFile(final String filePath) {
     String line = null;
-    try (InputStream inputStream = new ClassPathResource(filePath).getInputStream()) {
-      logger.debug("Successfully loaded a file.");
-      BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+    try (InputStream inputStream = new ClassPathResource(filePath).getInputStream();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+      LOGGER.debug("Successfully loaded a file.");
       line = reader.readLine();
-      logger.debug("Read line: {}", line);
+      LOGGER.debug("Read line: {}", line);
     } catch (IOException ex) {
-      logger.error("Failed to load a file: '{}'", ex.getMessage());
+      if (LOGGER.isErrorEnabled()) {
+        LOGGER.error("Failed to load a file: '{}'", ex.getMessage());
+      }
     }
     
     return line;
@@ -163,14 +177,13 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void error(Optional<String> optError)
-  private void error(Optional<String> optError) throws HandsOnException {
+  private void error(final Optional<String> optError) throws HandsOnException {
     UtilEnvInfo.logStartClassMethod();
 
     if (optError.isPresent()) {
-      logger.error("!!! It received a direction to occur an exception: '{}' !!!", "HandsOnException");
+      LOGGER.error("!!! It received a direction to occur an exception: '{}' !!!", "HandsOnException");
       throw new HandsOnException("It received a direction to occur an exception.");
     }
-    return;
   }
   // }}}
 
@@ -178,31 +191,28 @@ public class WebApiServiceImpl implements WebApiService {
   private int roll() {
     UtilEnvInfo.logStartClassMethod();
 
-    int value = this.getRandomNumber(1, 6);
-    logger.info("The value of dice is: '{}'", value);
+    final int value = this.getRandomNumber(1, 6);
+    LOGGER.info("The value of dice is: '{}'", value);
 
     return value;
   }
   // }}}
 
   // {{{ private int getRandomNumber(int min, int max)
-  private int getRandomNumber(int min, int max) {
+  private int getRandomNumber(final int min, final int max) {
     UtilEnvInfo.logStartClassMethod();
-    int number = ThreadLocalRandom.current().nextInt(min, max + 1);
-    return number;
+    return ThreadLocalRandom.current().nextInt(min, max + 1);
   }
   // }}}
 
   // {{{ private void insertDice(int value)
-  private void insertDice(int value) {
+  private void insertDice(final int value) {
     UtilEnvInfo.logStartClassMethod();
 
-    String sql = "INSERT INTO dice(value) VALUES(?)";
-    logger.info("The sql to execute is: '{}'. And the value to give is: '{}'", sql, value);
-    int number = this.jdbcTemplate.update(sql, value);
-    logger.info("The record count of the executed sql is: '{}'", number);
-
-    return;
+    final String sql = "INSERT INTO dice(value) VALUES(?)";
+    LOGGER.info("The sql to execute is: '{}'. And the value to give is: '{}'", sql, value);
+    final int number = this.jdbcTemplate.update(sql, value);
+    LOGGER.info("The record count of the executed sql is: '{}'", number);
   }
   // }}}
 
@@ -216,24 +226,26 @@ public class WebApiServiceImpl implements WebApiService {
    *
    * @return サイコロ（Dice）オブジェクトのリスト
    */
+  @Override
+  @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.GuardLogStatement"})
   public List<Dice> listDice() {
     UtilEnvInfo.logStartClassMethod();
 
-    String sql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
-    logger.info("The sql to execute is '{}'", sql);
+    final String sql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
+    LOGGER.info("The sql to execute is '{}'", sql);
 
-    List<Map<String, Object>> recordSets = this.jdbcTemplate.queryForList(sql);
-    List<Dice> list = new ArrayList<>();
+    final List<Map<String, Object>> recordSets = this.jdbcTemplate.queryForList(sql);
+    final List<Dice> list = new ArrayList<>();
 
-    for (Map<String, Object> recset : recordSets) {
-      Dice dice = new Dice(
+    for (final Map<String, Object> recset : recordSets) {
+      final Dice dice = new Dice(
           ((Number) recset.get("id")).intValue(),
           ((Number) recset.get("value")).intValue(),
-          ((LocalDateTime) recset.get("updated_at"))
+          (LocalDateTime) recset.get("updated_at")
       );
       list.add(dice);
     }
-    logger.info("The record count of the executed sql is: '{}'", list.size());
+    LOGGER.info("The record count of the executed sql is: '{}'", list.size());
 
     return list;
   }

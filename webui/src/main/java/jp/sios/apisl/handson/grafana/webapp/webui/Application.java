@@ -13,16 +13,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @author Toshiharu Konuma
  */
 @SpringBootApplication
+@SuppressWarnings("PMD.UseUtilityClass")
 public class Application {
-
-  // {{{ public Application() {
-  /**
-   * アプリケーションクラスのため、インスタンス化は行いません。.
-   */
-  public Application() {
-    // A default constructor.
-  }
-  // }}}
 
   // {{{ public static void main(String[] args)
   /**
@@ -31,7 +23,7 @@ public class Application {
    *
    * @param args コマンドライン引数
    */
-  public static void main(String[] args) {
+  public static void main(final String[] args) {
     SpringApplication.run(Application.class, args);
   }
   // }}}

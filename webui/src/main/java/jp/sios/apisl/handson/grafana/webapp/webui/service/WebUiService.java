@@ -24,7 +24,7 @@ public interface WebUiService {
    * @param optError エラー発生を示すオプショナルな文字列
    * @return APIからのレスポンスボディ（文字列）
    */
-  public String callRollDiceApi(
+  String callRollDiceApi(
       Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError);
 
   /**
@@ -36,7 +36,7 @@ public interface WebUiService {
    *
    * @return Dice APIから取得したリスト情報のJSONArray
    */
-  public JSONArray callListDiceApi();
+  JSONArray callListDiceApi();
 
   /**
    * 現在のリクエストからURLを取得します。.
@@ -44,6 +44,6 @@ public interface WebUiService {
    * @param request 現在のHTTPリクエスト
    * @return 現在のURL文字列
    */
-  public String getCurrentUrl(HttpServletRequest request);
+  String getCurrentUrl(HttpServletRequest request);
 
 }

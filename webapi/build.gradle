@@ -48,6 +48,14 @@ dependencies {
 
 }
 
+tasks.named('test') {
+	useJUnitPlatform()
+	jvmArgs '-Djava.security.egd=file:/dev/./urandom'
+	testLogging {
+		events "started", "passed", "skipped", "failed"
+	}
+}
+
 jacoco {
 	toolVersion = "0.8.13"
 }
@@ -74,9 +82,6 @@ tasks.withType(Pmd) {
 	}
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
 
 jacocoTestReport {
 	reports {
@@ -85,8 +90,8 @@ jacocoTestReport {
 	}
 }
 
-test.finalizedBy jacocoTestReport
-test.finalizedBy checkstyleMain
-test.finalizedBy checkstyleTest
-test.finalizedBy pmdMain
-test.finalizedBy pmdTest
+//	test.finalizedBy jacocoTestReport
+//	test.finalizedBy checkstyleMain
+//	test.finalizedBy checkstyleTest
+//	test.finalizedBy pmdMain
+//	test.finalizedBy pmdTest

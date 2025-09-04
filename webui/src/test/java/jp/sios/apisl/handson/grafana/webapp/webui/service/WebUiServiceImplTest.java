@@ -11,28 +11,53 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
+import jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.web.client.RestClient;
 
+/**
+ * WebUiServiceImplのユニットテストクラスです。.
+ * 
+ * <p>このクラスでは、WebUiServiceImplの各種API呼び出しメソッドの動作検証を行います。
+ * RestClientやHttpServletRequestのモックを利用し、APIの正常系・異常系のレスポンスや
+ * パラメータ付与時の挙動、ユーティリティメソッドの動作確認などを網羅的にテストします。
+ * </p>
+ * <ul>
+ *   <li>サイコロAPIの呼び出し（通常・パラメータ付き・サーバエラー時）</li>
+ *   <li>サイコロリストAPIの呼び出し</li>
+ *   <li>現在のURL取得メソッドの検証</li>
+ * </ul>
+ * 
+ * <p>モックサーバやMockitoの静的モック機能を活用し、外部依存を排除したテストを実現しています。
+ * </p>
+ */
+@SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.TooManyStaticImports"})
 class WebUiServiceImplTest {
 
+  /**
+   * REST APIとの通信を行うためのクライアント。.
+   */
   @Mock
   private RestClient restClient;
 
+  /**
+   * HTTPリクエスト情報を保持するためのフィールドです。
+   * テストケース内でリクエストのモックや検証に使用されます。.
+   */
   @Mock
   private HttpServletRequest request;
 
+  /**
+   * Web UIサービスの実装クラスのインスタンス。
+   * テスト対象となるWebUiServiceImplを保持します。.
+   */
   private WebUiServiceImpl webUiService;
-
-  @Value("${handson.webapp.webapi.host}")
-  private String webapiHost = "localhost";
 
   @BeforeEach
   void setUp() {
@@ -42,81 +67,81 @@ class WebUiServiceImplTest {
 
   @Test
   void testCallRollDiceApi() {
-    String testUrl = "http://null/api/dice/v1/roll";
-    String testResponse = "1";
+    final String testUrl = "http://null/api/dice/v1/roll";
+    final String testResponse = "1";
 
-    RestClient.Builder restClientBuilder = RestClient.builder();
-    MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+    final RestClient.Builder restClientBuilder = RestClient.builder();
+    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     mockServer.expect(requestTo(testUrl))
         .andExpect(method(HttpMethod.GET))
         .andRespond(withSuccess().body(testResponse));
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
 
-    Optional<String> optSleep = Optional.empty();
-    Optional<String> optLoop = Optional.empty();
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.empty();
+    final Optional<String> optLoop = Optional.empty();
+    final Optional<String> optError = Optional.empty();
 
-    String response = webUiService.callRollDiceApi(optSleep, optLoop, optError);
+    final String response = webUiService.callRollDiceApi(optSleep, optLoop, optError);
 
-    assertNotNull(response);
-    assertEquals(testResponse, response);
+    assertNotNull(response, "response should not be null");
+    assertEquals(testResponse, response, "response should match the expected testResponse");
   }
 
   @Test
-  void testCallRollDiceApi_SleepAndLoop() {
+  void testCallRollDiceApiSleepAndLoop() {
 
-    String testUrl = "http://null/api/dice/v1/roll?sleep=1000&loop=5";
-    String testResponse = "2";
+    final String testUrl = "http://null/api/dice/v1/roll?sleep=1000&loop=5";
+    final String testResponse = "2";
 
-    RestClient.Builder restClientBuilder = RestClient.builder();
-    MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+    final RestClient.Builder restClientBuilder = RestClient.builder();
+    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     mockServer.expect(requestTo(testUrl))
         .andExpect(method(HttpMethod.GET))
         .andRespond(withSuccess().body(testResponse));
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
 
-    Optional<String> optSleep = Optional.of("1000");
-    Optional<String> optLoop = Optional.of("5");
-    Optional<String> optError = Optional.empty();
+    final Optional<String> optSleep = Optional.of("1000");
+    final Optional<String> optLoop = Optional.of("5");
+    final Optional<String> optError = Optional.empty();
 
-    String response = webUiService.callRollDiceApi(optSleep, optLoop, optError);
+    final String response = webUiService.callRollDiceApi(optSleep, optLoop, optError);
 
-    assertNotNull(response);
-    assertEquals(testResponse, response);
+    assertNotNull(response, "response should not be null");
+    assertEquals(testResponse, response, "response should match the expected testResponse");
   }
 
   @Test
   void testCallListDiceApi() {
 
-    String testUrl = "http://null/api/dice/v1/list";
-    String testResponse
+    final String testUrl = "http://null/api/dice/v1/list";
+    final String testResponse
         = "[{\"id\":2,\"value\":6,\"updateAt\":\"2025-04-01T13:00:00\"},"
         + "{\"id\":1,\"value\":3,\"updateAt\":\"2025-04-01T12:00:00\"}]";
 
-    RestClient.Builder restClientBuilder = RestClient.builder();
-    MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+    final RestClient.Builder restClientBuilder = RestClient.builder();
+    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     mockServer.expect(requestTo(testUrl))
         .andExpect(method(HttpMethod.GET))
         .andRespond(withSuccess().body(testResponse));
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
 
-    JSONArray response = webUiService.callListDiceApi();
+    final JSONArray response = webUiService.callListDiceApi();
 
-    assertNotNull(response);
-    assertEquals(2, response.length());
-    assertEquals(6, response.getJSONObject(0).getInt("value"));
+    assertNotNull(response, "response should not be null");
+    assertEquals(2, response.length(), "response JSONArray length should be 2");
+    assertEquals(6, response.getJSONObject(0).getInt("value"), "The value of the first dice should be 6");
   }
 
   @Test
-  void testCallRollDiceApi_WhenApiReturnsServerError() {
+  void testCallRollDiceApiWhenApiReturnsServerError() {
     // reproduce the situation where the API returns a server error (500)
-    String testUrl = "http://null/api/dice/v1/roll";
+    final String testUrl = "http://null/api/dice/v1/roll";
 
-    RestClient.Builder restClientBuilder = RestClient.builder();
-    MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+    final RestClient.Builder restClientBuilder = RestClient.builder();
+    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     // return a server error
     mockServer.expect(requestTo(testUrl))
         .andExpect(method(HttpMethod.GET))
@@ -125,31 +150,30 @@ class WebUiServiceImplTest {
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
 
-    String response = webUiService.callRollDiceApi(
+    final String response = webUiService.callRollDiceApi(
         Optional.empty(), Optional.empty(), Optional.empty());
 
-    assertNotNull(response);
-    assertEquals("0", response);
+    assertNotNull(response, "response should not be null when API returns server error");
+    assertEquals("0", response, "response should be '0' when API returns server error");
   }
 
   @Test
-  void testGetCurrentUrl_WithQueryString() {
+  void testGetCurrentUrlWithQueryString() {
     // Mock UtilEnvInfo.getCurrentUrl to return expected value
-    String expectedUrl = "http://localhost:8080/test?param=value";
-    HttpServletRequest mockRequest = mock(HttpServletRequest.class);
+    final String expectedUrl = "http://localhost:8080/test?param=value";
+    final HttpServletRequest mockRequest = mock(HttpServletRequest.class);
 
     // Use reflection or a static mock for UtilEnvInfo if possible
     // Here, we simulate the static method
-    try (var mocked = mockStatic(
-        jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo.class)) {
+    try (org.mockito.MockedStatic<UtilEnvInfo> mocked = mockStatic(UtilEnvInfo.class)) {
       mocked.when(() ->
-          jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo.getCurrentUrl(mockRequest))
+        UtilEnvInfo.getCurrentUrl(mockRequest))
           .thenReturn(expectedUrl);
 
-      String result = webUiService.getCurrentUrl(mockRequest);
+      final String result = webUiService.getCurrentUrl(mockRequest);
 
-      assertNotNull(result);
-      assertEquals(expectedUrl, result);
+      assertNotNull(result, "result should not be null");
+      assertEquals(expectedUrl, result, "result should match the expectedUrl");
     }
   }
 
