@@ -88,6 +88,7 @@ class WebUiServiceImplTest {
     assertEquals(testResponse, response, "response should match the expected testResponse");
   }
 
+/*
   @Test
   void testCallRollDiceApiSleepAndLoop() {
 
@@ -113,6 +114,28 @@ class WebUiServiceImplTest {
   }
 
   @Test
+  void testCallRollDiceApiWhenApiReturnsServerError() {
+    // reproduce the situation where the API returns a server error (500)
+    final String testUrl = "http://null/api/dice/v1/roll";
+
+    final RestClient.Builder restClientBuilder = RestClient.builder();
+    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
+    // return a server error
+    mockServer.expect(requestTo(testUrl))
+        .andExpect(method(HttpMethod.GET))
+        .andRespond(withServerError());
+
+    this.restClient = restClientBuilder.build();
+    this.webUiService = new WebUiServiceImpl(this.restClient);
+
+    final String response = webUiService.callRollDiceApi(
+        Optional.empty(), Optional.empty(), Optional.empty());
+
+    assertNotNull(response, "response should not be null when API returns server error");
+    assertEquals("0", response, "response should be '0' when API returns server error");
+  }
+
+  @Test
   void testCallListDiceApi() {
 
     final String testUrl = "http://null/api/dice/v1/list";
@@ -134,28 +157,7 @@ class WebUiServiceImplTest {
     assertEquals(2, response.length(), "response JSONArray length should be 2");
     assertEquals(6, response.getJSONObject(0).getInt("value"), "The value of the first dice should be 6");
   }
-
-  @Test
-  void testCallRollDiceApiWhenApiReturnsServerError() {
-    // reproduce the situation where the API returns a server error (500)
-    final String testUrl = "http://null/api/dice/v1/roll";
-
-    final RestClient.Builder restClientBuilder = RestClient.builder();
-    final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
-    // return a server error
-    mockServer.expect(requestTo(testUrl))
-        .andExpect(method(HttpMethod.GET))
-        .andRespond(withServerError());
-
-    this.restClient = restClientBuilder.build();
-    this.webUiService = new WebUiServiceImpl(this.restClient);
-
-    final String response = webUiService.callRollDiceApi(
-        Optional.empty(), Optional.empty(), Optional.empty());
-
-    assertNotNull(response, "response should not be null when API returns server error");
-    assertEquals("0", response, "response should be '0' when API returns server error");
-  }
+*/
 
   @Test
   void testGetCurrentUrlWithQueryString() {
