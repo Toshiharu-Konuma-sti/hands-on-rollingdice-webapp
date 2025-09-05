@@ -6,34 +6,6 @@ services:
 # monitored servers
 ##############################
 
-  webapp-webapi:
-    container_name: webapp-webapi
-    hostname: webapp-webapi
-    build:
-      context: .
-      dockerfile: Dockerfile-webapi
-    image: webapp/webapi:latest
-    ports:
-      - 8182:8182
-    networks:
-      - internal
-      - external
-    working_dir: /webapi
-    command:
-      - /bin/bash
-      - -c
-      - |
-        java \
-          -jar build/libs/apisl.handson.grafana.webapp.webapi-0.0.1-SNAPSHOT.jar \
-          --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
-    environment:
-      PYROSCOPE_APPLICATION_NAME: webapp-webapi
-      PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
-      PYROSCOPE_FORMAT: jfr
-      PYROSCOPE_PROFILER_ALLOC: 512k
-      PYROSCOPE_PROFILER_LOCK: 10ms
-    tty: true
-
   webapp-webui:
     container_name: webapp-webui
     hostname: webapp-webui
@@ -56,6 +28,34 @@ services:
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webui
+      PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
+      PYROSCOPE_FORMAT: jfr
+      PYROSCOPE_PROFILER_ALLOC: 512k
+      PYROSCOPE_PROFILER_LOCK: 10ms
+    tty: true
+
+  webapp-webapi:
+    container_name: webapp-webapi
+    hostname: webapp-webapi
+    build:
+      context: .
+      dockerfile: Dockerfile-webapi
+    image: webapp/webapi:latest
+    ports:
+      - 8182:8182
+    networks:
+      - internal
+      - external
+    working_dir: /webapi
+    command:
+      - /bin/bash
+      - -c
+      - |
+        java \
+          -jar build/libs/apisl.handson.grafana.webapp.webapi-0.0.1-SNAPSHOT.jar \
+          --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
+    environment:
+      PYROSCOPE_APPLICATION_NAME: webapp-webapi
       PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
       PYROSCOPE_FORMAT: jfr
       PYROSCOPE_PROFILER_ALLOC: 512k
@@ -98,4 +98,3 @@ networks:
   external:
     name: hands-net
     driver: bridge
-
