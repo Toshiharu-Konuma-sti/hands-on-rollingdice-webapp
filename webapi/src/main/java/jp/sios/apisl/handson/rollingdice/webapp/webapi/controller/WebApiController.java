@@ -1,11 +1,11 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi.controller;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.grafana.webapp.webapi.entity.Dice;
-import jp.sios.apisl.handson.grafana.webapp.webapi.service.WebApiService;
-import jp.sios.apisl.handson.grafana.webapp.webapi.util.UtilEnvInfo;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;

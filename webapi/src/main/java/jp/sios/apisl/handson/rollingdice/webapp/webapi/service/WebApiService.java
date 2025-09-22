@@ -1,8 +1,8 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi.service;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi.service;
 
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.grafana.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import org.springframework.http.ResponseEntity;
 
 /**

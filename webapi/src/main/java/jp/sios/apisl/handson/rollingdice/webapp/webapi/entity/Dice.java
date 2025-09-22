@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi.entity;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi.entity;
 
 import java.time.LocalDateTime;
 

@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi.controller;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -10,8 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.grafana.webapp.webapi.entity.Dice;
-import jp.sios.apisl.handson.grafana.webapp.webapi.service.WebApiService;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

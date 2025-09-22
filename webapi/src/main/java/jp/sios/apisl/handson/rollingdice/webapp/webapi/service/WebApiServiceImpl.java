@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi.service;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import jp.sios.apisl.handson.grafana.webapp.webapi.entity.Dice;
-import jp.sios.apisl.handson.grafana.webapp.webapi.exception.HandsOnException;
-import jp.sios.apisl.handson.grafana.webapp.webapi.util.UtilEnvInfo;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;

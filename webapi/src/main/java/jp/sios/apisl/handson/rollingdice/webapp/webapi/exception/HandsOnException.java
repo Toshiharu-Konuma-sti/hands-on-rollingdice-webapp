@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi.exception;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi.exception;
 
 /**
  * ハンズオンアプリケーションで発生する例外を表すカスタム例外クラスです。.

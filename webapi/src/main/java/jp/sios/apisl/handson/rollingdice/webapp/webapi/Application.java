@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webapi;
+package jp.sios.apisl.handson.rollingdice.webapp.webapi;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
