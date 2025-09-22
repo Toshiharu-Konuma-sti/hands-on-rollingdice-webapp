@@ -1,9 +1,9 @@
-package jp.sios.apisl.handson.grafana.webapp.webui.controller;
+package jp.sios.apisl.handson.rollingdice.webapp.webui.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import jp.sios.apisl.handson.grafana.webapp.webui.service.WebUiService;
-import jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.service.WebUiService;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

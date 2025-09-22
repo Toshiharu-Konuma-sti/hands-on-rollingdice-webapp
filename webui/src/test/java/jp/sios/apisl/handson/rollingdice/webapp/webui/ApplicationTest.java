@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webui;
+package jp.sios.apisl.handson.rollingdice.webapp.webui;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.mockStatic;

@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webui.util;
+package jp.sios.apisl.handson.rollingdice.webapp.webui.util;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webui.util;
+package jp.sios.apisl.handson.rollingdice.webapp.webui.util;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webui.config;
+package jp.sios.apisl.handson.rollingdice.webapp.webui.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

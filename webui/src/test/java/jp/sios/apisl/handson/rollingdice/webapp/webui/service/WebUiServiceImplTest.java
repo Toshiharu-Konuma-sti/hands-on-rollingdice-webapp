@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webui.service;
+package jp.sios.apisl.handson.rollingdice.webapp.webui.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,7 +11,7 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
-import jp.sios.apisl.handson.grafana.webapp.webui.util.UtilEnvInfo;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

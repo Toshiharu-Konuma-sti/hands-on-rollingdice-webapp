@@ -1,4 +1,4 @@
-package jp.sios.apisl.handson.grafana.webapp.webui.service;
+package jp.sios.apisl.handson.rollingdice.webapp.webui.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
