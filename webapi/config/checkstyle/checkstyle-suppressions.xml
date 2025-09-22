@@ -5,6 +5,6 @@
 
 <suppressions>
 <!--
-	<suppress checks="FileTabCharacter" files="[/\\]src[/\\]main[/\\]java[/\\]jp[/\\]sios[/\\]apisl[/\\]handson[/\\]grafana[/\\]webapp[/\\]webui[/\\](.+\.java)$"/>
+	<suppress checks="FileTabCharacter" files="[/\\]src[/\\]main[/\\]java[/\\]jp[/\\]sios[/\\]apisl[/\\]handson[/\\]rollingdice[/\\]webapp[/\\]webui[/\\](.+\.java)$"/>
 -->
 </suppressions>

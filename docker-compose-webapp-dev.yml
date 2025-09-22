@@ -24,7 +24,7 @@ services:
       - -c
       - |
         java \
-          -jar build/libs/apisl.handson.grafana.webapp.webui-0.0.1-SNAPSHOT.jar \
+          -jar build/libs/apisl.handson.rollingdice.webapp.webui-0.0.1-SNAPSHOT.jar \
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webui
@@ -52,7 +52,7 @@ services:
       - -c
       - |
         java \
-          -jar build/libs/apisl.handson.grafana.webapp.webapi-0.0.1-SNAPSHOT.jar \
+          -jar build/libs/apisl.handson.rollingdice.webapp.webapi-0.0.1-SNAPSHOT.jar \
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webapi
