@@ -9,6 +9,20 @@ start_banner()
 }
 # }}}
 
+# {{{ finish_banner()
+# $1: time to start this script
+finish_banner()
+{
+	S_TIME=$1
+	E_TIME=$(date +%s)
+	DURATION=$((E_TIME - S_TIME))
+	echo "############################################################"
+	echo "# FINISH SCRIPT ($DURATION seconds)"
+	echo "############################################################"
+}
+# }}}
+
+
 # {{{ create_container()
 create_container()
 {
@@ -39,6 +53,7 @@ remove_webapp_image()
 }
 # }}}
 
+
 # {{{ show_list_container()
 show_list_container()
 {
@@ -66,18 +81,6 @@ EOS
 }
 # }}}
 
-# {{{ finish_banner()
-# $1: time to start this script
-finish_banner()
-{
-	S_TIME=$1
-	E_TIME=$(date +%s)
-	DURATION=$((E_TIME - S_TIME))
-	echo "############################################################"
-	echo "# FINISH SCRIPT ($DURATION seconds)"
-	echo "############################################################"
-}
-# }}}
 
 S_TIME=$(date +%s)
 
@@ -110,6 +113,7 @@ case "$1" in
 		start_banner
 		destory_container
 		remove_webapp_image
+
 		create_container
 		show_list_container
 		show_url
