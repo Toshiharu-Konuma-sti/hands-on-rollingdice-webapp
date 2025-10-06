@@ -17,8 +17,16 @@ java {
 	}
 }
 
-repositories {
-	mavenCentral()
+allprojects {
+	repositories {
+		all { repo ->
+			if (repo instanceof MavenArtifactRepository && repo.url.toString().startsWith('http://')) {
+				println "Allowing insecure protocol for repository: ${repo.url}"
+				repo.allowInsecureProtocol = true
+			}
+		}
+		mavenCentral()
+	}
 }
 
 dependencies {
