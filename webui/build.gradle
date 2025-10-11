@@ -1,11 +1,14 @@
+import com.github.spotbugs.snom.SpotBugsTask
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
-	id 'jacoco'
-	id 'checkstyle'
-	id 'pmd'
 	id 'org.cyclonedx.bom' version '2.3.1'
+	id 'jacoco'
+	id 'com.github.spotbugs' version '6.4.2'
+	id 'pmd'
+	id 'checkstyle'
 }
 
 group = 'jp.sios'
@@ -15,10 +18,6 @@ java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(21)
 	}
-}
-
-repositories {
-	mavenCentral()
 }
 
 allprojects {
@@ -35,7 +34,7 @@ allprojects {
 
 dependencies {
 
-	// fundamental libraries necessary to run the environment of spring boot
+	// fundamental libraries necessary to run the environment of Spring Boot
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -73,6 +72,17 @@ jacoco {
 	toolVersion = "0.8.13"
 }
 
+spotbugs {
+	ignoreFailures = true
+}
+
+pmd {
+	toolVersion = "7.17.0"
+	ignoreFailures = true
+	ruleSetFiles = files("${rootProject.projectDir}/config/pmd/pmd-ruleset.xml")
+	sourceSets = [sourceSets.main, sourceSets.test]
+}
+
 checkstyle {
 	toolVersion = "10.26.1"
 	configFile = file("${rootProject.projectDir}/config/checkstyle/google_checks.xml")
@@ -81,11 +91,18 @@ checkstyle {
 	]
 }
 
-pmd {
-	toolVersion = "7.12.0"
-	ruleSetFiles = files("${rootProject.projectDir}/config/pmd/pmd-ruleset.xml")
-	ignoreFailures = true
-	sourceSets = [sourceSets.main, sourceSets.test]
+tasks.withType(JacocoReport) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
+tasks.withType(SpotBugsTask) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }
 
 tasks.withType(Pmd) {
@@ -94,16 +111,3 @@ tasks.withType(Pmd) {
 		html.required = true
 	}
 }
-
-jacocoTestReport {
-	reports {
-		xml.required = true
-		html.required = true
-	}
-}
-
-//	test.finalizedBy jacocoTestReport
-//	test.finalizedBy checkstyleMain
-//	test.finalizedBy checkstyleTest
-//	test.finalizedBy pmdMain
-//	test.finalizedBy pmdTest
