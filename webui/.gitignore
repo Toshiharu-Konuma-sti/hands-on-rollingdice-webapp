@@ -37,4 +37,5 @@ out/
 .vscode/
 
 ### Hands-on Training ###
+*.swp
 pyroscope.jar
