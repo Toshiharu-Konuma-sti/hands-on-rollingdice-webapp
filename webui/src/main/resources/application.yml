@@ -4,6 +4,8 @@ server:
 spring:
   application:
     name: webui-app-yml
+  profiles:
+    active: prod
 
 # variables for spring-boot-starter-actuator
 management:
@@ -44,9 +46,9 @@ otel:
   log:
     level: debug
 
-# variables for hands-on training(if you develop and test the webapi, rewrite 'localhost:8182' to the host section.)
+# variables for hands-on training
 handson:
   webapp:
     webapi:
-      host: webapp-webapi:8182
+#      host: webapp-webapi:8182
 #      host: localhost:8182

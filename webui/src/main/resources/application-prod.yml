@@ -1,0 +1,4 @@
+handson:
+  webapp:
+    webapi:
+      host: webapp-webapi:8182
