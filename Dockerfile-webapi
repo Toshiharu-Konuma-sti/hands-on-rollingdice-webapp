@@ -9,5 +9,4 @@ WORKDIR /webapi
 
 # Execute Gradle commands in order
 RUN ./gradlew clean && \
-    ./gradlew build
-# RUN ./gradlew build -x test
+    ./gradlew assemble

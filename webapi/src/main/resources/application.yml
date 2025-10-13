@@ -4,10 +4,11 @@ server:
 spring:
   application:
     name: webapi-app-yml
+  profiles:
+    active: prod 
 
   datasource:
-    url: jdbc:mysql://webapp-mysql:3306/hands_on_db
-#    url: jdbc:mysql://localhost:3306/hands_on_db
+#    url: jdbc:mysql://webapp-mysql:3306/hands_on_db
     username: myuser
     password: mypass
     driver-class-name: com.mysql.cj.jdbc.Driver

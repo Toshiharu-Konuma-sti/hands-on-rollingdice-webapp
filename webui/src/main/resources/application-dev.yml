@@ -1,0 +1,4 @@
+handson:
+  webapp:
+    webapi:
+      host: localhost:8182
