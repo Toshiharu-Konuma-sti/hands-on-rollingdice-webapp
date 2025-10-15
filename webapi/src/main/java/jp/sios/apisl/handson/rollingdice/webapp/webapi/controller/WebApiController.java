@@ -1,5 +1,12 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webapi.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/dice/v1")
+@Tag(name = "Dice Rolling API", description = "サイコロを振ったり履歴を閲覧したりする機能を提供します")
 public class WebApiController {
 
   /**
@@ -68,10 +76,21 @@ public class WebApiController {
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
   @GetMapping({"/roll"})
+  @Operation(summary = "サイコロを振る", description = "サイコロを振って出目を取得します。")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "成功",
+                   content = @Content(mediaType = "application/json",
+                                      schema = @Schema(implementation = Integer.class, example = "5"))),
+      @ApiResponse(responseCode = "500", description = "errorパラメータが指定された場合など、サーバ内部でエラーが発生",
+                   content = @Content)
+  })
   public ResponseEntity<Integer> rollDice(
       final HttpServletRequest request,
+      @Parameter(description = "処理を意図的に遅延させる時間（ミリ秒）", example = "1000")
       final @RequestParam("sleep") Optional<String> optSleep,
+      @Parameter(description = "サイコロ処理のループ回数", example = "5")
       final @RequestParam("loop") Optional<String> optLoop,
+      @Parameter(description = "エラー発生フラグ", example = "true")
       final @RequestParam("error") Optional<String> optError) {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
