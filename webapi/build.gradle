@@ -95,6 +95,11 @@ checkstyle {
 	]
 }
 
+openApi {
+	apiDocsUrl = "http://localhost:8182/v3/api-docs"
+	outputDir = file("$buildDir/docs/openapi")
+}
+
 tasks.withType(JacocoReport) {
 	reports {
 		xml.required = true
@@ -116,7 +121,12 @@ tasks.withType(Pmd) {
 	}
 }
 
-openApi {
-	apiDocsUrl = "http://localhost:8182/v3/api-docs"
-	outputDir = file("$buildDir/docs/openapi")
+task generateOpenApiHtml(type: Exec) {
+	dependsOn generateOpenApiDocs
+	commandLine 'docker', 'run', '--rm',
+		'-v', "${buildDir}/docs/openapi:/spec",
+		'redocly/cli',
+			'build-docs',
+			'/spec/openapi.json',
+			'-o', '/spec/openapi.html'
 }
