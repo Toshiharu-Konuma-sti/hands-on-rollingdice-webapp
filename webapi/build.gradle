@@ -10,6 +10,7 @@ plugins {
 	id 'pmd'
 	id 'checkstyle'
 	id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
+	id 'org.openapi.generator' version '7.16.0'
 }
 
 group = 'jp.sios'
@@ -100,6 +101,13 @@ openApi {
 	outputDir = file("$buildDir/docs/openapi")
 }
 
+openApiGenerate {
+	generatorName = "html2"
+//	generatorName = "dynamic-html"
+	inputSpec.set("$buildDir/docs/openapi/openapi.json")
+	outputDir.set("$buildDir/docs/swagger")
+}
+
 tasks.withType(JacocoReport) {
 	reports {
 		xml.required = true
@@ -119,14 +127,4 @@ tasks.withType(Pmd) {
 		xml.required = true
 		html.required = true
 	}
-}
-
-task generateOpenApiHtml(type: Exec) {
-	dependsOn generateOpenApiDocs
-	commandLine 'docker', 'run', '--rm',
-		'-v', "${buildDir}/docs/openapi:/spec",
-		'redocly/cli',
-			'build-docs',
-			'/spec/openapi.json',
-			'-o', '/spec/openapi.html'
 }
