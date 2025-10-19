@@ -9,4 +9,4 @@ WORKDIR /webapi
 
 # Execute Gradle commands in order
 RUN ./gradlew clean && \
-    ./gradlew assemble
+    ./gradlew assemble -x cyclonedxBom

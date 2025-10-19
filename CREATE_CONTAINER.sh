@@ -150,6 +150,7 @@ case "$1" in
 		start_banner
 		rebuild_container $CUR_DIR $2
 		show_list_container
+		show_url
 		finish_banner $S_TIME
 		;;
 	"list")

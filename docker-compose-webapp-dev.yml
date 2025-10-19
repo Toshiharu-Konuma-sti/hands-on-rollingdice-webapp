@@ -28,10 +28,10 @@ services:
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webui
-      PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
-      PYROSCOPE_FORMAT: jfr
-      PYROSCOPE_PROFILER_ALLOC: 512k
-      PYROSCOPE_PROFILER_LOCK: 10ms
+      PYROSCOPE_SERVER_ADDRESS: ${PYROSCOPE_SERVER_ADDRESS}
+      PYROSCOPE_FORMAT: ${PYROSCOPE_FORMAT}
+      PYROSCOPE_PROFILER_ALLOC: ${PYROSCOPE_PROFILER_ALLOC}
+      PYROSCOPE_PROFILER_LOCK: ${PYROSCOPE_PROFILER_LOCK}
     tty: true
 
   webapp-webapi:
@@ -56,10 +56,10 @@ services:
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webapi
-      PYROSCOPE_SERVER_ADDRESS: http://alloy:9999
-      PYROSCOPE_FORMAT: jfr
-      PYROSCOPE_PROFILER_ALLOC: 512k
-      PYROSCOPE_PROFILER_LOCK: 10ms
+      PYROSCOPE_SERVER_ADDRESS: ${PYROSCOPE_SERVER_ADDRESS}
+      PYROSCOPE_FORMAT: ${PYROSCOPE_FORMAT}
+      PYROSCOPE_PROFILER_ALLOC: ${PYROSCOPE_PROFILER_ALLOC}
+      PYROSCOPE_PROFILER_LOCK: ${PYROSCOPE_PROFILER_LOCK}
     tty: true
 
   webapp-mysql:
@@ -76,10 +76,10 @@ services:
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
     command: mysqld
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       TZ: "Asia/Tokyo"
 #    logging:
 #      driver: loki

@@ -90,7 +90,7 @@ public class WebApiServiceImpl implements WebApiService {
    */
   @Override
   @SuppressWarnings("PMD.OnlyOneReturn")
-  public ResponseEntity<Integer> rollDice(final Optional<String> optSleep, final Optional<String> optLoop, final Optional<String> optError) {
+  public ResponseEntity<String> rollDice(final Optional<Integer> optSleep, final Optional<Integer> optLoop, final Optional<Boolean> optError) {
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
@@ -100,61 +100,57 @@ public class WebApiServiceImpl implements WebApiService {
       this.error(optError);
     } catch (HandsOnException ex) {
       LOGGER.error("The exception was happened with error()", ex);
-      return new ResponseEntity<>(0, HttpStatus.INTERNAL_SERVER_ERROR);
+      return new ResponseEntity<>("0", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     final int value = this.roll();
     this.insertDice(value);
-    return new ResponseEntity<>(value, HttpStatus.OK);
+    return new ResponseEntity<>(String.valueOf(value), HttpStatus.OK);
   }
   // }}}
 
-  // {{{ private void sleep(Optional<String> optSleep)
+  // {{{ private void sleep(Optional<Integer> optSleep)
   @SuppressWarnings({"PMD.DoNotUseThreads", "PMD.GuardLogStatement"})
-  private void sleep(final Optional<String> optSleep) {
+  private void sleep(final Optional<Integer> optSleep) {
     UtilEnvInfo.logStartClassMethod();
 
-    if (optSleep.isPresent()) {
-      try {
-        final int milliSecond = Integer.parseInt(optSleep.get());
-        LOGGER.warn("!!! The sleep is: {} ms !!!", milliSecond);
-        try {
-          Thread.sleep(milliSecond);
-          LOGGER.warn("!!! The sleep has finnished !!!");
-        } catch (InterruptedException ex) {
-          LOGGER.error("The exception was happened with sleep()", ex);
-        }
-      } catch (NumberFormatException ex) {
-        LOGGER.error("The processing of sleep was skipped, because the value of parameter was not an integer: '{}'", optSleep.get());
+    optSleep.ifPresent(milliSecond -> {
+      if (milliSecond <= 0) {
+        LOGGER.warn("The processing of sleep was skipped, because the value of parameter was not a positive integer: '{}'", milliSecond);
+        return;
       }
-    }
+      LOGGER.warn("!!! The sleep is: {} ms !!!", milliSecond);
+      try {
+        Thread.sleep(milliSecond);
+        LOGGER.warn("!!! The sleep has finnished !!!");
+      } catch (InterruptedException ex) {
+        LOGGER.error("The exception was happened with sleep()", ex);
+      }
+    });
   }
   // }}}
 
-  // {{{ private void loop(Optional<String> optLoop)
+  // {{{ private void loop(Optional<Integer> optLoop)
   @SuppressWarnings("PMD.GuardLogStatement")
-  private void loop(final Optional<String> optLoop) {
+  private void loop(final Optional<Integer> optLoop) {
     UtilEnvInfo.logStartClassMethod();
 
-    if (optLoop.isPresent()) {
-      try {
-        final int loopCount = Integer.parseInt(optLoop.get());
-        final int interval = loopCount / 5;
-        String line = null;
-        LOGGER.warn("!!! The loop is: {} count !!!", loopCount);
-        for (int i = 1; i <= loopCount; i++) {
-
-          line = this.readFile(FILE_PATH_IN_LOOP);
-          
-          if ((i != 0) && ((i % interval) == 0)) {
-            LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
-          }
-        }
-        LOGGER.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
-      } catch (NumberFormatException ex) {
-        LOGGER.error("The processing of loop was skipped, because the value of parameter was not an integer: '{}'", optLoop.get());
+    optLoop.ifPresent(loopCount -> {
+      if (loopCount <= 0) {
+        LOGGER.warn("The processing of loop was skipped, because the value of parameter was not a positive integer: '{}'", loopCount);
+        return;
       }
-    }
+      LOGGER.warn("!!! The loop is: {} count !!!", loopCount);
+      final int interval = loopCount / 5;
+      String line = null;
+      for (int i = 1; i <= loopCount; i++) {
+        line = this.readFile(FILE_PATH_IN_LOOP);
+        if ((i != 0) && ((i % interval) == 0)) {
+          LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
+        }
+      }
+      LOGGER.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
+    });
   }
   // }}}
 
@@ -176,11 +172,11 @@ public class WebApiServiceImpl implements WebApiService {
   }
   // }}}
 
-  // {{{ private void error(Optional<String> optError)
-  private void error(final Optional<String> optError) throws HandsOnException {
+  // {{{ private void error(Optional<Boolean> optError)
+  private void error(final Optional<Boolean> optError) throws HandsOnException {
     UtilEnvInfo.logStartClassMethod();
 
-    if (optError.isPresent()) {
+    if (optError.isPresent() && optError.get()) {
       LOGGER.error("!!! It received a direction to occur an exception: '{}' !!!", "HandsOnException");
       throw new HandsOnException("It received a direction to occur an exception.");
     }
