@@ -1,7 +1,9 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webapi.controller;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -36,6 +38,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/dice/v1")
+@OpenAPIDefinition(
+    info = @Info(
+        title = "Dice Rolling API",
+        version = "0.0.1",
+        description = "このAPIは、サイコロを振る機能とその履歴を閲覧する機能を提供します。"
+            + "<br>ハンズオンやデモでの利用を想定しています。"
+    )
+)
 @Tag(name = "Dice Rolling API", description = "サイコロを振ったり履歴を閲覧したりする機能を提供します")
 public class WebApiController {
 
@@ -70,33 +80,34 @@ public class WebApiController {
    * </p>
    *
    * @param request   HTTPリクエスト情報
-   * @param optSleep  サイコロ処理前の待機時間（ミリ秒、オプション）
-   * @param optLoop   サイコロ処理のループ回数（オプション）
+   * @param optSleep  サイコロ処理前に意図的に遅延させる待機時間（ミリ秒、オプション）
+   * @param optLoop   サイコロ処理前に意図的に遅延させるループ回数（オプション）
    * @param optError  エラー発生フラグ（オプション）
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
   @GetMapping({"/roll"})
-  @Operation(summary = "サイコロを振る", description = "サイコロを振って出目を取得します。")
+  @Operation(summary = "サイコロを振ります。", description = "リクエストパラメータとして、sleep（待機時間）、loop（ループ回数）、error（エラー発生フラグ）を受け取ります。これらのパラメータに基づき、サイコロの値を生成し、結果をレスポンスとして返却します。")
   @ApiResponses(value = {
-      @ApiResponse(responseCode = "200", description = "成功",
-                   content = @Content(mediaType = "application/json",
-                                      schema = @Schema(implementation = Integer.class, example = "5"))),
+      @ApiResponse(responseCode = "200", description = "サイコロの出目（1～6の整数値）",
+          content = @Content(mediaType = "text/plain",
+              schema = @Schema(implementation = Integer.class, example = "5"))),
       @ApiResponse(responseCode = "500", description = "errorパラメータが指定された場合など、サーバ内部でエラーが発生",
-                   content = @Content)
+          content = @Content)
   })
-  public ResponseEntity<Integer> rollDice(
+  public ResponseEntity<String> rollDice(
       final HttpServletRequest request,
       @Parameter(description = "処理を意図的に遅延させる時間（ミリ秒）", example = "1000")
-      final @RequestParam("sleep") Optional<String> optSleep,
+      final @RequestParam(name = "sleep", required = false) Optional<Integer> optSleep,
       @Parameter(description = "サイコロ処理のループ回数", example = "5")
-      final @RequestParam("loop") Optional<String> optLoop,
+      final @RequestParam(name = "loop", required = false) Optional<Integer> optLoop,
       @Parameter(description = "エラー発生フラグ", example = "true")
-      final @RequestParam("error") Optional<String> optError) {
+      final @RequestParam(name = "error", required = false) Optional<Boolean> optError) {
+
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
-    final ResponseEntity<Integer> entity = service.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> entity = service.rollDice(optSleep, optLoop, optError);
 
     UtilEnvInfo.logFinishRequest(request);
     return entity;
@@ -114,7 +125,16 @@ public class WebApiController {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @GetMapping({"/list"})
+  @Operation(summary = "サイコロのリストを取得します。", description = "サイコロの出目リストを返却します。")
+  @ApiResponses(value = {
+      @ApiResponse(responseCode = "200", description = "サイコロの出目リスト",
+          content = @Content(mediaType = "application/json",
+              schema = @Schema(implementation = Dice.class))),
+      @ApiResponse(responseCode = "500", description = "サーバ内部でエラーが発生",
+          content = @Content)
+  })
   public List<Dice> listDice(final HttpServletRequest request) {
+
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
 

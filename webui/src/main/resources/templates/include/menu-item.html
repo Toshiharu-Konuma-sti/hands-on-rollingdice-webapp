@@ -9,5 +9,5 @@
 			<li><a th:href="${cUrl} + '?loop=1500000'" onclick="putLoadingImage();">Loop 1.5M count at API</a></li>
 			<li class="li-spacing"><a th:href="${cUrl} + '?loop=3000000'" onclick="putLoadingImage();">Loop 3.0M count at API</a></li>
 
-			<li><a th:href="${cUrl} + '?error=1'">Cause 5xx error at API</a></li>
+			<li><a th:href="${cUrl} + '?error=true'">Cause 5xx error at API</a></li>
 		</ol>

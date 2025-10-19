@@ -74,17 +74,17 @@ class WebApiControllerTest {
   void testRollDice() {
     // Arrange
     final String mockCurrentUrl = "http://localhost:8080";
-    final Optional<String> optSleep = Optional.of("1000");
-    final Optional<String> optLoop = Optional.of("5");
-    final Optional<String> optError = Optional.empty();
-    final Integer mockDice = 6;
-    final ResponseEntity<Integer> mockResponse = ResponseEntity.ok(mockDice);
+    final Optional<Integer> optSleep = Optional.of(1000);
+    final Optional<Integer> optLoop = Optional.of(5);
+    final Optional<Boolean> optError = Optional.empty();
+    final String mockDice = "6";
+    final ResponseEntity<String> mockResponse = ResponseEntity.ok(mockDice);
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
     when(service.rollDice(optSleep, optLoop, optError)).thenReturn(mockResponse);
 
     // Act
-    final ResponseEntity<Integer> response = controller.rollDice(request, optSleep, optLoop, optError);
+    final ResponseEntity<String> response = controller.rollDice(request, optSleep, optLoop, optError);
 
     // Assert
     assertNotNull(response, "Response should not be null");
