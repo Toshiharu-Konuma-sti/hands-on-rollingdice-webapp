@@ -1,7 +1,6 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webapi.controller;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -34,7 +33,6 @@ import org.springframework.http.ResponseEntity;
  *
  * @author Toshiharu Konuma
  */
-@SuppressWarnings("PMD.TooManyStaticImports")
 class WebApiControllerTest {
 
   /**
@@ -84,11 +82,12 @@ class WebApiControllerTest {
     when(service.rollDice(optSleep, optLoop, optError)).thenReturn(mockResponse);
 
     // Act
-    final ResponseEntity<String> response = controller.rollDice(request, optSleep, optLoop, optError);
+    final ResponseEntity<String> response = controller.rollDice(
+        request, optSleep, optLoop, optError);
 
     // Assert
-    assertNotNull(response, "Response should not be null");
-    assertEquals(mockDice, response.getBody(), "The response body should match the expected dice value");
+    assertEquals(mockDice, response.getBody(), 
+        "The response body should match the expected dice value");
     verify(service, times(1)).rollDice(optSleep, optLoop, optError);
   }
 
@@ -96,7 +95,10 @@ class WebApiControllerTest {
   void testListDice() {
     // Arrange
     final String mockCurrentUrl = "http://localhost:8080";
-    final List<Dice> mockDiceList = List.of(new Dice(3, 1, LocalDateTime.of(2025, 3, 1, 12, 34, 56)), new Dice(2, 3, LocalDateTime.of(2025, 2, 1, 12, 34, 56)), new Dice(1, 5, LocalDateTime.of(2025, 1, 1, 12, 34, 56)));
+    final List<Dice> mockDiceList = List.of(
+        new Dice(3, 1, LocalDateTime.of(2025, 3, 1, 12, 34, 56)), 
+        new Dice(2, 3, LocalDateTime.of(2025, 2, 1, 12, 34, 56)), 
+        new Dice(1, 5, LocalDateTime.of(2025, 1, 1, 12, 34, 56)));
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
     when(service.listDice()).thenReturn(mockDiceList);
@@ -105,7 +107,6 @@ class WebApiControllerTest {
     final List<Dice> result = controller.listDice(request);
 
     // Assert
-    assertNotNull(result, "The result list should not be null");
     assertEquals(3, result.size(), "The result list size should be 3");
     verify(service, times(1)).listDice();
   }

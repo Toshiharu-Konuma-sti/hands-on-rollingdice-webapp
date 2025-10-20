@@ -14,12 +14,13 @@ public interface WebApiService {
   /**
    * サイコロを振る処理を実行します。.
    *
-   * @param optSleep サイコロを振る前にスリープする時間（ミリ秒）を指定するオプションの文字列
-   * @param optLoop サイコロを振る回数を指定するオプションの文字列
-   * @param optError エラーを発生させるかどうかを指定するオプションの文字列
+   * @param optSleep サイコロを振る前にスリープする時間（ミリ秒）を指定するオプションの整数
+   * @param optLoop サイコロを振る回数を指定するオプションの整数
+   * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
    * @return サイコロの出目を含むレスポンスエンティティ
    */
-  ResponseEntity<String> rollDice(Optional<Integer> optSleep, Optional<Integer> optLoop, Optional<Boolean> optError);
+  ResponseEntity<String> rollDice(
+      Optional<Integer> optSleep, Optional<Integer> optLoop, Optional<Boolean> optError);
 
   /**
    * サイコロ出目の一覧を取得します。.

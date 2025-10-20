@@ -74,9 +74,9 @@ public class WebUiController {
   public ModelAndView index(
       final HttpServletRequest request,
       final ModelAndView model,
-      final @RequestParam("sleep") Optional<String> optSleep,
-      final @RequestParam("loop") Optional<String> optLoop,
-      final @RequestParam("error") Optional<String> optError) {
+      @RequestParam("sleep") final Optional<String> optSleep,
+      @RequestParam("loop") final Optional<String> optLoop,
+      @RequestParam("error") final Optional<String> optError) {
 
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
