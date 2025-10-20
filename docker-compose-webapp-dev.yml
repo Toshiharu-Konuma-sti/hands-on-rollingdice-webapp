@@ -26,12 +26,10 @@ services:
         java \
           -jar build/libs/apisl.handson.rollingdice.webapp.webui-0.0.1-SNAPSHOT.jar \
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
+    env_file:
+      - .env-webapp
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webui
-      PYROSCOPE_SERVER_ADDRESS: ${PYROSCOPE_SERVER_ADDRESS}
-      PYROSCOPE_FORMAT: ${PYROSCOPE_FORMAT}
-      PYROSCOPE_PROFILER_ALLOC: ${PYROSCOPE_PROFILER_ALLOC}
-      PYROSCOPE_PROFILER_LOCK: ${PYROSCOPE_PROFILER_LOCK}
     tty: true
 
   webapp-webapi:
@@ -54,12 +52,10 @@ services:
         java \
           -jar build/libs/apisl.handson.rollingdice.webapp.webapi-0.0.1-SNAPSHOT.jar \
           --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
+    env_file:
+      - .env-webapp
     environment:
       PYROSCOPE_APPLICATION_NAME: webapp-webapi
-      PYROSCOPE_SERVER_ADDRESS: ${PYROSCOPE_SERVER_ADDRESS}
-      PYROSCOPE_FORMAT: ${PYROSCOPE_FORMAT}
-      PYROSCOPE_PROFILER_ALLOC: ${PYROSCOPE_PROFILER_ALLOC}
-      PYROSCOPE_PROFILER_LOCK: ${PYROSCOPE_PROFILER_LOCK}
     tty: true
 
   webapp-mysql:
@@ -75,12 +71,8 @@ services:
       - ./mysql/config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
       - ./mysql/init:/docker-entrypoint-initdb.d:ro
     command: mysqld
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      TZ: "Asia/Tokyo"
+    env_file:
+      - .env-webapp-mysql
 #    logging:
 #      driver: loki
 #      options:

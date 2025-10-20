@@ -8,7 +8,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +45,6 @@ import org.springframework.web.bind.annotation.RestController;
             + "<br>ハンズオンやデモでの利用を想定しています。"
     )
 )
-@Tag(name = "Dice Rolling API", description = "サイコロを振ったり履歴を閲覧したりする機能を提供します")
 public class WebApiController {
 
   /**
@@ -86,8 +84,11 @@ public class WebApiController {
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
   @GetMapping({"/roll"})
-  @Operation(summary = "サイコロを振ります。", description = "リクエストパラメータとして、sleep（待機時間）、loop（ループ回数）、error（エラー発生フラグ）を受け取ります。これらのパラメータに基づき、サイコロの値を生成し、結果をレスポンスとして返却します。")
-  @ApiResponses(value = {
+  @Operation(summary = "サイコロを振ります。", 
+      description = "リクエストパラメータとして、"
+          + "sleep（待機時間）、loop（ループ回数）、error（エラー発生フラグ）を受け取ります。"
+          + "これらのパラメータに基づき、サイコロの値を生成し、結果をレスポンスとして返却します。")
+  @ApiResponses({
       @ApiResponse(responseCode = "200", description = "サイコロの出目（1～6の整数値）",
           content = @Content(mediaType = "text/plain",
               schema = @Schema(implementation = Integer.class, example = "5"))),
@@ -97,15 +98,17 @@ public class WebApiController {
   public ResponseEntity<String> rollDice(
       final HttpServletRequest request,
       @Parameter(description = "処理を意図的に遅延させる時間（ミリ秒）", example = "1000")
-      final @RequestParam(name = "sleep", required = false) Optional<Integer> optSleep,
+      @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,
       @Parameter(description = "サイコロ処理のループ回数", example = "5")
-      final @RequestParam(name = "loop", required = false) Optional<Integer> optLoop,
+      @RequestParam(name = "loop", required = false) final Optional<Integer> optLoop,
       @Parameter(description = "エラー発生フラグ", example = "true")
-      final @RequestParam(name = "error", required = false) Optional<Boolean> optError) {
+      @RequestParam(name = "error", required = false) final Optional<Boolean> optError) {
 
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
-    LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info(
+        "The received parameters are: sleep='{}', loop='{}' and error='{}'",
+        optSleep, optLoop, optError);
 
     final ResponseEntity<String> entity = service.rollDice(optSleep, optLoop, optError);
 
@@ -126,7 +129,7 @@ public class WebApiController {
    */
   @GetMapping({"/list"})
   @Operation(summary = "サイコロのリストを取得します。", description = "サイコロの出目リストを返却します。")
-  @ApiResponses(value = {
+  @ApiResponses({
       @ApiResponse(responseCode = "200", description = "サイコロの出目リスト",
           content = @Content(mediaType = "application/json",
               schema = @Schema(implementation = Dice.class))),

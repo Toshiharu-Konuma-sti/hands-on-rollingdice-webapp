@@ -73,7 +73,7 @@ public class WebApiServiceImpl implements WebApiService {
   }
   // }}}
 
-  // {{{ public ResponseEntity<Integer> rollDice(Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError)
+  // {{{ public ResponseEntity<Integer> rollDice(...)
   /**
    * サイコロを振る処理を実行し、結果をレスポンスとして返します。.
    *
@@ -83,16 +83,22 @@ public class WebApiServiceImpl implements WebApiService {
    * 正常時はサイコロの出目（1～6）をHTTP 200（OK）で返却します。
    * </p>
    *
-   * @param optSleep スリープ時間（ミリ秒）を表すオプションの文字列
-   * @param optLoop  ループ回数を表すオプションの文字列
-   * @param optError エラー発生有無を表すオプションの文字列
+   * @param optSleep スリープ時間（ミリ秒）を表すオプションの整数
+   * @param optLoop  ループ回数を表すオプションの整数
+   * @param optError エラー発生有無を表すオプションの真偽値
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
   @Override
   @SuppressWarnings("PMD.OnlyOneReturn")
-  public ResponseEntity<String> rollDice(final Optional<Integer> optSleep, final Optional<Integer> optLoop, final Optional<Boolean> optError) {
+  public ResponseEntity<String> rollDice(
+      final Optional<Integer> optSleep, 
+      final Optional<Integer> optLoop, 
+      final Optional<Boolean> optError) {
+
     UtilEnvInfo.logStartClassMethod();
-    LOGGER.info("The received parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info(
+        "The received parameters are: sleep='{}', loop='{}' and error='{}'", 
+        optSleep, optLoop, optError);
 
     this.sleep(optSleep);
     this.loop(optLoop);
@@ -110,13 +116,17 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void sleep(Optional<Integer> optSleep)
-  @SuppressWarnings({"PMD.DoNotUseThreads", "PMD.GuardLogStatement"})
+  @SuppressWarnings("PMD.DoNotUseThreads")
   private void sleep(final Optional<Integer> optSleep) {
+
     UtilEnvInfo.logStartClassMethod();
 
     optSleep.ifPresent(milliSecond -> {
       if (milliSecond <= 0) {
-        LOGGER.warn("The processing of sleep was skipped, because the value of parameter was not a positive integer: '{}'", milliSecond);
+        LOGGER.warn(
+            "The processing of sleep was skipped, "
+            + "because the value of parameter was not a positive integer: '{}'",
+            milliSecond);
         return;
       }
       LOGGER.warn("!!! The sleep is: {} ms !!!", milliSecond);
@@ -133,11 +143,15 @@ public class WebApiServiceImpl implements WebApiService {
   // {{{ private void loop(Optional<Integer> optLoop)
   @SuppressWarnings("PMD.GuardLogStatement")
   private void loop(final Optional<Integer> optLoop) {
+
     UtilEnvInfo.logStartClassMethod();
 
     optLoop.ifPresent(loopCount -> {
       if (loopCount <= 0) {
-        LOGGER.warn("The processing of loop was skipped, because the value of parameter was not a positive integer: '{}'", loopCount);
+        LOGGER.warn(
+            "The processing of loop was skipped, "
+            + "because the value of parameter was not a positive integer: '{}'",
+            loopCount);
         return;
       }
       LOGGER.warn("!!! The loop is: {} count !!!", loopCount);
@@ -146,7 +160,9 @@ public class WebApiServiceImpl implements WebApiService {
       for (int i = 1; i <= loopCount; i++) {
         line = this.readFile(FILE_PATH_IN_LOOP);
         if ((i != 0) && ((i % interval) == 0)) {
-          LOGGER.warn("The progress of loop is: {}/{} count", String.format("%,d", i), String.format("%,d", loopCount));
+          LOGGER.warn(
+              "The progress of loop is: {}/{} count", 
+              String.format("%,d", i), String.format("%,d", loopCount));
         }
       }
       LOGGER.warn("!!! The loop has finnished !!! : The read text is: '{}'", line);
@@ -177,7 +193,9 @@ public class WebApiServiceImpl implements WebApiService {
     UtilEnvInfo.logStartClassMethod();
 
     if (optError.isPresent() && optError.get()) {
-      LOGGER.error("!!! It received a direction to occur an exception: '{}' !!!", "HandsOnException");
+      LOGGER.error(
+          "!!! It received a direction to occur an exception: '{}' !!!", 
+          "HandsOnException");
       throw new HandsOnException("It received a direction to occur an exception.");
     }
   }
