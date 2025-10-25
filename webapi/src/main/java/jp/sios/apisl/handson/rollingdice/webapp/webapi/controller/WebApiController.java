@@ -45,6 +45,7 @@ import org.springframework.web.bind.annotation.RestController;
             + "<br>ハンズオンやデモでの利用を想定しています。"
     )
 )
+@SuppressWarnings("PMD.CommentSize")
 public class WebApiController {
 
   /**

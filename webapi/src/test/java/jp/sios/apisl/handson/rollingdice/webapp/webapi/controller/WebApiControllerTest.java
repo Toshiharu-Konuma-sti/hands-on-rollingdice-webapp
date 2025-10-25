@@ -33,6 +33,7 @@ import org.springframework.http.ResponseEntity;
  *
  * @author Toshiharu Konuma
  */
+@SuppressWarnings("PMD.CommentSize")
 class WebApiControllerTest {
 
   /**

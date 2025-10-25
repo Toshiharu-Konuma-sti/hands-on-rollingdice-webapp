@@ -1,24 +1,25 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webapi.service;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 
 /**
  * {@code WebApiServiceImplTest} クラスは、{@link WebApiServiceImpl} のユニットテストを提供します。.
@@ -35,7 +36,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
  *
  * @author Toshiharu Konuma
  */
-@SuppressWarnings("PMD.LawOfDemeter")
+// @SuppressWarnings("PMD.LawOfDemeter")
+@SuppressWarnings("PMD.CommentSize")
 class WebApiServiceImplTest {
 
   /**
@@ -72,8 +74,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 on success");
-    assertTrue(Integer.parseInt(response.getBody()) >= 1 && Integer.parseInt(response.getBody()) <= 6, "Dice value should be between 1 and 6");
+    assertThat(response.getStatusCode()).as("Status code should be 200 on success").isEqualTo(HttpStatus.OK);
+    assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6").isBetween(1, 6);
   }
 
   @Test
@@ -84,8 +86,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when sleep parameter is provided");
-    assertTrue(Integer.parseInt(response.getBody()) >= 1 && Integer.parseInt(response.getBody()) <= 6, "Dice value should be between 1 and 6 when sleep parameter is provided");
+    assertThat(response.getStatusCode()).as("Status code should be 200 when sleep parameter is provided").isEqualTo(HttpStatus.OK);
+    assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when sleep parameter is provided").isBetween(1, 6);
   }
 
   @Test
@@ -96,8 +98,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when invalid sleep parameter is provided");
-    assertTrue(Integer.parseInt(response.getBody()) >= 1 && Integer.parseInt(response.getBody()) <= 6, "Dice value should be between 1 and 6 when invalid sleep parameter is provided");
+    assertThat(response.getStatusCode()).as("Status code should be 200 when invalid sleep parameter is provided").isEqualTo(HttpStatus.OK);
+    assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when invalid sleep parameter is provided").isBetween(1, 6);
   }
 
   @Test
@@ -108,8 +110,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when loop parameter is provided");
-    assertTrue(Integer.parseInt(response.getBody()) >= 1 && Integer.parseInt(response.getBody()) <= 6, "Dice value should be between 1 and 6 when loop parameter is provided");
+    assertThat(response.getStatusCode()).as("Status code should be 200 when loop parameter is provided").isEqualTo(HttpStatus.OK);
+    assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when loop parameter is provided").isBetween(1, 6);
   }
 
   @Test
@@ -120,8 +122,8 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(200, response.getStatusCode().value(), "Status code should be 200 when invalid loop parameter is provided");
-    assertTrue(Integer.parseInt(response.getBody()) >= 1 && Integer.parseInt(response.getBody()) <= 6, "Dice value should be between 1 and 6 when invalid loop parameter is provided");
+    assertThat(response.getStatusCode()).as("Status code should be 200 when invalid loop parameter is provided").isEqualTo(HttpStatus.OK);
+    assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when invalid loop parameter is provided").isBetween(1, 6);
   }
 
   @Test
@@ -132,20 +134,17 @@ class WebApiServiceImplTest {
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
 
-    assertEquals(500, response.getStatusCode().value(), "Status code should be 500 when error parameter is provided");
-    assertEquals("0", response.getBody(), "Dice value should be 0 when error parameter is provided");
+    assertThat(response.getStatusCode()).as("Status code should be 500 when error parameter is provided").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
+    assertThat(response.getBody()).as("Dice value should be 0 when error parameter is provided").isEqualTo("0");
   }
 
   @Test
   void testListDice() {
-    final Map<String, Object> record = new ConcurrentHashMap<>();
-    record.put("id", 1);
-    record.put("value", 5);
-    record.put("updated_at", LocalDateTime.now());
-    final List<Map<String, Object>> mockResult = new ArrayList<>();
-    mockResult.add(record);
+    final String expectedSql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
+    final Dice dice1 = new Dice(1, 5, LocalDateTime.now());
+    final List<Dice> expectedRecord = Arrays.asList(dice1);
 
-    when(jdbcTemplate.queryForList(anyString())).thenReturn(mockResult);
+    when(jdbcTemplate.query(eq(expectedSql), any(RowMapper.class))).thenReturn(expectedRecord);
 
     final List<Dice> diceList = webApiService.listDice();
 
