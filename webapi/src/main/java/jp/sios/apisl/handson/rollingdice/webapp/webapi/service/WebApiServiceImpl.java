@@ -5,9 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
@@ -42,6 +40,7 @@ import org.springframework.stereotype.Service;
  * @version 1.0
  */
 @Service
+@SuppressWarnings("PMD.CommentSize")
 public class WebApiServiceImpl implements WebApiService {
 
   /**
@@ -89,7 +88,6 @@ public class WebApiServiceImpl implements WebApiService {
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
   @Override
-  @SuppressWarnings("PMD.OnlyOneReturn")
   public ResponseEntity<String> rollDice(
       final Optional<Integer> optSleep, 
       final Optional<Integer> optLoop, 
@@ -116,7 +114,6 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void sleep(Optional<Integer> optSleep)
-  @SuppressWarnings("PMD.DoNotUseThreads")
   private void sleep(final Optional<Integer> optSleep) {
 
     UtilEnvInfo.logStartClassMethod();
@@ -241,24 +238,20 @@ public class WebApiServiceImpl implements WebApiService {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @Override
-  @SuppressWarnings({"PMD.AvoidInstantiatingObjectsInLoops", "PMD.GuardLogStatement"})
+  @SuppressWarnings("PMD.GuardLogStatement")
   public List<Dice> listDice() {
     UtilEnvInfo.logStartClassMethod();
 
     final String sql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
     LOGGER.info("The sql to execute is '{}'", sql);
 
-    final List<Map<String, Object>> recordSets = this.jdbcTemplate.queryForList(sql);
-    final List<Dice> list = new ArrayList<>();
-
-    for (final Map<String, Object> recset : recordSets) {
-      final Dice dice = new Dice(
-          ((Number) recset.get("id")).intValue(),
-          ((Number) recset.get("value")).intValue(),
-          (LocalDateTime) recset.get("updated_at")
-      );
-      list.add(dice);
-    }
+    final List<Dice> list = this.jdbcTemplate.query(sql, (rs, rowNum) -> 
+        new Dice(
+          rs.getInt("id"),
+          rs.getInt("value"),
+          rs.getObject("updated_at", LocalDateTime.class)
+        )
+    );
     LOGGER.info("The record count of the executed sql is: '{}'", list.size());
 
     return list;

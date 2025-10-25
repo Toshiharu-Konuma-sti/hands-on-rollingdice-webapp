@@ -17,6 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  * <p>このクラスはインスタンス化せず、すべてのメソッドはstaticとして利用します。</p>
  */
+@SuppressWarnings("PMD.CommentSize")
 public final class UtilEnvInfo {
 
   /**
@@ -85,14 +86,12 @@ public final class UtilEnvInfo {
   // }}}
 
   // {{{ private static String getClassName()
-  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getClassName() {
     return Thread.currentThread().getStackTrace()[3].getClassName();
   }
   // }}}
 
   // {{{ private static String getMethodName()
-  @SuppressWarnings("PMD.DoNotUseThreads")
   private static String getMethodName() {
     return Thread.currentThread().getStackTrace()[3].getMethodName();
   }

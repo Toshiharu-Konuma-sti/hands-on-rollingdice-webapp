@@ -21,6 +21,7 @@ import org.springframework.boot.SpringApplication;
  * <p>モックを利用して SpringApplication の静的メソッド呼び出しを検証しています。
  * </p>
  */
+@SuppressWarnings("PMD.CommentSize")
 class ApplicationTest {
 
   /**
@@ -29,13 +30,6 @@ class ApplicationTest {
    */
   public ApplicationTest() {
     // Constructor for ApplicationTest
-  }
-
-  @Test
-  @SuppressWarnings("PMD.UnitTestShouldIncludeAssert")
-  void contextLoads() {
-    // This method is intentionally empty.
-    // The test passes if the application context loads successfully.
   }
 
   @Test
