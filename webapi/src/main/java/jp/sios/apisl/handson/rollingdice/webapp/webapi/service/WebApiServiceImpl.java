@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
  * <ul>
  *   <li>rollDiceメソッドでサイコロを振り、結果をデータベースに保存します。</li>
  *   <li>sleepメソッドで指定時間のスリープを行います。</li>
- *   <li>loopメソッドで指定回数ファイル読み込みを繰り返します。</li>
+ *   <li>loopメソッドで指定時間ループをしながらファイル読み込みを繰り返します。</li>
  *   <li>errorメソッドで意図的に例外を発生させます。</li>
  *   <li>listDiceメソッドで保存されたサイコロ出目の一覧を取得します。</li>
  * </ul>
