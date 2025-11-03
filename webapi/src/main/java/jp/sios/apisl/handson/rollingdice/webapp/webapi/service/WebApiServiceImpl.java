@@ -114,6 +114,7 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void sleep(Optional<Integer> optSleep)
+  @SuppressWarnings("PMD.GuardLogStatement")
   private void sleep(final Optional<Integer> optSleep) {
 
     UtilEnvInfo.logStartClassMethod();
@@ -153,7 +154,7 @@ public class WebApiServiceImpl implements WebApiService {
         return;
       }
 
-      final double totalSeconds = (double) loopSeconds;
+      final double totalSeconds = loopSeconds;
       LOGGER.warn("!!! The loop is: {} seconds !!!", String.format("%.2f", totalSeconds));
 
       final long durationMillis = loopSeconds * 1000L;
