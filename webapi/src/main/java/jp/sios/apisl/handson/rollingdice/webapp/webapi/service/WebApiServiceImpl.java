@@ -76,14 +76,14 @@ public class WebApiServiceImpl implements WebApiService {
   /**
    * サイコロを振る処理を実行し、結果をレスポンスとして返します。.
    *
-   * <p>オプションでスリープ時間、ループ回数、エラー発生の有無を指定できます。
+   * <p>オプションでスリープ時間、ループ時間、エラー発生の有無を指定できます。
    * 指定されたパラメータに基づき、スリープやループ処理、エラー発生処理を行います。
    * エラーが発生した場合はHTTP 500（INTERNAL_SERVER_ERROR）を返却し、
    * 正常時はサイコロの出目（1～6）をHTTP 200（OK）で返却します。
    * </p>
    *
-   * @param optSleep スリープ時間（ミリ秒）を表すオプションの整数
-   * @param optLoop  ループ回数を表すオプションの整数
+   * @param optSleep スリープ時間（秒）を表すオプションの整数
+   * @param optLoop  ループ時間（秒）を表すオプションの整数
    * @param optError エラー発生有無を表すオプションの真偽値
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
@@ -118,17 +118,18 @@ public class WebApiServiceImpl implements WebApiService {
 
     UtilEnvInfo.logStartClassMethod();
 
-    optSleep.ifPresent(milliSecond -> {
-      if (milliSecond <= 0) {
+    optSleep.ifPresent(sleepSeconds -> {
+      if (sleepSeconds <= 0) {
         LOGGER.warn(
             "The processing of sleep was skipped, "
             + "because the value of parameter was not a positive integer: '{}'",
-            milliSecond);
+            sleepSeconds);
         return;
       }
-      LOGGER.warn("!!! The sleep is: {} ms !!!", milliSecond);
+      LOGGER.warn("!!! The sleep is: {} seconds !!!", String.format("%.2f", (double) sleepSeconds));
+      final long sleepMillis = sleepSeconds * 1000L;
       try {
-        Thread.sleep(milliSecond);
+        Thread.sleep(sleepMillis);
         LOGGER.warn("!!! The sleep has finnished !!!");
       } catch (InterruptedException ex) {
         LOGGER.error("The exception was happened with sleep()", ex);

@@ -80,7 +80,7 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDiceWithSleep() {
-    final Optional<Integer> optSleep = Optional.of(100);
+    final Optional<Integer> optSleep = Optional.of(3);
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
 
@@ -92,7 +92,7 @@ class WebApiServiceImplTest {
 
   @Test
   void testRollDiceWithInvalidSleep() {
-    final Optional<Integer> optSleep = Optional.of(-100);
+    final Optional<Integer> optSleep = Optional.of(-3);
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
 
@@ -105,7 +105,7 @@ class WebApiServiceImplTest {
   @Test
   void testRollDiceWithLoop() {
     final Optional<Integer> optSleep = Optional.empty();
-    final Optional<Integer> optLoop = Optional.of(100);
+    final Optional<Integer> optLoop = Optional.of(3);
     final Optional<Boolean> optError = Optional.empty();
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
@@ -117,7 +117,7 @@ class WebApiServiceImplTest {
   @Test
   void testRollDiceWithInvalidLoop() {
     final Optional<Integer> optSleep = Optional.empty();
-    final Optional<Integer> optLoop = Optional.of(-100);
+    final Optional<Integer> optLoop = Optional.of(-3);
     final Optional<Boolean> optError = Optional.empty();
 
     final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
