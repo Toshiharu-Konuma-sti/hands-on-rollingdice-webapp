@@ -175,7 +175,7 @@ public class WebApiServiceImpl implements WebApiService {
         if (currentTime >= nextLogTime && currentTime < endTime) {
           final double elapsedSeconds = (currentTime - startTime) / 1000.0;
           LOGGER.warn(
-              "The progress of loop is: {}/{} seconds (executed {} times)",
+              "The progress of loop is: {}/{} seconds (loop count: {})",
               String.format("%.2f", elapsedSeconds),
               String.format("%.2f", totalSeconds),
               String.format("%,d", executionCount));
