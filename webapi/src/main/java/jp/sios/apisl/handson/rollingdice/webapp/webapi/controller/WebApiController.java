@@ -74,20 +74,20 @@ public class WebApiController {
   /**
    * サイコロを振る処理を実行します。.
    *
-   * <p>リクエストパラメータとして、sleep（待機時間）、loop（ループ回数）、error（エラー発生フラグ）を受け取ります。
+   * <p>リクエストパラメータとして、sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）を受け取ります。
    * これらのパラメータに基づき、サービス層でサイコロの値を生成し、結果をレスポンスとして返却します。
    * </p>
    *
    * @param request   HTTPリクエスト情報
-   * @param optSleep  サイコロ処理前に意図的に遅延させる待機時間（ミリ秒、オプション）
-   * @param optLoop   サイコロ処理前に意図的に遅延させるループ回数（オプション）
+   * @param optSleep  サイコロ処理前に意図的に遅延させる待機時間（秒、オプション）
+   * @param optLoop   サイコロ処理前に意図的に遅延させるループ時間（秒、オプション）
    * @param optError  エラー発生フラグ（オプション）
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
   @GetMapping({"/roll"})
   @Operation(summary = "サイコロを振ります。", 
       description = "リクエストパラメータとして、"
-          + "sleep（待機時間）、loop（ループ回数）、error（エラー発生フラグ）を受け取ります。"
+          + "sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）を受け取ります。"
           + "これらのパラメータに基づき、サイコロの値を生成し、結果をレスポンスとして返却します。")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "サイコロの出目（1～6の整数値）",
@@ -98,9 +98,9 @@ public class WebApiController {
   })
   public ResponseEntity<String> rollDice(
       final HttpServletRequest request,
-      @Parameter(description = "処理を意図的に遅延させる時間（ミリ秒）", example = "1000")
+      @Parameter(description = "処理を意図的に遅延させる時間（秒）", example = "10")
       @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,
-      @Parameter(description = "サイコロ処理のループ回数", example = "5")
+      @Parameter(description = "処理を意図的に遅延させるループ時間（秒）", example = "15")
       @RequestParam(name = "loop", required = false) final Optional<Integer> optLoop,
       @Parameter(description = "エラー発生フラグ", example = "true")
       @RequestParam(name = "error", required = false) final Optional<Boolean> optError) {
