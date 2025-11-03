@@ -1,13 +1,13 @@
 		<ol id="menu-roll">
 			<li class="li-spacing"><a th:href="${cUrl}">Roll normally</a></li>
 
-			<li><a th:href="${cUrl} + '?sleep=5000'" onclick="putLoadingImage();">Sleep 5 sec at API</a></li>
-			<li><a th:href="${cUrl} + '?sleep=15000'" onclick="putLoadingImage();">Sleep 15 sec at API</a></li>
-			<li class="li-spacing"><a th:href="${cUrl} + '?sleep=30000'" onclick="putLoadingImage();">Sleep 30 sec at API</a></li>
+			<li><a th:href="${cUrl} + '?sleep=5'" onclick="putLoadingImage();">Sleep 5 sec at API</a></li>
+			<li><a th:href="${cUrl} + '?sleep=15'" onclick="putLoadingImage();">Sleep 15 sec at API</a></li>
+			<li class="li-spacing"><a th:href="${cUrl} + '?sleep=30'" onclick="putLoadingImage();">Sleep 30 sec at API</a></li>
 
-			<li><a th:href="${cUrl} + '?loop=500000'" onclick="putLoadingImage();">Loop 0.5M count at API</a></li>
-			<li><a th:href="${cUrl} + '?loop=1500000'" onclick="putLoadingImage();">Loop 1.5M count at API</a></li>
-			<li class="li-spacing"><a th:href="${cUrl} + '?loop=3000000'" onclick="putLoadingImage();">Loop 3.0M count at API</a></li>
+			<li><a th:href="${cUrl} + '?loop=5'" onclick="putLoadingImage();">Loop 5 sec at API</a></li>
+			<li><a th:href="${cUrl} + '?loop=15'" onclick="putLoadingImage();">Loop 15 sec at API</a></li>
+			<li class="li-spacing"><a th:href="${cUrl} + '?loop=30'" onclick="putLoadingImage();">Loop 30 sec at API</a></li>
 
 			<li><a th:href="${cUrl} + '?error=true'">Cause 5xx error at API</a></li>
 		</ol>
