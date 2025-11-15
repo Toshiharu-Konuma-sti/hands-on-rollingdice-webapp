@@ -1,66 +1,66 @@
-# ハンズオン用 Rolling dice Web アプリケーション
+# Rolling Dice Web Application for Hands-on
 
-DevOps（CI/CD、オブザーバビリティー）をはじめとする各種ハンズオンでアプリケーションレイヤーで利用する Web アプリケーションです。
+This is a web application used at the application layer for various hands-on workshops, including DevOps (CI/CD, Observability).
 
-## 前提条件 (Prerequisites)
+## Prerequisites
 
-ローカル環境で実行するためには、以下のツールがインストールされている必要があります。
+To run this application in your local environment, you must have the following tools installed.
 
-- Git
-  - リポジトリをクローンするために使用します。
-- Docker / Docker Desktop
-  - mysql を含むアプリケーションコンテナの起動・管理に必須です。
-- Java (JDK) (例: 17 以上)
-  - webui および webapi のビルドや、ローカルでの起動に必要です。
-- Webブラウザ または curl
-  - webui や webapi の動作確認で使用します。
-- テキストエディタ
-  - ソースコードの改良・編集に使用します（例: Visual Studio Code, IntelliJ IDEA, Vim など）。
+- **Git**
+  - Used to clone the repository.
+- **Docker / Docker Desktop**
+  - Required to run and manage application containers, including `mysql`.
+- **Java (JDK)** (e.g., 17 or higher)
+  - Needed to build `webui` and `webapi`, and to run them locally.
+- **Web Browser or curl**
+  - Used to check the operation of `webui` and `webapi`.
+- **Text Editor**
+  - Used to modify and edit source code (e.g., Visual Studio Code, IntelliJ IDEA, Vim, etc.).
 
-## 技術スタック
+## Technology Stack
 
-Web アプリケーションは、以下の技術スタックで構成されています。
+This web application consists of the following technology stack.
 
-### 🖥️ webui (プレゼンテーション層)
+### 🖥️ webui (Presentation Layer)
 
-ユーザーがブラウザでアクセスするフロントエンドのWebアプリケーションです。webapi を呼び出し、結果をHTMLとしてレンダリングします。
+A front-end web application that users access via a browser. It calls the `webapi` and renders the results as HTML.
 
-- 言語: Java
-- フレームワーク: Spring Boot
-- 主なライブラリ:
-  - Spring Web (Webアプリケーション機能)
-  - Thymeleaf (テンプレートエンジン)
-  - Spring Boot Actuator (オブザーバビリティ用エンドポイント)
+- **Language**: Java
+- **Framework**: Spring Boot
+- **Key Libraries**:
+  - Spring Web (Web application features)
+  - Thymeleaf (Template engine)
+  - Spring Boot Actuator (Observability endpoints)
 
-### ⚙️ webapi (アプリケーション層)
+### ⚙️ webapi (Application Layer)
 
-webui から呼び出されるバックエンドのREST APIです。ビジネスロジック（サイコロを振る、履歴の管理）を担当します。
+A back-end REST API called by `webui`. It handles business logic (rolling the dice, managing history).
 
-- 言語: Java
-- フレームワーク: Spring Boot
-- 主なライブラリ:
-  - Spring Web (REST API機能)
-  - Spring Data JPA (データベースアクセス)
-  - Spring Boot Actuator (オブザーバビリティ用エンドポイント)
-  - MySQL Connector (DBドライバ)
+- **Language**: Java
+- **Framework**: Spring Boot
+- **Key Libraries**:
+  - Spring Web (REST API features)
+  - Spring Data JPA (Database access)
+  - Spring Boot Actuator (Observability endpoints)
+  - MySQL Connector (DB driver)
 
-### 🗄️ Database (データ層)
+### 🗄️ Database (Data Layer)
 
-webapi が処理したサイコロの出目履歴を永続化します。
+Persists the dice roll history processed by the `webapi`.
 
-- データベース: MySQL (8.0)
+- **Database**: MySQL (8.0)
 
-### 🛠️ ビルド・実行環境
+### 🛠️ Build & Runtime Environment
 
-これらのコンポーネントをビルドし、コンテナとして実行します。
+Builds these components and runs them as containers.
 
-- ビルドツール: Gradle
-- コンテナ: Docker
-- ユーティリティ: Shell Script (各種操作の自動化用)
+- **Build Tool**: Gradle
+- **Container**: Docker
+- **Utility**: Shell Script (For automating various operations)
 
-## Web アプリケーション構成
+## Web Application Architecture
 
-Web アプリケーションを構成する各コンポーネントの関係性をシーケンス図で示します。
+The sequence diagram below shows the relationships between the components of this web application.
 
 ```mermaid
 sequenceDiagram
@@ -115,19 +115,19 @@ sequenceDiagram
     deactivate webui
 ```
 
-## ソースコード改良手順
+## How to Modify the Source Code
 
-機能変更やバグ修正などでソースコードを改良したくなった場合の手順を案内します。
+This section guides you through the steps to modify the source code for feature changes or bug fixes.
 
-### Web アプリケーションの起動
+### Start the Web Application
 
-リポジトリのルートディレクトリでスクリプトを実行して、各コンポーネントの実態となる全てのコンテナを起動します。
+Run the script in the root directory of the repository to start all containers for each component.
 
 ```
 $ ./CREATE_CONTAINER.sh
 ```
 
-スクリプトが終了したら全てのコンテナが起動したことを確認します。
+After the script finishes, verify that all containers are running.
 
 ```
 $ ./CREATE_CONTAINER.sh list
@@ -152,23 +152,25 @@ $ ./CREATE_CONTAINER.sh info
  ***********************************************************/
 ```
 
-### 改良対象のコンポーネントを停止
+### Stop the Target Component
 
-docker コマンドで改良対象のコンテナを停止します。手順では webapi を改良するケースを示しますが、webui を改良する場合は、webapi を webui に差し替えます。
+Stop the container you want to modify using the `docker stop` command. This example shows how to modify `webapi`. If you want to modify `webui`, replace `webapp-webapi` with `webapp-webui`.
 
 ```
 $ cd webapi/
 $ docker stop webapp-webapi
 ```
 
-### ソースコードを改良
+### Modify the Source Code
 
-機能を改良したいソースコードを改良します。コマンド例では「WebApiServiceImpl.java」を改良しています。
+Modify the source code you want to improve. The command example shows modifying "WebApiServiceImpl.java".
+
 ```
 $ vim src/main/java/jp/sios/apisl/handson/rollingdice/webapp/webapi/service/WebApiServiceImpl.java
 ```
 
-ビルドして構文エラーが無いことを確認します。
+Build the code to confirm there are no syntax errors.
+
 ```
 $ ./gradlew assemble
  :
@@ -177,9 +179,10 @@ BUILD SUCCESSFUL in 33s
 Configuration cache entry stored.
 ```
 
-### 改良したコンポーネントを起動
+### Run the Modified Component
 
-用意してある起動用スクリプトを使って起動します。
+Use the provided startup script to run it locally.
+
 ```
 $ ./RUN.sh
  :
@@ -200,17 +203,13 @@ Test URL:
 > :bootRun
 ```
 
-起動用スクリプト実行直後に表示される URL へアクセスして動作を確認します。確認が終了したら [ctrl] + [c] で終了します。
+Access the URL displayed immediately after running the script to verify its behavior. Press [Ctrl] + [C] to stop when finished.
 
+### Restart the Modified Component as a Container
 
-### 改良したコンポーネントをコンテナで再起動
-
-ルートディレクトリに戻り、改良したコンポーネントをリビルドして起動しなおします。
+Return to the root directory, rebuild the modified component, and restart it.
 
 ```
 $ cd ..
 $ ./CREATE_CONTAINER.sh rebuild webapp-webapi
 ```
-
-
-
