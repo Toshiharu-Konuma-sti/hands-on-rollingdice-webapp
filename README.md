@@ -1,4 +1,4 @@
-# Rolling Dice Web Application for Hands-on
+# Rolling Dice Web Application for Hands-on workshops
 
 This is a web application used at the application layer for various hands-on workshops, including DevOps (CI/CD, Observability).
 
