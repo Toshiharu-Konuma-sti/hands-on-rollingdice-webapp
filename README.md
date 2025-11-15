@@ -67,7 +67,7 @@ sequenceDiagram
     actor User
     participant webui
     participant webapi
-    participant Database(mysql)
+    participant Database
 
     User->>webui: http://localhost:8181/
     Note right of User: Query String<br>- sleep: milliseconds to sleep<br>- loop: number of times to loop<br>- error: flag to cause HTTP status error
