@@ -59,7 +59,9 @@ sequenceDiagram
     deactivate webui
 ```
 
-## 改修手順
+## ソースコード改良手順
+
+機能変更やバグ修正などでソースコードを改良したくなった場合の手順を案内します。
 
 ### Web アプリケーションの起動
 
@@ -94,18 +96,18 @@ $ ./CREATE_CONTAINER.sh info
  ***********************************************************/
 ```
 
-### 改修対象のコンポーネントを停止
+### 改良対象のコンポーネントを停止
 
-docker コマンドで改修対象のコンテナを停止します。手順では webapi を改修するケースを示しますが、webui を改修する場合は、webapi を webui に差し替えます。
+docker コマンドで改良対象のコンテナを停止します。手順では webapi を改良するケースを示しますが、webui を改良する場合は、webapi を webui に差し替えます。
 
 ```
 $ cd webapi/
 $ docker stop webapp-webapi
 ```
 
-### ソースコードを改修
+### ソースコードを改良
 
-機能を改良したいソースコードを改修します。コマンド例では「WebApiServiceImpl.java」を改修しています。
+機能を改良したいソースコードを改良します。コマンド例では「WebApiServiceImpl.java」を改良しています。
 ```
 $ vim src/main/java/jp/sios/apisl/handson/rollingdice/webapp/webapi/service/WebApiServiceImpl.java
 ```
@@ -119,7 +121,7 @@ BUILD SUCCESSFUL in 33s
 Configuration cache entry stored.
 ```
 
-### 改修したコンポーネントを起動
+### 改良したコンポーネントを起動
 
 用意してある起動用スクリプトを使って起動します。
 ```
@@ -145,9 +147,9 @@ Test URL:
 起動用スクリプト実行直後に表示される URL へアクセスして動作を確認します。確認が終了したら [ctrl] + [c] で終了します。
 
 
-### 改修したコンポーネントをコンテナで再起動
+### 改良したコンポーネントをコンテナで再起動
 
-ルートディレクトリに戻り、改修したコンポーネントをリビルドして起動しなおします。
+ルートディレクトリに戻り、改良したコンポーネントをリビルドして起動しなおします。
 
 ```
 $ cd ..
