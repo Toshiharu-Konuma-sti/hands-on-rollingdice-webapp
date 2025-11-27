@@ -9,5 +9,7 @@
 			<li><a th:href="${cUrl} + '?loop=15'" onclick="putLoadingImage();">Loop 15 sec at API</a></li>
 			<li class="li-spacing"><a th:href="${cUrl} + '?loop=30'" onclick="putLoadingImage();">Loop 30 sec at API</a></li>
 
-			<li><a th:href="${cUrl} + '?error=true'">Cause 5xx error at API</a></li>
+			<li class="li-spacing"><a th:href="${cUrl} + '?error=true'">Cause 5xx error at API</a></li>
+
+			<li><a href="#" id="simulate-error-link">Cause JS error at Browser</a></li>
 		</ol>
