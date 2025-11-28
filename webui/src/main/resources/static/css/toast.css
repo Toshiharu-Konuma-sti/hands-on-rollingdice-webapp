@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 /* トースト通知のコンテナ */
 #toast {
 	visibility: hidden; /* デフォルトは非表示 */
