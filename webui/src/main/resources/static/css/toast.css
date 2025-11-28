@@ -1,0 +1,28 @@
+/* トースト通知のコンテナ */
+#toast {
+	visibility: hidden; /* デフォルトは非表示 */
+	min-width: 300px;   /* 少し幅を広げました */
+	background-color: #333; /* 背景色（ダークグレー） */
+	color: #fff;        /* 文字色（白） */
+	text-align: center;
+	border-radius: 8px; /* 角丸を少し強めに */
+	padding: 20px;      /* 余白を広めに */
+    
+	/* --- 画面中央への配置設定 --- */
+	position: fixed;
+	z-index: 9999;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%); /* 要素の中心を画面の中心に合わせる */
+
+	font-size: 16px;    /* 文字を少し大きく */
+	opacity: 0;
+	transition: opacity 0.5s; /* フェードイン・アウトのみ */
+	box-shadow: 0 4px 15px rgba(0,0,0,0.3); /* 少し影をつけて浮き上がらせる */
+}
+
+/* 表示時のクラス */
+#toast.show {
+	visibility: visible;
+	opacity: 1;
+}
