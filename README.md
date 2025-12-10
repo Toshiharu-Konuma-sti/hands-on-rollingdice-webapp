@@ -60,6 +60,8 @@ Builds these components and runs them as containers.
 
 ## Web Application Architecture
 
+### Sequence Diagram
+
 The sequence diagram below shows the relationships between the components of this web application.
 
 ```mermaid
@@ -114,6 +116,50 @@ sequenceDiagram
 
     deactivate webui
 ```
+
+### Project Initialization
+
+The application skeletons for both WebUI and WebAPI were generated using [Spring Initializr](https://start.spring.io/) with the following configurations:
+
+#### Spring Initializr Settings
+
+| Item | webapp-webui | webapp-webapi |
+| :--- | :--- | :--- |
+| **Project** | Gradle - Groovy | Gradle - Groovy |
+| **Language** | Java | Java |
+| **Spring Boot** | 3.4.3 | 3.4.3 |
+| **Group** | jp.sios | jp.sios |
+| **Artifact** | apisl.handson.grafana.webapp.webui | apisl.handson.grafana.webapp.webapi |
+| **Packaging** | Jar | Jar |
+| **Java** | 21 | 21 |
+| **Dependencies** | Spring Web<br>Spring Boot DevTools<br>OTLP for metrics<br>Spring Boot Actuator<br>Thymeleaf | Spring Web<br>Spring Boot DevTools<br>OTLP for metrics<br>Spring Boot Actuator<br>MySQL Driver<br>JDBC API |
+
+#### Additional Libraries
+
+In addition to the dependencies configured via Spring Initializr, the following Java libraries are manually added to `build.gradle`:
+
+**Common (webapp-webui & webapp-webapi):**
+
+* `implementation 'org.springframework.boot:spring-boot-starter-actuator'`
+    * Exposes health check endpoints at `http://{spring-boot:port}/actuator` for metrics.
+* `runtimeOnly 'io.micrometer:micrometer-registry-otlp'`
+    * Enables sending metrics via OTLP through Micrometer.
+* `runtimeOnly 'io.micrometer:micrometer-registry-prometheus'`
+    * Enables scraping metrics via Prometheus through Micrometer.
+* `implementation 'io.micrometer:micrometer-tracing-bridge-otel'`
+    * Enables Exemplars to attach Trace IDs and Span IDs to `http_server_requests_seconds_bucket` metrics.
+* `implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'`
+    * Enables sending logs and traces via OTLP.
+
+**webapp-webui only:**
+
+* `implementation 'org.json:json'`
+    * Used to parse JSON strings and handle them as objects.
+
+**webapp-webapi only:**
+
+* `implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui'`
+    * Generates documentation in OpenAPI specification format directly from the source code.
 
 ## How to Modify the Source Code
 
