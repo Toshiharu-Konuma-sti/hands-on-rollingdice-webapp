@@ -1,13 +1,12 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webapi.controller;
 
-import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
@@ -37,14 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/dice/v1")
-@OpenAPIDefinition(
-    info = @Info(
-        title = "Dice Rolling API",
-        version = "0.0.1",
-        description = "このAPIは、サイコロを振る機能とその履歴を閲覧する機能を提供します。"
-            + "<br>ハンズオンやデモでの利用を想定しています。"
-    )
-)
+@Tag(name = "web-api-controller")
 @SuppressWarnings("PMD.CommentSize")
 public class WebApiController {
 
