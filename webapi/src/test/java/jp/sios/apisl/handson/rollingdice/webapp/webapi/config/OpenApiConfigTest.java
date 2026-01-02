@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import io.swagger.v3.oas.models.OpenAPI;
-import io.swagger.v3.oas.models.info.Info;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +16,11 @@ import org.junit.jupiter.api.Test;
 class OpenApiConfigTest {
 
   /**
+   * テスト対象のメソッドから返却されるOpenAPIインスタンス.
+   */
+  private OpenAPI result;
+
+  /**
    * OpenApiConfigTestのコンストラクタです。
    * このクラスのテストインスタンスを初期化します。.
    */
@@ -23,27 +28,35 @@ class OpenApiConfigTest {
     // Constructor for WebApiServiceImplTest
   }
 
-  @Test
-  @DisplayName("customOpenApiメソッドが期待通りの設定値を持つOpenAPIオブジェクトを返却すること")
-  @SuppressWarnings("PMD.LawOfDemeter")
-  void testCustomOpenApi() {
-
+  /**
+   * 各テストメソッド実行前のセットアップを行います.
+   * テスト対象クラスをインスタンス化し、検証対象のOpenAPIオブジェクトを生成します。
+   */
+  @BeforeEach
+  void setUp() {
     // 1. テスト対象クラスのインスタンス化
-    // (これでコンストラクタのカバレッジも通ります)
     final OpenApiConfig config = new OpenApiConfig();
+    // 2. メソッドの実行結果をフィールドに保持
+    this.result = config.customOpenApi();
+  }
 
-    // 2. メソッドの実行
-    final OpenAPI result = config.customOpenApi();
+  @Test
+  @DisplayName("customOpenApiメソッドがnullではないOpenAPIオブジェクトを返却すること")
+  void testResultIsNotNull() {
+    assertNotNull(this.result, "OpenAPIインスタンスがnullであってはなりません");
+  }
 
-    // 3. 検証 (Assertions)
+  @Test
+  @DisplayName("OpenAPIオブジェクトにInfoセクションが含まれていること")
+  void testInfoSectionIsNotNull() {
+    assertNotNull(result.getInfo(), "Infoセクションがnullであってはなりません");
+  }
 
-    // OpenAPIオブジェクト自体の検証
-    assertNotNull(result, "OpenAPIインスタンスがnullであってはなりません");
-
-    // Infoセクションの検証
-    final Info info = result.getInfo();
-    assertNotNull(info, "Infoセクションがnullであってはなりません");
-    assertEquals("Dice Rolling API", info.getTitle(), "タイトルが期待値と一致すること");
+  @Test
+  @DisplayName("Infoセクションのタイトルが期待値と一致すること")
+  @SuppressWarnings("PMD.LawOfDemeter")
+  void testTitleIsCorrect() {
+    assertEquals("Dice Rolling API", result.getInfo().getTitle(), "タイトルが期待値と一致すること");
   }
 
 }
