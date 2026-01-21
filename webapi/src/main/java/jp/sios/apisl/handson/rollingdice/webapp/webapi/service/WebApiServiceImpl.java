@@ -80,23 +80,26 @@ public class WebApiServiceImpl implements WebApiService {
    * 指定されたパラメータに基づき、スリープやループ処理、エラー発生処理を行います。
    * エラーが発生した場合はHTTP 500（INTERNAL_SERVER_ERROR）を返却し、
    * 正常時はサイコロの出目（1～6）をHTTP 200（OK）で返却します。
+   * なお、リクエストボディーで値が指定された場合は、サイコロの出目にその値を使用します。
    * </p>
    *
    * @param optSleep スリープ時間（秒）を表すオプションの整数
    * @param optLoop  ループ時間（秒）を表すオプションの整数
    * @param optError エラー発生有無を表すオプションの真偽値
+   * @param fixedValue サイコロの出目を強制するオプションの整数
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
   @Override
   public ResponseEntity<String> rollDice(
       final Optional<Integer> optSleep, 
       final Optional<Integer> optLoop, 
-      final Optional<Boolean> optError) {
+      final Optional<Boolean> optError,
+      final Optional<Integer> fixedValue) {
 
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
-        "The received parameters are: sleep='{}', loop='{}' and error='{}'", 
-        optSleep, optLoop, optError);
+        "The received parameters are: sleep='{}', loop='{}', error='{}' and fixedValue='{}'", 
+        optSleep, optLoop, optError, fixedValue);
 
     this.sleep(optSleep);
     this.loop(optLoop);
@@ -107,7 +110,13 @@ public class WebApiServiceImpl implements WebApiService {
       return new ResponseEntity<>("0", HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    final int value = this.roll();
+    final int value;
+    if (fixedValue.isPresent()) {
+      value = fixedValue.get();
+      LOGGER.info("The fixed value of dice is: '{}'", value);
+    } else {
+      value = this.roll();
+    }
     this.insertDice(value);
     return new ResponseEntity<>(String.valueOf(value), HttpStatus.OK);
   }

@@ -82,7 +82,7 @@ public class WebUiController {
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info("The received request parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
 
-    final String dice = this.service.callRollDiceApi(optSleep, optLoop, optError);
+    final String dice = this.service.callRollDiceApi(optSleep, optLoop, optError, Optional.empty());
     final JSONArray diceList = this.service.callListDiceApi();
     final String currentUrl = this.service.getCurrentUrl(request);
 

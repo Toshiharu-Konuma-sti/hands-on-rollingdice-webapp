@@ -60,12 +60,13 @@ class WebUiControllerTest {
     final Optional<String> optSleep = Optional.of("1000");
     final Optional<String> optLoop = Optional.of("5");
     final Optional<String> optError = Optional.of("false");
+    final Optional<Integer> optFixedValue = Optional.empty();
 
     final String mockDice = "6";
     final JSONArray mockDiceList = new JSONArray("[1, 2, 3, 4, 5, 6]");
     final String mockCurrentUrl = "http://localhost:8080";
 
-    when(service.callRollDiceApi(optSleep, optLoop, optError)).thenReturn(mockDice);
+    when(service.callRollDiceApi(optSleep, optLoop, optError, optFixedValue)).thenReturn(mockDice);
     when(service.callListDiceApi()).thenReturn(mockDiceList);
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
     when(service.getCurrentUrl(request)).thenReturn(mockCurrentUrl);
@@ -79,7 +80,7 @@ class WebUiControllerTest {
     assertEquals(mockDiceList, result.getModel().get("list"), "Dice list should match the mockDiceList");
     assertEquals(mockCurrentUrl, result.getModel().get("cUrl"), "Current URL should match the mockCurrentUrl");
 
-    verify(service).callRollDiceApi(optSleep, optLoop, optError);
+    verify(service).callRollDiceApi(optSleep, optLoop, optError, optFixedValue);
     verify(service).callListDiceApi();
     verify(service).getCurrentUrl(request);
   }

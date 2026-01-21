@@ -4,11 +4,15 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceRequest;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -70,24 +74,35 @@ public class WebUiServiceImpl implements WebUiService {
    * @param optSleep スリープ時間（秒）を表すオプショナルな文字列
    * @param optLoop  ループ時間（秒）を表すオプショナルな文字列
    * @param optError エラー発生を示すオプショナルな文字列
+   * @param fixedValue サイコロの出目を強制するオプションの整数
    * @return APIからのレスポンスボディ（文字列）
    */
   @Override
   public String callRollDiceApi(
-      final Optional<String> optSleep, final Optional<String> optLoop,  final Optional<String> optError) {
+      final Optional<String> optSleep,
+      final Optional<String> optLoop,
+      final Optional<String> optError,
+    final Optional<Integer> fixedValue) {
     UtilEnvInfo.logStartClassMethod();
-    LOGGER.info("The received request parameters are: sleep='{}', loop='{}' and error='{}'", optSleep, optLoop, optError);
+    LOGGER.info("The received request parameters are: sleep='{}', loop='{}', error='{}' and fixedValue='{}' ", optSleep, optLoop, optError, fixedValue);
 
     final List<String> paramList = new ArrayList<>();
     optSleep.ifPresent(sleep -> paramList.add("sleep=" + sleep));
     optLoop.ifPresent(loop -> paramList.add("loop=" + loop));
     optError.ifPresent(error -> paramList.add("error=" + error));
+
     String path = "/api/dice/v1/roll";
     if (!paramList.isEmpty()) {
       path += "?" + String.join("&", paramList);
     }
 
-    return this.callApi(path, "0");
+    DiceRequest requestBody = null;
+    if (fixedValue.isPresent()) {
+      requestBody = new DiceRequest(fixedValue.get());
+      LOGGER.info("The request body to send to the API is: '{}'", requestBody);
+    }
+
+    return this.callApi(path, HttpMethod.POST, requestBody, "0");
   }
   // }}}
 
@@ -106,7 +121,7 @@ public class WebUiServiceImpl implements WebUiService {
     UtilEnvInfo.logStartClassMethod();
 
     final String path = "/api/dice/v1/list";
-    final String body = this.callApi(path, "");
+    final String body = this.callApi(path, HttpMethod.GET, null, "");
 
     final JSONArray jsonList = new JSONArray(body);
     LOGGER.info("The object converted to json is {}", jsonList);
@@ -120,18 +135,28 @@ public class WebUiServiceImpl implements WebUiService {
    * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。.
    *
    * @param path APIのエンドポイントパス
+   * @param method HTTPメソッド (GET, POSTなど)
+   * @param requestBody 送信するボディ (ない場合はnull)
    * @param defaultBody APIリクエストで例外発生時に返すデフォルトのレスポンスボディ
    * @return APIから取得したレスポンスボディの文字列。例外発生時はdefaultBodyを返します。
    */
-  private String callApi(final String path, final String defaultBody) {
+  private String callApi(
+      final String path,
+      final HttpMethod method,
+      final Object requestBody,
+      final String defaultBody) {
     UtilEnvInfo.logStartClassMethod();
 
     final String url = "http://" + this.webapiHost + path;
-    LOGGER.info("The URL to call the API is: '{}'", url);
+    LOGGER.info("Calling API is: URL='{}', Method='{}', Body='{}'", url, method, requestBody);
 
     String body = defaultBody;
     try {
-      body = this.restClient.get().uri(url).retrieve().body(String.class);
+      var requestSpec = this.restClient.method(method).uri(url);
+      if (requestBody != null) {
+        requestSpec.contentType(MediaType.APPLICATION_JSON).body(requestBody);
+      }
+      body = requestSpec.retrieve().body(String.class);
       LOGGER.info("The value recieved from the rolldice api is: '{}'", body);
     } catch (HttpClientErrorException | HttpServerErrorException ex) {
       LOGGER.error("!!! Could not get a response from the API, because an exception was happened !!!", ex);

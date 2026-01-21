@@ -25,7 +25,7 @@ public interface WebUiService {
    * @return APIからのレスポンスボディ（文字列）
    */
   String callRollDiceApi(
-      Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError);
+      Optional<String> optSleep, Optional<String> optLoop, Optional<String> optError, Optional<Integer> fixedValue);
 
   /**
    * Dice APIのリスト取得エンドポイントを呼び出し、結果をJSONArrayとして返します。.

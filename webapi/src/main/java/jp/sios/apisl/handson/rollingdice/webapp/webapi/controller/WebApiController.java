@@ -10,13 +10,18 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
+
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceRequest;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -66,21 +71,26 @@ public class WebApiController {
   /**
    * サイコロを振る処理を実行します。.
    *
-   * <p>リクエストパラメータとして、sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）を受け取ります。
-   * これらのパラメータに基づき、サービス層でサイコロの値を生成し、結果をレスポンスとして返却します。
+   * <p>リクエストパラメータとして、sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）
+   * を受け取り処理の流れを制御します。
+   * ボディーに値が指定されている場合は値を採用し、指定がなければサイコロを振り、
+   * 結果をレスポンスとして返却します。
    * </p>
    *
    * @param request   HTTPリクエスト情報
+   * @param requestBody サイコロの値を強制する場合に使用するリクエストボディ
    * @param optSleep  サイコロ処理前に意図的に遅延させる待機時間（秒、オプション）
    * @param optLoop   サイコロ処理前に意図的に遅延させるループ時間（秒、オプション）
    * @param optError  エラー発生フラグ（オプション）
    * @return サイコロの出目（1～6の整数値）を含むResponseEntity
    */
-  @GetMapping({"/roll"})
+  @PostMapping({"/roll"})
   @Operation(summary = "サイコロを振ります。", 
       description = "リクエストパラメータとして、"
-          + "sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）を受け取ります。"
-          + "これらのパラメータに基づき、サイコロの値を生成し、結果をレスポンスとして返却します。")
+          + "sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）"
+          + "を受け取り処理の流れを制御します。"
+          + "ボディーに値が指定されている場合は値を採用し、指定がなければサイコロを振り、"
+          + "結果をレスポンスとして返却します。")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "サイコロの出目（1～6の整数値）",
           content = @Content(mediaType = "text/plain",
@@ -90,6 +100,8 @@ public class WebApiController {
   })
   public ResponseEntity<String> rollDice(
       final HttpServletRequest request,
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "サイコロの値を強制する場合に使用", required = false)
+      @RequestBody(required = false) @Validated final DiceRequest requestBody,
       @Parameter(description = "処理を意図的に遅延させる時間（秒）", example = "10")
       @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,
       @Parameter(description = "処理を意図的に遅延させるループ時間（秒）", example = "15")
@@ -100,10 +112,15 @@ public class WebApiController {
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
-        "The received parameters are: sleep='{}', loop='{}' and error='{}'",
-        optSleep, optLoop, optError);
+        "The received parameters are: body='{}', sleep='{}', loop='{}' and error='{}'",
+        requestBody, optSleep, optLoop, optError);
 
-    final ResponseEntity<String> entity = service.rollDice(optSleep, optLoop, optError);
+    Optional<Integer> fixedValue = Optional.empty();
+    if (requestBody != null && requestBody.value() != null) {
+      fixedValue = Optional.of(requestBody.value());
+    }
+
+    final ResponseEntity<String> entity = service.rollDice(optSleep, optLoop, optError, fixedValue);
 
     UtilEnvInfo.logFinishRequest(request);
     return entity;

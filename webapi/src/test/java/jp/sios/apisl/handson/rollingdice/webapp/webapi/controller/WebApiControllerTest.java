@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceRequest;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,20 +77,21 @@ class WebApiControllerTest {
     final Optional<Integer> optSleep = Optional.of(1000);
     final Optional<Integer> optLoop = Optional.of(5);
     final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
     final String mockDice = "6";
     final ResponseEntity<String> mockResponse = ResponseEntity.ok(mockDice);
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
-    when(service.rollDice(optSleep, optLoop, optError)).thenReturn(mockResponse);
+    when(service.rollDice(optSleep, optLoop, optError, optFixedValue)).thenReturn(mockResponse);
 
     // Act
     final ResponseEntity<String> response = controller.rollDice(
-        request, optSleep, optLoop, optError);
+        request, null, optSleep, optLoop, optError);
 
     // Assert
     assertEquals(mockDice, response.getBody(), 
         "The response body should match the expected dice value");
-    verify(service, times(1)).rollDice(optSleep, optLoop, optError);
+    verify(service, times(1)).rollDice(optSleep, optLoop, optError, optFixedValue);
   }
 
   @Test

@@ -7,12 +7,14 @@ import static org.mockito.Mockito.mockStatic;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
 import static org.springframework.test.web.client.response.MockRestResponseCreators.withSuccess;
+import static org.springframework.test.web.client.response.MockRestResponseCreators.withServerError;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.json.JSONArray;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.http.HttpMethod;
@@ -71,7 +73,7 @@ class WebUiServiceImplTest {
     final RestClient.Builder restClientBuilder = RestClient.builder();
     final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     mockServer.expect(requestTo(testUrl))
-        .andExpect(method(HttpMethod.GET))
+        .andExpect(method(HttpMethod.POST))
         .andRespond(withSuccess().body(testResponse));
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
@@ -79,8 +81,9 @@ class WebUiServiceImplTest {
     final Optional<String> optSleep = Optional.empty();
     final Optional<String> optLoop = Optional.empty();
     final Optional<String> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final String response = webUiService.callRollDiceApi(optSleep, optLoop, optError);
+    final String response = webUiService.callRollDiceApi(optSleep, optLoop, optError, optFixedValue);
 
     assertNotNull(response, "response should not be null");
     assertEquals(testResponse, response, "response should match the expected testResponse");
@@ -96,7 +99,7 @@ class WebUiServiceImplTest {
     final RestClient.Builder restClientBuilder = RestClient.builder();
     final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     mockServer.expect(requestTo(testUrl))
-        .andExpect(method(HttpMethod.GET))
+        .andExpect(method(HttpMethod.POST))
         .andRespond(withSuccess().body(testResponse));
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
@@ -104,8 +107,9 @@ class WebUiServiceImplTest {
     final Optional<String> optSleep = Optional.of("1000");
     final Optional<String> optLoop = Optional.of("5");
     final Optional<String> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final String response = webUiService.callRollDiceApi(optSleep, optLoop, optError);
+    final String response = webUiService.callRollDiceApi(optSleep, optLoop, optError, optFixedValue);
 
     assertNotNull(response, "response should not be null");
     assertEquals(testResponse, response, "response should match the expected testResponse");
@@ -120,14 +124,14 @@ class WebUiServiceImplTest {
     final MockRestServiceServer mockServer = MockRestServiceServer.bindTo(restClientBuilder).build();
     // return a server error
     mockServer.expect(requestTo(testUrl))
-        .andExpect(method(HttpMethod.GET))
+        .andExpect(method(HttpMethod.POST))
         .andRespond(withServerError());
 
     this.restClient = restClientBuilder.build();
     this.webUiService = new WebUiServiceImpl(this.restClient);
 
     final String response = webUiService.callRollDiceApi(
-        Optional.empty(), Optional.empty(), Optional.empty());
+        Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty());
 
     assertNotNull(response, "response should not be null when API returns server error");
     assertEquals("0", response, "response should be '0' when API returns server error");

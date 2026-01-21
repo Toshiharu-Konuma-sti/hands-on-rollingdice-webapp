@@ -71,8 +71,9 @@ class WebApiServiceImplTest {
     final Optional<Integer> optSleep = Optional.empty();
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
 
     assertThat(response.getStatusCode()).as("Status code should be 200 on success").isEqualTo(HttpStatus.OK);
     assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6").isBetween(1, 6);
@@ -83,8 +84,9 @@ class WebApiServiceImplTest {
     final Optional<Integer> optSleep = Optional.of(3);
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
 
     assertThat(response.getStatusCode()).as("Status code should be 200 when sleep parameter is provided").isEqualTo(HttpStatus.OK);
     assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when sleep parameter is provided").isBetween(1, 6);
@@ -95,8 +97,9 @@ class WebApiServiceImplTest {
     final Optional<Integer> optSleep = Optional.of(-3);
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
 
     assertThat(response.getStatusCode()).as("Status code should be 200 when invalid sleep parameter is provided").isEqualTo(HttpStatus.OK);
     assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when invalid sleep parameter is provided").isBetween(1, 6);
@@ -107,8 +110,9 @@ class WebApiServiceImplTest {
     final Optional<Integer> optSleep = Optional.empty();
     final Optional<Integer> optLoop = Optional.of(3);
     final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
 
     assertThat(response.getStatusCode()).as("Status code should be 200 when loop parameter is provided").isEqualTo(HttpStatus.OK);
     assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when loop parameter is provided").isBetween(1, 6);
@@ -119,8 +123,9 @@ class WebApiServiceImplTest {
     final Optional<Integer> optSleep = Optional.empty();
     final Optional<Integer> optLoop = Optional.of(-3);
     final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
 
     assertThat(response.getStatusCode()).as("Status code should be 200 when invalid loop parameter is provided").isEqualTo(HttpStatus.OK);
     assertThat(Integer.parseInt(response.getBody())).as("Dice value should be between 1 and 6 when invalid loop parameter is provided").isBetween(1, 6);
@@ -131,8 +136,9 @@ class WebApiServiceImplTest {
     final Optional<Integer> optSleep = Optional.empty();
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.of(true);
+    final Optional<Integer> optFixedValue = Optional.empty();
 
-    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError);
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
 
     assertThat(response.getStatusCode()).as("Status code should be 500 when error parameter is provided").isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR);
     assertThat(response.getBody()).as("Dice value should be 0 when error parameter is provided").isEqualTo("0");
