@@ -95,6 +95,31 @@ class WebApiControllerTest {
   }
 
   @Test
+  void testRollDiceWithRequestBody() {
+    // Arrange
+    final String mockCurrentUrl = "http://localhost:8080";
+    final DiceRequest requestBody = new DiceRequest(4);
+    final Optional<Integer> optSleep = Optional.empty();
+    final Optional<Integer> optLoop = Optional.empty();
+    final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.of(4);
+    final String mockDice = "4";
+    final ResponseEntity<String> mockResponse = ResponseEntity.ok(mockDice);
+
+    when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
+    when(service.rollDice(optSleep, optLoop, optError, optFixedValue)).thenReturn(mockResponse);
+
+    // Act
+    final ResponseEntity<String> response = controller.rollDice(
+        request, requestBody, optSleep, optLoop, optError);
+
+    // Assert
+    assertEquals(mockDice, response.getBody(), 
+        "The response body should match the fixed dice value from request body");
+    verify(service, times(1)).rollDice(optSleep, optLoop, optError, optFixedValue);
+  }
+
+  @Test
   void testListDice() {
     // Arrange
     final String mockCurrentUrl = "http://localhost:8080";
@@ -113,4 +138,5 @@ class WebApiControllerTest {
     assertEquals(3, result.size(), "The result list size should be 3");
     verify(service, times(1)).listDice();
   }
+
 }

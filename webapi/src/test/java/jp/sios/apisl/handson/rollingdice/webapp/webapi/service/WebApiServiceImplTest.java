@@ -145,6 +145,19 @@ class WebApiServiceImplTest {
   }
 
   @Test
+  void testRollDiceWithFixedValue() {
+    final Optional<Integer> optSleep = Optional.empty();
+    final Optional<Integer> optLoop = Optional.empty();
+    final Optional<Boolean> optError = Optional.empty();
+    final Optional<Integer> optFixedValue = Optional.of(4);
+
+    final ResponseEntity<String> response = webApiService.rollDice(optSleep, optLoop, optError, optFixedValue);
+
+    assertThat(response.getStatusCode()).as("Status code should be 200 when fixed value is provided").isEqualTo(HttpStatus.OK);
+    assertThat(response.getBody()).as("Dice value should match the fixed value").isEqualTo("4");
+  }
+
+  @Test
   void testListDice() {
     final String expectedSql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
     final Dice dice1 = new Dice(1, 5, LocalDateTime.now());

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceRequest;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
@@ -100,7 +99,8 @@ public class WebApiController {
   })
   public ResponseEntity<String> rollDice(
       final HttpServletRequest request,
-      @io.swagger.v3.oas.annotations.parameters.RequestBody(description = "サイコロの値を強制する場合に使用", required = false)
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "サイコロの値を強制する場合に使用", required = false)
       @RequestBody(required = false) @Validated final DiceRequest requestBody,
       @Parameter(description = "処理を意図的に遅延させる時間（秒）", example = "10")
       @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,

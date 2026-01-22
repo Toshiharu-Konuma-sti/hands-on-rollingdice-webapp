@@ -10,9 +10,9 @@ import jakarta.validation.constraints.Min;
  * @param value 強制したいサイコロの出目（ボディーが無い場合はnull）
  */
 public record DiceRequest(
-	@Schema(description = "サイコロの指定値", example = "3")
-	@Min(value = 1, message = "サイコロの値は1以上である必要があります")
-	@Max(value = 6, message = "サイコロの値は6以下である必要があります")
-	Integer value
-) {	
+    @Schema(description = "サイコロの指定値", example = "3")
+    @Min(value = 1, message = "サイコロの値は1以上である必要があります")
+    @Max(value = 6, message = "サイコロの値は6以下である必要があります")
+    Integer value
+) {
 }

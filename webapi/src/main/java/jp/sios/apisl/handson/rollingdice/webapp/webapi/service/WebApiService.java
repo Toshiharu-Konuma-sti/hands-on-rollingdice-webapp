@@ -21,7 +21,10 @@ public interface WebApiService {
    * @return サイコロの出目を含むレスポンスエンティティ
    */
   ResponseEntity<String> rollDice(
-       Optional<Integer> optSleep, Optional<Integer> optLoop, Optional<Boolean> optError, Optional<Integer> fixedValue);
+      Optional<Integer> optSleep,
+      Optional<Integer> optLoop,
+      Optional<Boolean> optError,
+      Optional<Integer> fixedValue);
 
   /**
    * サイコロ出目の一覧を取得します。.
