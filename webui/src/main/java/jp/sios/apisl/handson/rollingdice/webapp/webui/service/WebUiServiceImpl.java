@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceRequest;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.slf4j.Logger;
@@ -14,8 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClient;
 
 /**
@@ -82,7 +81,7 @@ public class WebUiServiceImpl implements WebUiService {
       final Optional<String> optSleep,
       final Optional<String> optLoop,
       final Optional<String> optError,
-    final Optional<Integer> fixedValue) {
+      final Optional<Integer> fixedValue) {
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info("The received request parameters are: sleep='{}', loop='{}', error='{}' and fixedValue='{}' ", optSleep, optLoop, optError, fixedValue);
 
@@ -96,13 +95,20 @@ public class WebUiServiceImpl implements WebUiService {
       path += "?" + String.join("&", paramList);
     }
 
-    DiceRequest requestBody = null;
+    DiceDto requestBody = null;
     if (fixedValue.isPresent()) {
-      requestBody = new DiceRequest(fixedValue.get());
+      requestBody = new DiceDto(fixedValue.get());
       LOGGER.info("The request body to send to the API is: '{}'", requestBody);
     }
 
-    return this.callApi(path, HttpMethod.POST, requestBody, "0");
+    final DiceDto response = this.callApi(path, HttpMethod.POST, requestBody, DiceDto.class);
+
+    String returnValue = "0";
+    if (response != null && response.value() != null) {
+      returnValue = String.valueOf(response.value());
+    }
+
+    return returnValue;
   }
   // }}}
 
@@ -121,48 +127,51 @@ public class WebUiServiceImpl implements WebUiService {
     UtilEnvInfo.logStartClassMethod();
 
     final String path = "/api/dice/v1/list";
-    final String body = this.callApi(path, HttpMethod.GET, null, "");
+    final String body = this.callApi(path, HttpMethod.GET, null, String.class);
 
-    final JSONArray jsonList = new JSONArray(body);
-    LOGGER.info("The object converted to json is {}", jsonList);
+    JSONArray jsonList = new JSONArray();
+    if (body != null && !body.isEmpty()) {
+      jsonList = new JSONArray(body);
+      LOGGER.info("The object converted to json is {}", jsonList);
+    }
 
     return jsonList;
   }
   // }}}
 
-  // {{{ private String callApi(String path, String body)
+  // {{{ private <T> T callApi(...)
   /**
    * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。.
    *
    * @param path APIのエンドポイントパス
    * @param method HTTPメソッド (GET, POSTなど)
-   * @param requestBody 送信するボディ (ない場合はnull)
-   * @param defaultBody APIリクエストで例外発生時に返すデフォルトのレスポンスボディ
+   * @param requestBody 送信するボディ (送信するデータが無い場合はnull)
+   * @param responseType レスポンスをマッピングするクラス
    * @return APIから取得したレスポンスボディの文字列。例外発生時はdefaultBodyを返します。
    */
-  private String callApi(
+  private <T> T callApi(
       final String path,
       final HttpMethod method,
       final Object requestBody,
-      final String defaultBody) {
+      final Class<T> responseType) {
     UtilEnvInfo.logStartClassMethod();
 
     final String url = "http://" + this.webapiHost + path;
     LOGGER.info("Calling API is: URL='{}', Method='{}', Body='{}'", url, method, requestBody);
 
-    String body = defaultBody;
+    T response = null;
     try {
       var requestSpec = this.restClient.method(method).uri(url);
       if (requestBody != null) {
         requestSpec.contentType(MediaType.APPLICATION_JSON).body(requestBody);
       }
-      body = requestSpec.retrieve().body(String.class);
-      LOGGER.info("The value recieved from the rolldice api is: '{}'", body);
-    } catch (HttpClientErrorException | HttpServerErrorException ex) {
+      response = requestSpec.retrieve().body(responseType);
+      LOGGER.info("The value recieved from the rolldice api is: '{}'", response);
+    } catch (RestClientException ex) {
       LOGGER.error("!!! Could not get a response from the API, because an exception was happened !!!", ex);
     }
 
-    return body;
+    return response;
   }
   // }}}
 

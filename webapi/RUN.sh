@@ -53,7 +53,7 @@ case "$1" in
 		export SPRING_PROFILES_ACTIVE=dev
 		./gradlew clean
 		# ./gradlew bootRun
-		./gradlew assemble
+		./gradlew assemble -x cyclonedxBom
         java -jar ./build/libs/apisl.handson.rollingdice.webapp.webapi-*-SNAPSHOT.jar --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
 		;;
 	*)

@@ -8,6 +8,19 @@ start_banner()
 }
 # }}}
 
+# {{{ finish_banner()
+# $1: time to start this script
+finish_banner()
+{
+	S_TIME=$1
+	E_TIME=$(date +%s)
+	DURATION=$((E_TIME - S_TIME))
+	echo "############################################################"
+	echo "# FINISH SCRIPT ($DURATION seconds)"
+	echo "############################################################"
+}
+# }}}
+
 # {{{ install_jdk()
 install_jdk()
 {
