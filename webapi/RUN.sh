@@ -10,6 +10,7 @@ Runs this project as a Spring Boot application. Also simplify execution
 of common Gradle tasks.
 
 Options:
+  assemble              Assembles the outputs of this project.
   oas                   Generates the spring doc openapi file and
                         convert from json to html.
   javadoc               (Coming soon!!)
@@ -23,6 +24,11 @@ CUR_DIR=$(cd $(dirname $0); pwd)
 . $CUR_DIR/functions.sh
 
 case "$1" in
+	"assemble")
+		start_banner
+		./gradlew assemble -x cyclonedxBom --info
+		finish_banner $S_TIME
+		;;
 	"oas")
 		start_banner
 		./gradlew generateOpenApiDocs --no-configuration-cache -x cyclonedxBom
