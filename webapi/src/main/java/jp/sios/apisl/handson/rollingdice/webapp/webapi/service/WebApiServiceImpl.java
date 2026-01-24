@@ -8,14 +8,13 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -90,35 +89,30 @@ public class WebApiServiceImpl implements WebApiService {
    * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
    */
   @Override
-  public ResponseEntity<String> rollDice(
+  public DiceDto rollDice(
       final Optional<Integer> optSleep, 
       final Optional<Integer> optLoop, 
       final Optional<Boolean> optError,
-      final Optional<Integer> fixedValue) {
+      final DiceDto fixedDiceRequest) {
 
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
         "The received parameters are: sleep='{}', loop='{}', error='{}' and fixedValue='{}'", 
-        optSleep, optLoop, optError, fixedValue);
+        optSleep, optLoop, optError, fixedDiceRequest);
 
     this.sleep(optSleep);
     this.loop(optLoop);
-    try {
-      this.error(optError);
-    } catch (HandsOnException ex) {
-      LOGGER.error("The exception was happened with error()", ex);
-      return new ResponseEntity<>("0", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    this.error(optError);
 
-    final int value;
-    if (fixedValue.isPresent()) {
-      value = fixedValue.get();
-      LOGGER.info("The fixed value of dice is: '{}'", value);
+    final int resultValue;
+    if (fixedDiceRequest != null && fixedDiceRequest.value() != null) {
+      resultValue = fixedDiceRequest.value();
+      LOGGER.info("The fixed value of dice is: '{}'", resultValue);
     } else {
-      value = this.roll();
+      resultValue = this.roll();
     }
-    this.insertDice(value);
-    return new ResponseEntity<>(String.valueOf(value), HttpStatus.OK);
+    this.insertDice(resultValue);
+    return new DiceDto(resultValue);
   }
   // }}}
 
@@ -136,13 +130,15 @@ public class WebApiServiceImpl implements WebApiService {
             sleepSeconds);
         return;
       }
-      LOGGER.warn("!!! The sleep is: {} seconds !!!", String.format("%.2f", (double) sleepSeconds));
-      final long sleepMillis = sleepSeconds * 1000L;
+      LOGGER.warn("!!! Starting sleep for: {} seconds !!!", String.format("%.2f", (double) sleepSeconds));
       try {
+        final long sleepMillis = sleepSeconds * 1000L;
         Thread.sleep(sleepMillis);
-        LOGGER.warn("!!! The sleep has finnished !!!");
+        LOGGER.warn("!!! Sleep finished !!!");
       } catch (InterruptedException ex) {
         LOGGER.error("The exception was happened with sleep()", ex);
+        Thread.currentThread().interrupt();
+        throw new HandsOnException("Interrupted during sleep", ex);
       }
     });
   }
@@ -164,7 +160,7 @@ public class WebApiServiceImpl implements WebApiService {
       }
 
       final double totalSeconds = loopSeconds;
-      LOGGER.warn("!!! The loop is: {} seconds !!!", String.format("%.2f", totalSeconds));
+      LOGGER.warn("!!! Starting loop for: {} seconds !!!", String.format("%.2f", totalSeconds));
 
       final long durationMillis = loopSeconds * 1000L;
       final long startTime = System.currentTimeMillis();
@@ -192,7 +188,7 @@ public class WebApiServiceImpl implements WebApiService {
         }
       }
       LOGGER.warn(
-          "!!! The loop has finnished !!! (Total executions: {}) : The read text is: '{}'",
+          "!!! Loop finished !!! (Total executions: {}) : The read text is: '{}'",
           String.format("%,d", executionCount), line);
 
     });
@@ -218,14 +214,14 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void error(Optional<Boolean> optError)
-  private void error(final Optional<Boolean> optError) throws HandsOnException {
+  private void error(final Optional<Boolean> optError) {
     UtilEnvInfo.logStartClassMethod();
 
     if (optError.isPresent() && optError.get()) {
       LOGGER.error(
-          "!!! It received a direction to occur an exception: '{}' !!!", 
+          "!!! Intentional exception triggered: '{}' !!!", 
           "HandsOnException");
-      throw new HandsOnException("It received a direction to occur an exception.");
+      throw new HandsOnException("Intentional error triggered by request parameter.");
     }
   }
   // }}}

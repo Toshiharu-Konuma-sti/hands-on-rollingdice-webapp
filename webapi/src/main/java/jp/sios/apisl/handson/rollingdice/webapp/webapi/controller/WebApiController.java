@@ -10,13 +10,13 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceRequest;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,36 +77,32 @@ public class WebApiController {
    * </p>
    *
    * @param request   HTTPリクエスト情報
-   * @param requestBody サイコロの値を強制する場合に使用するリクエストボディ
-   * @param optSleep  サイコロ処理前に意図的に遅延させる待機時間（秒、オプション）
-   * @param optLoop   サイコロ処理前に意図的に遅延させるループ時間（秒、オプション）
-   * @param optError  エラー発生フラグ（オプション）
-   * @return サイコロの出目（1～6の整数値）を含むResponseEntity
+   * @param requestBody サイコロの出目を強制する場合に使用するリクエストボディ
+   * @param optSleep  サイコロを振る前に意図的に遅延させる待機時間（秒、オプション）
+   * @param optLoop   サイコロを振る前に意図的に遅延させるループ時間（秒、オプション）
+   * @param optError  サイコロを振らずにエラーを発生させるフラグ（boolean、オプション）
+   * @return サイコロの出目情報
    */
   @PostMapping({"/roll"})
   @Operation(summary = "サイコロを振ります。", 
-      description = "リクエストパラメータとして、"
-          + "sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）"
-          + "を受け取り処理の流れを制御します。"
-          + "ボディーに値が指定されている場合は値を採用し、指定がなければサイコロを振り、"
-          + "結果をレスポンスとして返却します。")
+      description = "通常はサイコロを振った結果の出目を返却しますが、リクエストボディに出目が指定されている場合には、振らずにその値を出目として採用します。また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "サイコロの出目（1～6の整数値）",
-          content = @Content(mediaType = "text/plain",
-              schema = @Schema(implementation = Integer.class, example = "5"))),
-      @ApiResponse(responseCode = "500", description = "errorパラメータが指定された場合など、サーバ内部でエラーが発生",
+      @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
+          content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = DiceDto.class))),
+      @ApiResponse(responseCode = "500", description = "errorパラメータが指定されて例外が発生、もしくはサーバ内部でエラーが発生",
           content = @Content)
   })
-  public ResponseEntity<String> rollDice(
+  public DiceDto rollDice(
       final HttpServletRequest request,
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
-          description = "サイコロの値を強制する場合に使用", required = false)
-      @RequestBody(required = false) @Validated final DiceRequest requestBody,
-      @Parameter(description = "処理を意図的に遅延させる時間（秒）", example = "10")
+          description = "サイコロの出目を強制したい場合に送信", required = false)
+      @RequestBody(required = false) @Validated final DiceDto requestBody,
+      @Parameter(description = "サイコロを振る前に意図的に遅延させる待機時間（秒）", example = "10")
       @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,
-      @Parameter(description = "処理を意図的に遅延させるループ時間（秒）", example = "15")
+      @Parameter(description = "サイコロを振る前に意図的に遅延させるループ時間（秒）", example = "15")
       @RequestParam(name = "loop", required = false) final Optional<Integer> optLoop,
-      @Parameter(description = "エラー発生フラグ", example = "true")
+      @Parameter(description = "サイコロを振らずにエラーを発生させるフラグ", example = "true")
       @RequestParam(name = "error", required = false) final Optional<Boolean> optError) {
 
     UtilEnvInfo.logStartRequest(request);
@@ -115,15 +111,10 @@ public class WebApiController {
         "The received parameters are: body='{}', sleep='{}', loop='{}' and error='{}'",
         requestBody, optSleep, optLoop, optError);
 
-    Optional<Integer> fixedValue = Optional.empty();
-    if (requestBody != null && requestBody.value() != null) {
-      fixedValue = Optional.of(requestBody.value());
-    }
-
-    final ResponseEntity<String> entity = service.rollDice(optSleep, optLoop, optError, fixedValue);
+    final DiceDto responseDto = service.rollDice(optSleep, optLoop, optError, requestBody);
 
     UtilEnvInfo.logFinishRequest(request);
-    return entity;
+    return responseDto;
   }
   // }}}
 
@@ -138,11 +129,11 @@ public class WebApiController {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @GetMapping({"/list"})
-  @Operation(summary = "サイコロのリストを取得します。", description = "サイコロの出目リストを返却します。")
+  @Operation(summary = "サイコロを振った履歴を一覧で取得します。", description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "サイコロの出目リスト",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = Dice.class))),
+      @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
+          content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(description = "記録されているサイコロの出目履歴", implementation = Dice.class))),
       @ApiResponse(responseCode = "500", description = "サーバ内部でエラーが発生",
           content = @Content)
   })

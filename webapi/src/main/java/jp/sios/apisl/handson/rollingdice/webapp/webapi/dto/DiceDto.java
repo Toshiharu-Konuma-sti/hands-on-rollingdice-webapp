@@ -5,12 +5,13 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 /**
- * サイコロAPIのリクエストボディを受け取るRecordです.
+ * サイコロの出目情報を扱うデータクラスです.
+ * <p>APIのリクエスト、およびレスポンスで共通利用します。</p>
  *
- * @param value 強制したいサイコロの出目（ボディーが無い場合はnull）
+ * @param value サイコロの出目（1～6の整数）
  */
-public record DiceRequest(
-    @Schema(description = "サイコロの指定値", example = "3")
+public record DiceDto(
+    @Schema(description = "サイコロの出目（1～6の整数）", example = "3")
     @Min(value = 1, message = "サイコロの値は1以上である必要があります")
     @Max(value = 6, message = "サイコロの値は6以下である必要があります")
     Integer value
