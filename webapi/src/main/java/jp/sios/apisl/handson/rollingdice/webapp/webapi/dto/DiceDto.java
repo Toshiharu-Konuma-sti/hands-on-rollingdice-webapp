@@ -5,15 +5,17 @@ import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 
 /**
- * サイコロの出目情報を扱うデータクラスです.
+ * サイコロの出目情報を扱うデータクラスです。.
+ * 
  * <p>APIのリクエスト、およびレスポンスで共通利用します。</p>
  *
  * @param value サイコロの出目（1～6の整数）
  */
+@Schema(description = "サイコロの出目情報")
 public record DiceDto(
     @Schema(description = "サイコロの出目（1～6の整数）", example = "3")
-    @Min(value = 1, message = "サイコロの値は1以上である必要があります")
-    @Max(value = 6, message = "サイコロの値は6以下である必要があります")
+    @Min(value = 1, message = "The dice value must be 1 or greater.")
+    @Max(value = 6, message = "The dice value must be 6 or less.")
     Integer value
 ) {
 }

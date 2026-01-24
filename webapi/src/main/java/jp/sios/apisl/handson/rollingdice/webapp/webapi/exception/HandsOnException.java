@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
- * ハンズオンアプリケーションで発生する例外を表すカスタム例外クラスです。.
+ * ハンズオンアプリケーションで発生する例外を扱うカスタム例外クラスです。.
  *
  * <p>この例外は、アプリケーション固有のエラーが発生した場合にスローされます。
  * </p>

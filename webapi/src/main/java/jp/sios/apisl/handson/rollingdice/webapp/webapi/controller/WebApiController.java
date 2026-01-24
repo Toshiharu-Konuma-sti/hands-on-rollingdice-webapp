@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * サイコロAPIのエンドポイントを提供するコントローラクラスです。.
+ * サイコロWeb APIのエンドポイントを管理するクラスです。.
  * 
  * <ul>
  *   <li>サイコロを振るAPI（/api/dice/v1/roll）</li>
@@ -129,7 +129,8 @@ public class WebApiController {
    * @return サイコロ（Dice）オブジェクトのリスト
    */
   @GetMapping({"/list"})
-  @Operation(summary = "サイコロを振った履歴を一覧で取得します。", description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
+  @Operation(summary = "サイコロを振った履歴を一覧で取得します。",
+      description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
           content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,

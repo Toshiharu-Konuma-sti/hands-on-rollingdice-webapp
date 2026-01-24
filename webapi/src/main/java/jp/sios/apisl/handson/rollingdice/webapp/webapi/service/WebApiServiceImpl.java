@@ -19,7 +19,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
- * WebApiServiceImplは、WebApiServiceインターフェースの実装クラスです。.
+ * サイコロの操作に関するサービスの実装クラスです。.
  *
  * <p>このクラスは、サイコロを振る処理、スリープやループによる遅延処理、例外発生のシミュレーション、
  * データベースへのサイコロ出目の保存および取得など、Web APIの主要なサービスロジックを提供します。
@@ -36,7 +36,6 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author Toshiharu Konuma
- * @version 1.0
  */
 @Service
 @SuppressWarnings("PMD.CommentSize")
@@ -73,20 +72,19 @@ public class WebApiServiceImpl implements WebApiService {
 
   // {{{ public ResponseEntity<Integer> rollDice(...)
   /**
-   * サイコロを振る処理を実行し、結果をレスポンスとして返します。.
+   * サイコロを振り出目を返します。.
    *
-   * <p>オプションでスリープ時間、ループ時間、エラー発生の有無を指定できます。
-   * 指定されたパラメータに基づき、スリープやループ処理、エラー発生処理を行います。
+   * <p>オプションでスリープ時間、ループ時間、エラー発生の有無を指定して処理の挙動を制御できます。
    * エラーが発生した場合はHTTP 500（INTERNAL_SERVER_ERROR）を返却し、
-   * 正常時はサイコロの出目（1～6）をHTTP 200（OK）で返却します。
-   * なお、リクエストボディーで値が指定された場合は、サイコロの出目にその値を使用します。
+   * 正常時はサイコロを振って出た出目（1～6）をHTTP 200（OK）で返却します。
+   * なお、リクエストボディーで出目が指定された場合は、その値を出目に使用します。
    * </p>
    *
-   * @param optSleep スリープ時間（秒）を表すオプションの整数
-   * @param optLoop  ループ時間（秒）を表すオプションの整数
-   * @param optError エラー発生有無を表すオプションの真偽値
-   * @param fixedValue サイコロの出目を強制するオプションの整数
-   * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
+   * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
+   * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
+   * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションのDiceDtoオブジェクト
+   * @return サイコロの出目（1～6）を含むDiceDtoオブジェクト
    */
   @Override
   public DiceDto rollDice(
@@ -97,7 +95,7 @@ public class WebApiServiceImpl implements WebApiService {
 
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
-        "The received parameters are: sleep='{}', loop='{}', error='{}' and fixedValue='{}'", 
+        "The received parameters are: sleep='{}', loop='{}', error='{}' and fixedDiceRequest='{}'", 
         optSleep, optLoop, optError, fixedDiceRequest);
 
     this.sleep(optSleep);
@@ -257,13 +255,13 @@ public class WebApiServiceImpl implements WebApiService {
 
   // {{{ public List<Dice> listDice()
   /**
-   * データベースからサイコロ（Dice）の一覧を取得します。.
+   * サイコロを振った履歴を一覧で返します。.
    *
-   * <p>diceテーブルから全レコードを取得し、IDの降順で並べ替えたリストを返します。
-   * 各レコードはDiceオブジェクトに変換され、リストに格納されます。
+   * <p>diceテーブルから全レコードをIDの降順で取得し、
+   * Diceオブジェクトのリストで返却します。
    * </p>
    *
-   * @return サイコロ（Dice）オブジェクトのリスト
+   * @return サイコロを振った履歴を保持するDiceオブジェクトのリスト
    */
   @Override
   @SuppressWarnings("PMD.GuardLogStatement")

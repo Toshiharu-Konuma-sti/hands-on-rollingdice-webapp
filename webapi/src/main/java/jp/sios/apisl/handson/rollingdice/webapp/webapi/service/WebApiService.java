@@ -6,19 +6,22 @@ import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
 
 /**
- * WebApiServiceインターフェースは、サイコロの操作に関するWeb APIサービスの機能を定義します。.
- * このインターフェースは、サイコロを振る処理やサイコロの一覧取得処理を提供します。
+ * サイコロの操作に関するサービスの定義クラスです。.
+ * 
+ * <p>このインターフェースは、サイコロを振る処理やサイコロの一覧取得処理を提供します。</p>
+ * 
+ * @author Toshiharu Konuma
  */
 public interface WebApiService {
 
   /**
-   * サイコロを振る処理を実行します。.
+   * サイコロを振り出目を返します。.
    *
    * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
    * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
    * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
-   * @param fixedDiceRequest サイコロの出目を強制するオプションの整数
-   * @return サイコロの結果を含むDTO
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションのDiceDtoオブジェクト
+   * @return サイコロの出目（1～6）を含むDiceDtoオブジェクト
    */
   DiceDto rollDice(
       Optional<Integer> optSleep,
@@ -27,9 +30,9 @@ public interface WebApiService {
       final DiceDto fixedDiceRequest);
 
   /**
-   * サイコロ出目の一覧を取得します。.
+   * サイコロを振った履歴を一覧で返します。.
    *
-   * @return Diceオブジェクトのリスト
+   * @return サイコロを振った履歴を保持するDiceオブジェクトのリスト
    */
   List<Dice> listDice();
 
