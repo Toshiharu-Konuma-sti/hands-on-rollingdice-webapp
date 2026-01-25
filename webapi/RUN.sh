@@ -29,15 +29,10 @@ case "$1" in
 		./gradlew assemble -x cyclonedxBom --info
 		finish_banner $S_TIME
 		;;
-	"oas")
+	"doc")
 		start_banner
 		./gradlew generateOpenApiDocs --no-configuration-cache -x cyclonedxBom
 		./gradlew openApiGenerate
-        tree -L 2 build/docs/
-		finish_banner $S_TIME
-		;;
-	"javadoc")
-		start_banner
 		./gradlew javadoc -x cyclonedxBom
         tree -L 2 build/docs/
 		finish_banner $S_TIME

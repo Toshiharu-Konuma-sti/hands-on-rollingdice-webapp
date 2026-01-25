@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RestController;
  * 
  * <ul>
  *   <li>サイコロを振るAPI（/api/dice/v1/roll）</li>
- *   <li>サイコロの一覧を取得するAPI（/api/dice/v1/list）</li>
+ *   <li>サイコロを振った履歴を一覧で取得するAPI（/api/dice/v1/list）</li>
  * </ul>
  *
- * <p>各エンドポイントでリクエスト情報のログ出力や、サービス層への処理委譲を行います。
+ * <p>各エンドポイントでサービス層への処理委譲を行います。
  * </p>
  *
  * @author Toshiharu Konuma
@@ -68,20 +68,18 @@ public class WebApiController {
 
   // {{{ public ResponseEntity<Integer> rollDice(...)
   /**
-   * サイコロを振る処理を実行します。.
+   * サイコロを振る処理を扱います。.
    *
-   * <p>リクエストパラメータとして、sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）
-   * を受け取り処理の流れを制御します。
-   * ボディーに値が指定されている場合は値を採用し、指定がなければサイコロを振り、
-   * 結果をレスポンスとして返却します。
-   * </p>
+   * <p>通常はサイコロを振った結果の出目を返却しますが、リクエストボディに出目が指定されている場合には、
+   * 振らずにその値を出目として採用します。
+   * また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。</p>
    *
    * @param request   HTTPリクエスト情報
    * @param requestBody サイコロの出目を強制する場合に使用するリクエストボディ
    * @param optSleep  サイコロを振る前に意図的に遅延させる待機時間（秒、オプション）
    * @param optLoop   サイコロを振る前に意図的に遅延させるループ時間（秒、オプション）
    * @param optError  サイコロを振らずにエラーを発生させるフラグ（boolean、オプション）
-   * @return サイコロの出目情報
+   * @return サイコロの出目（1～6）を含む{@link DiceDto}オブジェクト
    */
   @PostMapping({"/roll"})
   @Operation(summary = "サイコロを振ります。", 
@@ -120,13 +118,12 @@ public class WebApiController {
 
   // {{{ public List<Dice> listDice(HttpServletRequest request)
   /**
-   * サイコロのリストを取得します。.
+   * サイコロを振った履歴を一覧で取得する処理を扱います。.
    *
-   * <p>このメソッドは、サービス層からサイコロ（Dice）オブジェクトのリストを取得し、返却します。
-   * リクエストの開始と終了時にログを出力します。</p>
+   * <p>サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。</p>
    *
    * @param request HTTPリクエスト情報
-   * @return サイコロ（Dice）オブジェクトのリスト
+   * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
   @GetMapping({"/list"})
   @Operation(summary = "サイコロを振った履歴を一覧で取得します。",
@@ -134,7 +131,7 @@ public class WebApiController {
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
           content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(description = "記録されているサイコロの出目履歴", implementation = DiceEntity.class))),
+              schema = @Schema(implementation = DiceEntity.class))),
       @ApiResponse(responseCode = "500", description = "サーバ内部でエラーが発生",
           content = @Content)
   })
