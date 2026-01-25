@@ -33,7 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
  *   <li>サイコロを振った履歴を一覧で取得するAPI（/api/dice/v1/list）</li>
  * </ul>
  *
- * <p>各エンドポイントでサービス層への処理委譲を行います。
+ * <p>各エンドポイントではサービス層への処理委譲を行います。
  * </p>
  *
  * @author Toshiharu Konuma

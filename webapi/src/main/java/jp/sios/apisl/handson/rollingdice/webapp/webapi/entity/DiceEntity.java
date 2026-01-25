@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
  *
  * @param id        出目の履歴ID（一意の識別子）
  * @param value     サイコロの出目（1～6の整数）
- * @param updateAt  サイコロを振った日時
+ * @param updatedAt サイコロを振った日時
  */
 @Schema(description = "サイコロの出目履歴情報")
 public record DiceEntity(

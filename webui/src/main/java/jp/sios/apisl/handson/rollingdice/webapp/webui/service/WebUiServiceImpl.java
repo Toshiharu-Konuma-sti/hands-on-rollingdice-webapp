@@ -9,7 +9,6 @@ import java.util.Optional;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceHistoryDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -74,7 +73,7 @@ public class WebUiServiceImpl implements WebUiService {
    * @param optLoop  ループ時間（秒）を表すオプショナルな文字列
    * @param optError エラー発生を示すオプショナルな文字列
    * @param fixedValue サイコロの出目を強制するオプションの整数
-   * @return APIからのレスポンスボディ（文字列）
+   * @return サイコロを振った結果の出目（文字列）
    */
   @Override
   public String callRollDiceApi(
@@ -116,8 +115,8 @@ public class WebUiServiceImpl implements WebUiService {
   /**
    * サイコロWeb APIのList Diceを呼び出すメソッドです。.
    *
-   * <p>このメソッドは、/api/dice/v1/list エンドポイントに対してAPIコールを行い、
-   * 取得したレスポンスボディをJSONArrayに変換して返却します。
+   * <p>このメソッドは、サイコロWeb APIのList Diceをコールし、
+   * 取得したレスポンスボディを{@link DiceHistoryDto}のリストで返却します。
    * </p>
    *
    * @return Dice APIから取得したリスト情報のJSONArray
@@ -137,19 +136,30 @@ public class WebUiServiceImpl implements WebUiService {
   }
   // }}}
 
-  private <T> T callApi(String path, HttpMethod method, Object requestBody, Class<T> responseType) {
-    return callApi(path, method, requestBody, ParameterizedTypeReference.forType(responseType));
-  }
-
   // {{{ private <T> T callApi(...)
   /**
-   * 指定されたパスに対してAPIコールを行い、レスポンスボディを文字列として返します。.
+   * 指定されたパスに対してAPIコールを行い、レスポンスボディを指定のクラスで返します。.
    *
    * @param path APIのエンドポイントパス
    * @param method HTTPメソッド (GET, POSTなど)
    * @param requestBody 送信するボディ (送信するデータが無い場合はnull)
    * @param responseType レスポンスをマッピングするクラス
-   * @return APIから取得したレスポンスボディの文字列。例外発生時はdefaultBodyを返します。
+   * @return APIから取得したレスポンスボディ
+   */
+  private <T> T callApi(String path, HttpMethod method, Object requestBody, Class<T> responseType) {
+    return callApi(path, method, requestBody, ParameterizedTypeReference.forType(responseType));
+  }
+  // }}}
+
+  // {{{ private <T> T callApi(...)
+  /**
+   * 指定されたパスに対してAPIコールを行い、レスポンスボディを指定のクラスで返します。.
+   *
+   * @param path APIのエンドポイントパス
+   * @param method HTTPメソッド (GET, POSTなど)
+   * @param requestBody 送信するボディ (送信するデータが無い場合はnull)
+   * @param responseType レスポンスをマッピングするクラス
+   * @return APIから取得したレスポンスボディ
    */
   private <T> T callApi(
       final String path,
