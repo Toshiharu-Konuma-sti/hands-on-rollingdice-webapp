@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
@@ -134,16 +134,16 @@ public class WebApiController {
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
           content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(description = "記録されているサイコロの出目履歴", implementation = Dice.class))),
+              schema = @Schema(description = "記録されているサイコロの出目履歴", implementation = DiceEntity.class))),
       @ApiResponse(responseCode = "500", description = "サーバ内部でエラーが発生",
           content = @Content)
   })
-  public List<Dice> listDice(final HttpServletRequest request) {
+  public List<DiceEntity> listDice(final HttpServletRequest request) {
 
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
 
-    final List<Dice> list = service.listDice();
+    final List<DiceEntity> list = service.listDice();
 
     UtilEnvInfo.logFinishRequest(request);
     return list;

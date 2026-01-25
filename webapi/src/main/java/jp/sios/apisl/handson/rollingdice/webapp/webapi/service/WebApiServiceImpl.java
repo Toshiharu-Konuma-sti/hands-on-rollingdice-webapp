@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
@@ -21,19 +21,15 @@ import org.springframework.stereotype.Service;
 /**
  * サイコロの操作に関するサービスの実装クラスです。.
  *
- * <p>このクラスは、サイコロを振る処理、スリープやループによる遅延処理、例外発生のシミュレーション、
- * データベースへのサイコロ出目の保存および取得など、Web APIの主要なサービスロジックを提供します。
- * </p>
+ * <p>このクラスは、サイコロを振ったり履歴を一覧で返す処理を提供します。</p>
  * <ul>
  *   <li>rollDiceメソッドでサイコロを振り、結果をデータベースに保存します。</li>
  *   <li>sleepメソッドで指定時間のスリープを行います。</li>
  *   <li>loopメソッドで指定時間ループをしながらファイル読み込みを繰り返します。</li>
  *   <li>errorメソッドで意図的に例外を発生させます。</li>
- *   <li>listDiceメソッドで保存されたサイコロ出目の一覧を取得します。</li>
+ *   <li>listDiceメソッドで保存されたサイコロの出目履歴を一覧で取得します。</li>
  * </ul>
- *
- * <p>ロギングや例外処理も適切に実装されており、デバッグや運用時のトラブルシュートにも配慮されています。
- * </p>
+ * <p>デバッグや運用時のトラブルシューティングを容易にするため、詳細なログ出力や例外制御を行っています。</p>
  *
  * @author Toshiharu Konuma
  */
@@ -83,8 +79,8 @@ public class WebApiServiceImpl implements WebApiService {
    * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
    * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
    * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
-   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションのDiceDtoオブジェクト
-   * @return サイコロの出目（1～6）を含むDiceDtoオブジェクト
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceDto}オブジェクト
+   * @return サイコロの出目（1～6）を含む{@link DiceDto}オブジェクト
    */
   @Override
   public DiceDto rollDice(
@@ -258,21 +254,21 @@ public class WebApiServiceImpl implements WebApiService {
    * サイコロを振った履歴を一覧で返します。.
    *
    * <p>diceテーブルから全レコードをIDの降順で取得し、
-   * Diceオブジェクトのリストで返却します。
+   * {@link DiceEntity}オブジェクトのリストで返却します。
    * </p>
    *
-   * @return サイコロを振った履歴を保持するDiceオブジェクトのリスト
+   * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
   @Override
   @SuppressWarnings("PMD.GuardLogStatement")
-  public List<Dice> listDice() {
+  public List<DiceEntity> listDice() {
     UtilEnvInfo.logStartClassMethod();
 
     final String sql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
     LOGGER.info("The sql to execute is '{}'", sql);
 
-    final List<Dice> list = this.jdbcTemplate.query(sql, (rs, rowNum) -> 
-        new Dice(
+    final List<DiceEntity> list = this.jdbcTemplate.query(sql, (rs, rowNum) -> 
+        new DiceEntity(
           rs.getInt("id"),
           rs.getInt("value"),
           rs.getObject("updated_at", LocalDateTime.class)

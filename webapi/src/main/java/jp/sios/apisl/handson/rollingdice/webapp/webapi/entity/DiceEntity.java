@@ -4,16 +4,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDateTime;
 
 /**
- * サイコロの出目履歴を表すレコードクラスです。.
+ * サイコロの出目履歴を扱うレコードクラスです。.
  *
- * <p>各出目履歴には一意の履歴ID、出目の値、振った日時が含まれます。</p>
+ * <p>出目履歴には一意の履歴ID、出目の値、振った日時が含まれます。</p>
  *
  * @param id        出目の履歴ID（一意の識別子）
  * @param value     サイコロの出目（1～6の整数）
  * @param updateAt  サイコロを振った日時
  */
 @Schema(description = "サイコロの出目履歴情報")
-public record Dice(
+public record DiceEntity(
     @Schema(description = "出目の履歴ID（一意の識別子）", example = "12")
     int id,
     @Schema(description = "サイコロの出目（1～6の整数）", example = "3")
