@@ -10,7 +10,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
@@ -79,7 +79,7 @@ public class WebApiController {
    * @param optSleep  サイコロを振る前に意図的に遅延させる待機時間（秒、オプション）
    * @param optLoop   サイコロを振る前に意図的に遅延させるループ時間（秒、オプション）
    * @param optError  サイコロを振らずにエラーを発生させるフラグ（boolean、オプション）
-   * @return サイコロの出目（1～6）を含む{@link DiceDto}オブジェクト
+   * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
   @PostMapping({"/roll"})
   @Operation(operationId = "Roll Dice",
@@ -88,15 +88,15 @@ public class WebApiController {
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
           content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-              schema = @Schema(implementation = DiceDto.class))),
+              schema = @Schema(implementation = DiceValueDto.class))),
       @ApiResponse(responseCode = "500", description = "errorパラメータが指定されて例外が発生、もしくはサーバ内部でエラーが発生",
           content = @Content)
   })
-  public DiceDto rollDice(
+  public DiceValueDto rollDice(
       final HttpServletRequest request,
       @io.swagger.v3.oas.annotations.parameters.RequestBody(
           description = "サイコロの出目を強制したい場合に送信", required = false)
-      @RequestBody(required = false) @Validated final DiceDto requestBody,
+      @RequestBody(required = false) @Validated final DiceValueDto requestBody,
       @Parameter(description = "サイコロを振る前に意図的に遅延させる待機時間（秒）", example = "10")
       @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,
       @Parameter(description = "サイコロを振る前に意図的に遅延させるループ時間（秒）", example = "15")
@@ -110,7 +110,7 @@ public class WebApiController {
         "The received parameters are: body='{}', sleep='{}', loop='{}' and error='{}'",
         requestBody, optSleep, optLoop, optError);
 
-    final DiceDto responseDto = service.rollDice(optSleep, optLoop, optError, requestBody);
+    final DiceValueDto responseDto = service.rollDice(optSleep, optLoop, optError, requestBody);
 
     UtilEnvInfo.logFinishRequest(request);
     return responseDto;

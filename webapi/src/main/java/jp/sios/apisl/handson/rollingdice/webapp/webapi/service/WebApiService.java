@@ -2,7 +2,7 @@ package jp.sios.apisl.handson.rollingdice.webapp.webapi.service;
 
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 
 /**
@@ -20,14 +20,14 @@ public interface WebApiService {
    * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
    * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
    * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
-   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceDto}オブジェクト
-   * @return サイコロの出目（1～6）を含む{@link DiceDto}オブジェクト
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceValueDto}オブジェクト
+   * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
-  DiceDto rollDice(
+  DiceValueDto rollDice(
       Optional<Integer> optSleep,
       Optional<Integer> optLoop,
       Optional<Boolean> optError,
-      final DiceDto fixedDiceRequest);
+      final DiceValueDto fixedDiceRequest);
 
   /**
    * サイコロを振った履歴を一覧で返します。.

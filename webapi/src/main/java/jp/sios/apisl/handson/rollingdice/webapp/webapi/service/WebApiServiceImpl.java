@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
@@ -79,15 +79,15 @@ public class WebApiServiceImpl implements WebApiService {
    * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
    * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
    * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
-   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceDto}オブジェクト
-   * @return サイコロの出目（1～6）を含む{@link DiceDto}オブジェクト
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceValueDto}オブジェクト
+   * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
   @Override
-  public DiceDto rollDice(
+  public DiceValueDto rollDice(
       final Optional<Integer> optSleep, 
       final Optional<Integer> optLoop, 
       final Optional<Boolean> optError,
-      final DiceDto fixedDiceRequest) {
+      final DiceValueDto fixedDiceRequest) {
 
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
@@ -106,7 +106,7 @@ public class WebApiServiceImpl implements WebApiService {
       resultValue = this.roll();
     }
     this.insertDice(resultValue);
-    return new DiceDto(resultValue);
+    return new DiceValueDto(resultValue);
   }
   // }}}
 

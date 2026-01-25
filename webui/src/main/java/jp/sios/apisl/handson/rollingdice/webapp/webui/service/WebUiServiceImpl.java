@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceHistoryDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.slf4j.Logger;
@@ -94,13 +94,13 @@ public class WebUiServiceImpl implements WebUiService {
       path += "?" + String.join("&", paramList);
     }
 
-    DiceDto requestBody = null;
+    DiceValueDto requestBody = null;
     if (fixedValue.isPresent()) {
-      requestBody = new DiceDto(fixedValue.get());
+      requestBody = new DiceValueDto(fixedValue.get());
       LOGGER.info("The request body to send to the API is: '{}'", requestBody);
     }
 
-    final DiceDto response = this.callApi(path, HttpMethod.POST, requestBody, DiceDto.class);
+    final DiceValueDto response = this.callApi(path, HttpMethod.POST, requestBody, DiceValueDto.class);
 
     String returnValue = "0";
     if (response != null && response.value() != null) {

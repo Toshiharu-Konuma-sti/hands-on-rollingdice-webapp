@@ -12,7 +12,7 @@ import jakarta.validation.constraints.Min;
  * @param value サイコロの出目（1～6の整数）
  */
 @Schema(description = "サイコロの出目情報")
-public record DiceDto(
+public record DiceValueDto(
     @Schema(description = "サイコロの出目（1～6の整数）", example = "3")
     @Min(value = 1, message = "The dice value must be 1 or greater.")
     @Max(value = 6, message = "The dice value must be 6 or less.")

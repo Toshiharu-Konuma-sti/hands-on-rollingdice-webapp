@@ -10,5 +10,5 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @param value サイコロの出目（1～6の整数）
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record DiceDto(Integer value) {	
+public record DiceValueDto(Integer value) {	
 }
