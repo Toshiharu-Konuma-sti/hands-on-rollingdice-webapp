@@ -82,14 +82,16 @@ public class WebApiController {
    * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
   @PostMapping({"/roll"})
-  @Operation(operationId = "Roll Dice",
+  @Operation(
       summary = "サイコロを振ります。", 
       description = "通常はサイコロを振った結果の出目を返却しますが、リクエストボディに出目が指定されている場合には、振らずにその値を出目として採用します。また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
+      @ApiResponse(
+          responseCode = "200", description = "リクエストが正常に処理",
           content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = DiceValueDto.class))),
-      @ApiResponse(responseCode = "500", description = "errorパラメータが指定されて例外が発生、もしくはサーバ内部でエラーが発生",
+      @ApiResponse(
+          responseCode = "500", description = "errorパラメータが指定されて例外が発生、もしくはサーバ内部でエラーが発生",
           content = @Content)
   })
   public DiceValueDto rollDice(
@@ -127,14 +129,16 @@ public class WebApiController {
    * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
   @GetMapping({"/list"})
-  @Operation(operationId = "List Dice",
+  @Operation(
       summary = "サイコロを振った履歴を一覧で取得します。",
       description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
+      @ApiResponse(
+          responseCode = "200", description = "リクエストが正常に処理",
           content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
               schema = @Schema(implementation = DiceEntity.class))),
-      @ApiResponse(responseCode = "500", description = "サーバ内部でエラーが発生",
+      @ApiResponse(
+          responseCode = "500", description = "サーバ内部でエラーが発生",
           content = @Content)
   })
   public List<DiceEntity> listDice(final HttpServletRequest request) {
