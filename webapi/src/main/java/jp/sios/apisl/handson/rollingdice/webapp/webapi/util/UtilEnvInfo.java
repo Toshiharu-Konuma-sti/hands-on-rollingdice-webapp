@@ -7,17 +7,14 @@ import org.slf4j.LoggerFactory;
 /**
  * 環境情報やリクエスト情報のログ出力を支援するユーティリティクラスです。.
  *
- * <p>主にリクエストの開始・終了や、クラス・メソッド呼び出し時の情報をログ出力するための
- * 静的メソッドを提供します。
- * </p>
+ * <p>主に以下の機能を提供します:</p>
  * <ul>
- *   <li>リクエストのURLやラベル付きログ出力</li>
- *   <li>呼び出し元クラス名・メソッド名の取得とログ出力</li>
+ *   <li>リクエストの開始、および終了時にURLを付与したログ出力</li>
+ *   <li>実行中のリクエストURLの取得</li>
+ *   <li>実行中のクラス名・メソッド名のログ出力</li>
  * </ul>
- *
  * <p>このクラスはインスタンス化せず、すべてのメソッドはstaticとして利用します。</p>
  */
-@SuppressWarnings("PMD.CommentSize")
 public final class UtilEnvInfo {
 
   /**
@@ -75,8 +72,8 @@ public final class UtilEnvInfo {
   /**
    * 現在実行中のクラス名とメソッド名を取得し、ログに出力します。.
    *
-   * <p>ログの出力形式は「>>> calling: クラス名#メソッド名()」となります。
-   * 主にデバッグやトレース目的で、メソッドの開始時に呼び出してください。</p>
+   * <p>ログは「>>> calling: クラス名#メソッド名()」の形式で出力されます。
+   * 主にデバッグやトレース目的でメソッドの開始時に呼び出してください。</p>
    */
   public static void logStartClassMethod() {
     final String className = getClassName();

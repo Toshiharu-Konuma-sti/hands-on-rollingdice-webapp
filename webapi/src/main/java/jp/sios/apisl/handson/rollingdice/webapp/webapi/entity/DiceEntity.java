@@ -19,6 +19,6 @@ public record DiceEntity(
     @Schema(description = "サイコロの出目（1～6の整数）", example = "3")
     int value,
     @Schema(description = "サイコロを振った日時", example = "2026-04-01T12:34:56")
-    LocalDateTime updateAt
+    LocalDateTime updatedAt
 ) {
 }

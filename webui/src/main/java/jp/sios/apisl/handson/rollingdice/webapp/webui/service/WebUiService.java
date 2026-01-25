@@ -1,14 +1,16 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webui.service;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceHistoryDto;
+
+import java.util.List;
 import java.util.Optional;
 import org.json.JSONArray;
 
 /**
- * WebUiServiceインターフェースは、Web UI層から利用されるサービスの定義を提供します。.
+ * Webアプリケーションの制御に関するサービスの定義クラスです。.
  *
- * <p>主にDice APIの呼び出しや、現在のリクエストURLの取得などの機能を提供します。
- * 実装クラスは、APIとの連携やリクエスト処理の詳細を担います。</p>
+ * <p>このインターフェースは、サイコロWeb APIの呼び出しなどを処理する機能の定義を提供します。</p>
  */
 public interface WebUiService {
 
@@ -34,15 +36,15 @@ public interface WebUiService {
    * 取得したレスポンスボディをJSONArrayに変換して返却します。
    * </p>
    *
-   * @return Dice APIから取得したリスト情報のJSONArray
+   * @return サイコロWeb APIから取得したリスト情報
    */
-  JSONArray callListDiceApi();
+  List<DiceHistoryDto> callListDiceApi();
 
   /**
-   * 現在のリクエストからURLを取得します。.
+   * HTTPリクエストからURLを取得します。.
    *
-   * @param request 現在のHTTPリクエスト
-   * @return 現在のURL文字列
+   * @param request HTTPリクエスト
+   * @return アクセスされたURL文字列
    */
   String getCurrentUrl(HttpServletRequest request);
 

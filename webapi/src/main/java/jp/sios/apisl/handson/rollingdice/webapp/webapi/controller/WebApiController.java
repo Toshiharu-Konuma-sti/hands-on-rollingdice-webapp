@@ -82,7 +82,8 @@ public class WebApiController {
    * @return サイコロの出目（1～6）を含む{@link DiceDto}オブジェクト
    */
   @PostMapping({"/roll"})
-  @Operation(summary = "サイコロを振ります。", 
+  @Operation(operationId = "Roll Dice",
+      summary = "サイコロを振ります。", 
       description = "通常はサイコロを振った結果の出目を返却しますが、リクエストボディに出目が指定されている場合には、振らずにその値を出目として採用します。また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",
@@ -126,7 +127,8 @@ public class WebApiController {
    * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
   @GetMapping({"/list"})
-  @Operation(summary = "サイコロを振った履歴を一覧で取得します。",
+  @Operation(operationId = "List Dice",
+      summary = "サイコロを振った履歴を一覧で取得します。",
       description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
   @ApiResponses({
       @ApiResponse(responseCode = "200", description = "リクエストが正常に処理",

@@ -2,15 +2,18 @@ package jp.sios.apisl.handson.rollingdice.webapp.webui.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceHistoryDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -18,15 +21,12 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClient;
 
 /**
- * WebUiServiceImplは、Web UI層からWeb APIへのリクエストを仲介するサービス実装クラスです。.
+ * Webアプリケーションの制御に関するサービスの実装クラスです。.
  *
- * <p>Dice APIの呼び出しや、サイコロリストの取得、現在のURLの取得などの機能を提供します。
- * RestClientを利用して外部APIと通信し、必要に応じてリクエストパラメータを組み立ててAPIを呼び出します。
- * </p>
+ * <p>このクラスは、サイコロWeb APIの呼び出しなどを処理する機能の実装を提供します。</p>
  * <ul>
- *   <li>Dice APIの呼び出し（roll, list）</li>
- *   <li>API呼び出し時のログ出力</li>
- *   <li>現在のリクエストURLの取得</li>
+ *   <li>サイコロWeb APIの呼び出し（roll, list）</li>
+ *   <li>リクエストしているURLの取得</li>
  * </ul>
  *
  * @author Toshiharu Konuma
@@ -64,10 +64,10 @@ public class WebUiServiceImpl implements WebUiService {
 
   // {{{ public String callRollDiceApi(Optional<String> optSleep, Optional<String> optLoop, Op ... )
   /**
-   * Roll Dice APIを呼び出すメソッドです。.
+   * サイコロWeb APIのRoll Diceを呼び出すメソッドです。.
    *
-   * <p>オプションでスリープ時間、ループ時間、エラー発生のパラメータを指定できます。
-   * 指定されたパラメータはAPIリクエストのクエリパラメータとして付与されます。
+   * <p>オプションでスリープ時間、ループ時間、エラー発生の有無と出目を強制するパラメータを指定できます。
+   * 指定されたパラメータは、APIリクエストのクエリパラメータやリクエストボディーとして送信します。
    * </p>
    *
    * @param optSleep スリープ時間（秒）を表すオプショナルな文字列
@@ -114,7 +114,7 @@ public class WebUiServiceImpl implements WebUiService {
 
   // {{{ public JSONArray callListDiceApi()
   /**
-   * Dice APIのリスト取得エンドポイントを呼び出し、結果をJSONArrayとして返します。.
+   * サイコロWeb APIのList Diceを呼び出すメソッドです。.
    *
    * <p>このメソッドは、/api/dice/v1/list エンドポイントに対してAPIコールを行い、
    * 取得したレスポンスボディをJSONArrayに変換して返却します。
@@ -123,21 +123,23 @@ public class WebUiServiceImpl implements WebUiService {
    * @return Dice APIから取得したリスト情報のJSONArray
    */
   @Override
-  public JSONArray callListDiceApi() {
+  public List<DiceHistoryDto> callListDiceApi() {
     UtilEnvInfo.logStartClassMethod();
 
     final String path = "/api/dice/v1/list";
-    final String body = this.callApi(path, HttpMethod.GET, null, String.class);
+    List<DiceHistoryDto> list = this.callApi(path, HttpMethod.GET, null, new ParameterizedTypeReference<List<DiceHistoryDto>>() {});
 
-    JSONArray jsonList = new JSONArray();
-    if (body != null && !body.isEmpty()) {
-      jsonList = new JSONArray(body);
-      LOGGER.info("The object converted to json is {}", jsonList);
+    if (list == null) {
+      list = Collections.emptyList();
     }
 
-    return jsonList;
+    return list;
   }
   // }}}
+
+  private <T> T callApi(String path, HttpMethod method, Object requestBody, Class<T> responseType) {
+    return callApi(path, method, requestBody, ParameterizedTypeReference.forType(responseType));
+  }
 
   // {{{ private <T> T callApi(...)
   /**
@@ -153,7 +155,7 @@ public class WebUiServiceImpl implements WebUiService {
       final String path,
       final HttpMethod method,
       final Object requestBody,
-      final Class<T> responseType) {
+      final ParameterizedTypeReference<T> responseType) {
     UtilEnvInfo.logStartClassMethod();
 
     final String url = "http://" + this.webapiHost + path;
@@ -177,10 +179,10 @@ public class WebUiServiceImpl implements WebUiService {
 
   // {{{ public String getCurrentUrl(HttpServletRequest request)
   /**
-   * 現在のリクエストからURLを取得します。.
+   * リクエストしているURLを取得します。.
    *
-   * @param request 現在のHTTPリクエスト
-   * @return 現在のURL文字列
+   * @param request 送信されてきたHTTPリクエスト
+   * @return リクエストしているURL文字列
    */
   @Override
   public String getCurrentUrl(final HttpServletRequest request) {

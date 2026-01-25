@@ -9,11 +9,11 @@ import org.slf4j.LoggerFactory;
  *
  * <p>主に以下の機能を提供します:</p>
  * <ul>
- *   <li>リクエスト開始・終了時のURLログ出力</li>
- *   <li>クラス名・メソッド名のログ出力</li>
- *   <li>現在のリクエストURLの取得</li>
+ *   <li>リクエストの開始、および終了時にURLを付与したログ出力</li>
+ *   <li>実行中のリクエストURLの取得</li>
+ *   <li>実行中のクラス名・メソッド名のログ出力</li>
  * </ul>
- * ログ出力にはSLF4JのLoggerを利用しています。
+ * <p>このクラスはインスタンス化せず、すべてのメソッドはstaticとして利用します。</p>
  */
 public final class UtilEnvInfo {
 
@@ -62,6 +62,9 @@ public final class UtilEnvInfo {
 
   /**
    * 現在実行中のクラス名とメソッド名をログに出力します。.
+   * 
+   * <p>ログは「>>> calling: クラス名#メソッド名()」の形式で出力されます。
+   * 主にデバッグやトレース目的でメソッドの開始時に呼び出してください。</p>
    */
   public static void logStartClassMethod() {
     final String className = getClassName();
