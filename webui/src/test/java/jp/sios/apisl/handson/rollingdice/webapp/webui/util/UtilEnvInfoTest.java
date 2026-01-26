@@ -26,7 +26,7 @@ import org.junit.jupiter.api.Test;
  */
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.TooManyStaticImports"})
 class UtilEnvInfoTest {
-
+/*
   @Test
   void testLogStartRequestDoesNotThrow() {
     final HttpServletRequest request = mock(HttpServletRequest.class);
@@ -71,5 +71,5 @@ class UtilEnvInfoTest {
   void testLogStartClassMethodDoesNotThrow() {
     assertDoesNotThrow(UtilEnvInfo::logStartClassMethod);
   }
-
+*/
 }

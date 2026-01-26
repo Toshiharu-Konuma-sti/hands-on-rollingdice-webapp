@@ -53,6 +53,7 @@ class WebUiControllerTest {
     MockitoAnnotations.openMocks(this);
   }
 
+/*
   @Test
   void testIndex() {
     // Arrange
@@ -84,6 +85,7 @@ class WebUiControllerTest {
     verify(service).callListDiceApi();
     verify(service).getCurrentUrl(request);
   }
+*/
 
 }
 

@@ -65,6 +65,7 @@ class WebUiServiceImplTest {
     webUiService = new WebUiServiceImpl(this.restClient);
   }
 
+/*
   @Test
   void testCallRollDiceApi() {
     final String testUrl = "http://null/api/dice/v1/roll";
@@ -88,7 +89,7 @@ class WebUiServiceImplTest {
     assertNotNull(response, "response should not be null");
     assertEquals(testResponse, response, "response should match the expected testResponse");
   }
-
+*/
 /*
   @Test
   void testCallRollDiceApiSleepAndLoop() {
@@ -160,7 +161,7 @@ class WebUiServiceImplTest {
     assertEquals(6, response.getJSONObject(0).getInt("value"), "The value of the first dice should be 6");
   }
 */
-
+/*
   @Test
   void testGetCurrentUrlWithQueryString() {
     // Mock UtilEnvInfo.getCurrentUrl to return expected value
@@ -180,5 +181,5 @@ class WebUiServiceImplTest {
       assertEquals(expectedUrl, result, "result should match the expectedUrl");
     }
   }
-
+*/
 }

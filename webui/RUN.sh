@@ -35,6 +35,11 @@ case "$1" in
         tree -L 2 build/docs/
 		finish_banner $S_TIME
 		;;
+	"test")
+		start_banner
+		./gradlew test -x cyclonedxBom
+		finish_banner $S_TIME
+		;;
 	"")
 		start_banner
 		install_jdk

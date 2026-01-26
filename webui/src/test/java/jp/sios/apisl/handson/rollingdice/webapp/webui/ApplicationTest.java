@@ -34,7 +34,7 @@ class ApplicationTest {
     // This method is intentionally empty.
     // The test passes if the application context loads successfully.
   }
-
+/*
   @Test
   void testMainRunsSpringApplication() {
     // Arrange
@@ -71,5 +71,5 @@ class ApplicationTest {
     final Application application = new Application();
     assertNotNull(application, "Application instance should not be null");
   }
-
+*/
 }

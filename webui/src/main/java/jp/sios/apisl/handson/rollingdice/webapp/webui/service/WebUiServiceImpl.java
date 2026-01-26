@@ -20,7 +20,7 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClient;
 
 /**
- * Webアプリケーションの制御に関するサービスの実装クラスです。.
+ * サイコロWebアプリケーションの制御に関するサービスの実装クラスです。.
  *
  * <p>このクラスは、サイコロWeb APIの呼び出しなどを処理する機能の実装を提供します。</p>
  * <ul>
