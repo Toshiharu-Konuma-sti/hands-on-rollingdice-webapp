@@ -47,12 +47,10 @@ case "$1" in
 		install_jdk
 
 		echo "Test URL:"
-		echo "- http://localhost:8182/api/dice/v1/roll"
-		echo "- http://localhost:8182/api/dice/v1/list" 
+		echo "- http://localhost:8182/api/v1/dices"
 
 		export SPRING_PROFILES_ACTIVE=dev
 		./gradlew clean
-		# ./gradlew bootRun
 		./gradlew assemble -x cyclonedxBom
         java -jar ./build/libs/apisl.handson.rollingdice.webapp.webapi-*-SNAPSHOT.jar --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
 		;;
