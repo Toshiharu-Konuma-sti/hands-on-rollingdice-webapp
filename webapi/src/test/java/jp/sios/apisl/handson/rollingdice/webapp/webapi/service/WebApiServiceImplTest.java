@@ -35,7 +35,6 @@ import org.springframework.jdbc.core.RowMapper;
  *
  * @author Toshiharu Konuma
  */
-// @SuppressWarnings("PMD.LawOfDemeter")
 @SuppressWarnings("PMD.CommentSize")
 class WebApiServiceImplTest {
 
@@ -74,9 +73,9 @@ class WebApiServiceImplTest {
 
     when(jdbcTemplate.update(any(String.class), any(Integer.class))).thenReturn(1);
 
-    final DiceValueDto response = webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest);
+    final DiceValueDto response = webApiService.rollDice(
+        optSleep, optLoop, optError, fixedDiceRequest);
 
-    assertThat(response).isNotNull();
     assertThat(response.value()).isBetween(1, 6);
   }
 
@@ -89,9 +88,9 @@ class WebApiServiceImplTest {
 
     when(jdbcTemplate.update(any(String.class), any(Integer.class))).thenReturn(1);
 
-    final DiceValueDto response = webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest);
+    final DiceValueDto response = webApiService.rollDice(
+        optSleep, optLoop, optError, fixedDiceRequest);
 
-    assertThat(response).isNotNull();
     assertThat(response.value()).isBetween(1, 6);
   }
 
@@ -104,9 +103,9 @@ class WebApiServiceImplTest {
 
     when(jdbcTemplate.update(any(String.class), any(Integer.class))).thenReturn(1);
 
-    final DiceValueDto response = webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest);
+    final DiceValueDto response = webApiService.rollDice(
+        optSleep, optLoop, optError, fixedDiceRequest);
 
-    assertThat(response).isNotNull();
     assertThat(response.value()).isBetween(1, 6);
   }
 
@@ -119,9 +118,9 @@ class WebApiServiceImplTest {
 
     when(jdbcTemplate.update(any(String.class), any(Integer.class))).thenReturn(1);
 
-    final DiceValueDto response = webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest);
+    final DiceValueDto response = webApiService.rollDice(
+        optSleep, optLoop, optError, fixedDiceRequest);
 
-    assertThat(response).isNotNull();
     assertThat(response.value()).isBetween(1, 6);
   }
 
@@ -134,9 +133,9 @@ class WebApiServiceImplTest {
 
     when(jdbcTemplate.update(any(String.class), any(Integer.class))).thenReturn(1);
 
-    final DiceValueDto response = webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest);
+    final DiceValueDto response = webApiService.rollDice(
+        optSleep, optLoop, optError, fixedDiceRequest);
 
-    assertThat(response).isNotNull();
     assertThat(response.value()).isBetween(1, 6);
   }
 
@@ -162,9 +161,9 @@ class WebApiServiceImplTest {
 
     when(jdbcTemplate.update(any(String.class), any(Integer.class))).thenReturn(1);
 
-    final DiceValueDto response = webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest);
+    final DiceValueDto response = webApiService.rollDice(
+        optSleep, optLoop, optError, fixedDiceRequest);
 
-    assertThat(response).isNotNull();
     assertThat(response.value()).isEqualTo(4);
   }
 
@@ -178,8 +177,10 @@ class WebApiServiceImplTest {
 
     final List<DiceEntity> diceList = webApiService.listDice();
 
-    assertEquals(1, diceList.size());
-    assertEquals(5, diceList.get(0).value());
+    assertEquals(1, diceList.size(),
+        "The dice list should contain exactly one element.");
+    assertEquals(5, diceList.get(0).value(),
+        "The dice value of the first element should be 5.");
   }
 
 }

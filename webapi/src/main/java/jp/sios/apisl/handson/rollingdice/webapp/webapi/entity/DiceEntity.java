@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
  * @param value     サイコロの出目（1～6の整数）
  * @param updatedAt サイコロを振った日時
  */
+@SuppressWarnings("PMD.CommentSize")
 @Schema(description = "サイコロの出目履歴情報")
 public record DiceEntity(
     @Schema(description = "出目の履歴ID（一意の識別子）", example = "12")

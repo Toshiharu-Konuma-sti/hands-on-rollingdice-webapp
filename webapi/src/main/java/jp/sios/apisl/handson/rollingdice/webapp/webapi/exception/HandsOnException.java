@@ -32,7 +32,7 @@ public class HandsOnException extends RuntimeException {
    * @param cause   原因となった例外（InterruptedExceptionなど）
    */
   // {{{
-  public HandsOnException(String message, Throwable cause) {
+  public HandsOnException(final String message, final Throwable cause) {
     super(message, cause);
   }
   // }}}

@@ -84,7 +84,9 @@ public class WebApiController {
   @PostMapping({"/roll"})
   @Operation(
       summary = "サイコロを振ります。", 
-      description = "通常はサイコロを振った結果の出目を返却しますが、リクエストボディに出目が指定されている場合には、振らずにその値を出目として採用します。また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。")
+      description = "通常はサイコロを振った結果の出目を返却しますが、"
+          + "リクエストボディに出目が指定されている場合には、振らずにその値を出目として採用します。"
+          + "また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。")
   @ApiResponses({
       @ApiResponse(
           responseCode = "200", description = "リクエストが正常に処理",

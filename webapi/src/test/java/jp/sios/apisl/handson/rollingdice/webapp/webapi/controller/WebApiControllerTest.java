@@ -37,6 +37,11 @@ import org.mockito.MockitoAnnotations;
 class WebApiControllerTest {
 
   /**
+   * A constant representing the mock URL for the current request.
+   */
+  private static final String MOCK_CURRENT_URL = "http://localhost:8080";
+
+  /**
    * Web API サービスのインスタンス。
    * コントローラのテストで利用されるモックやスタブのサービスを格納します。.
    */
@@ -72,13 +77,12 @@ class WebApiControllerTest {
   @Test
   void testRollDice() {
     // Arrange
-    final String mockCurrentUrl = "http://localhost:8080";
     final Optional<Integer> optSleep = Optional.of(3);
     final Optional<Integer> optLoop = Optional.of(5);
     final Optional<Boolean> optError = Optional.empty();
     final DiceValueDto mockResponse = new DiceValueDto(6);
 
-    when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
+    when(request.getRequestURL()).thenReturn(new StringBuffer(MOCK_CURRENT_URL));
     when(service.rollDice(optSleep, optLoop, optError, null)).thenReturn(mockResponse);
 
     // Act
@@ -94,14 +98,13 @@ class WebApiControllerTest {
   @Test
   void testRollDiceWithRequestBody() {
     // Arrange
-    final String mockCurrentUrl = "http://localhost:8080";
     final DiceValueDto requestBody = new DiceValueDto(4);
     final Optional<Integer> optSleep = Optional.empty();
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
     final DiceValueDto mockResponse = new DiceValueDto(4);
 
-    when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
+    when(request.getRequestURL()).thenReturn(new StringBuffer(MOCK_CURRENT_URL));
     when(service.rollDice(optSleep, optLoop, optError, requestBody)).thenReturn(mockResponse);
 
     // Act
@@ -117,14 +120,13 @@ class WebApiControllerTest {
   @Test
   void testRollDiceWithAllParameters() {
     // Arrange
-    final String mockCurrentUrl = "http://localhost:8080";
     final DiceValueDto requestBody = new DiceValueDto(2);
     final Optional<Integer> optSleep = Optional.of(1);
     final Optional<Integer> optLoop = Optional.of(2);
     final Optional<Boolean> optError = Optional.of(false);
     final DiceValueDto mockResponse = new DiceValueDto(2);
 
-    when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
+    when(request.getRequestURL()).thenReturn(new StringBuffer(MOCK_CURRENT_URL));
     when(service.rollDice(optSleep, optLoop, optError, requestBody)).thenReturn(mockResponse);
 
     // Act
@@ -140,13 +142,12 @@ class WebApiControllerTest {
   @Test
   void testListDice() {
     // Arrange
-    final String mockCurrentUrl = "http://localhost:8080";
     final List<DiceEntity> mockDiceList = List.of(
         new DiceEntity(3, 1, LocalDateTime.of(2026, 3, 1, 12, 34, 56)), 
         new DiceEntity(2, 3, LocalDateTime.of(2026, 2, 1, 12, 34, 56)), 
         new DiceEntity(1, 5, LocalDateTime.of(2026, 1, 1, 12, 34, 56)));
 
-    when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
+    when(request.getRequestURL()).thenReturn(new StringBuffer(MOCK_CURRENT_URL));
     when(service.listDice()).thenReturn(mockDiceList);
 
     // Act

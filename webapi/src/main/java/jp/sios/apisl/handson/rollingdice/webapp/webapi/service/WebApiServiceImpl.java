@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
  *   <li>errorメソッドで意図的に例外を発生させます。</li>
  *   <li>listDiceメソッドで保存されたサイコロの出目履歴を一覧で取得します。</li>
  * </ul>
+ * 
  * <p>デバッグや運用時のトラブルシューティングを容易にするため、詳細なログ出力や例外制御を行っています。</p>
  *
  * @author Toshiharu Konuma
@@ -41,6 +42,11 @@ public class WebApiServiceImpl implements WebApiService {
    * ループ内で使用される設定ファイル「application.yml」のパスを表す定数です。.
    */
   private static final String FILE_PATH_IN_LOOP = "application.yml";
+
+  /**
+   * 浮動小数点数を小数点以下2桁でフォーマットするための書式文字列です。.
+   */
+  private static final String FLOAT_FORMAT = "%.2f";
 
   /**
    * ログ出力を行うためのロガーインスタンスです。
@@ -124,7 +130,8 @@ public class WebApiServiceImpl implements WebApiService {
             sleepSeconds);
         return;
       }
-      LOGGER.warn("!!! Starting sleep for: {} seconds !!!", String.format("%.2f", (double) sleepSeconds));
+      LOGGER.warn("!!! Starting sleep for: {} seconds !!!",
+          String.format(FLOAT_FORMAT, (double) sleepSeconds));
       try {
         final long sleepMillis = sleepSeconds * 1000L;
         Thread.sleep(sleepMillis);
@@ -154,7 +161,8 @@ public class WebApiServiceImpl implements WebApiService {
       }
 
       final double totalSeconds = loopSeconds;
-      LOGGER.warn("!!! Starting loop for: {} seconds !!!", String.format("%.2f", totalSeconds));
+      LOGGER.warn("!!! Starting loop for: {} seconds !!!",
+          String.format(FLOAT_FORMAT, totalSeconds));
 
       final long durationMillis = loopSeconds * 1000L;
       final long startTime = System.currentTimeMillis();
@@ -175,8 +183,8 @@ public class WebApiServiceImpl implements WebApiService {
           final double elapsedSeconds = (currentTime - startTime) / 1000.0;
           LOGGER.warn(
               "The progress of loop is: {}/{} seconds (loop count: {})",
-              String.format("%.2f", elapsedSeconds),
-              String.format("%.2f", totalSeconds),
+              String.format(FLOAT_FORMAT, elapsedSeconds),
+              String.format(FLOAT_FORMAT, totalSeconds),
               String.format("%,d", executionCount));
           nextLogTime += logIntervalMillis;
         }

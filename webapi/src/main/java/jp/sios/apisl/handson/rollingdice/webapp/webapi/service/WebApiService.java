@@ -7,11 +7,12 @@ import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 
 /**
  * サイコロの操作に関するサービスの定義クラスです。.
- * 
+ *
  * <p>このインターフェースは、サイコロを振ったり履歴を一覧で返す定義を提供します。</p>
- * 
+ *
  * @author Toshiharu Konuma
  */
+@SuppressWarnings("PMD.CommentSize")
 public interface WebApiService {
 
   /**
@@ -27,7 +28,7 @@ public interface WebApiService {
       Optional<Integer> optSleep,
       Optional<Integer> optLoop,
       Optional<Boolean> optError,
-      final DiceValueDto fixedDiceRequest);
+      DiceValueDto fixedDiceRequest);
 
   /**
    * サイコロを振った履歴を一覧で返します。.
