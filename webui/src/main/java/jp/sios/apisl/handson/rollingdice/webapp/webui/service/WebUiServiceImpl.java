@@ -89,7 +89,7 @@ public class WebUiServiceImpl implements WebUiService {
     optLoop.ifPresent(loop -> paramList.add("loop=" + loop));
     optError.ifPresent(error -> paramList.add("error=" + error));
 
-    String path = "/api/dice/v1/roll";
+    String path = "/api/v1/dices";
     if (!paramList.isEmpty()) {
       path += "?" + String.join("&", paramList);
     }
@@ -125,7 +125,7 @@ public class WebUiServiceImpl implements WebUiService {
   public List<DiceHistoryDto> callListDiceApi() {
     UtilEnvInfo.logStartClassMethod();
 
-    final String path = "/api/dice/v1/list";
+    final String path = "/api/v1/dices";
     List<DiceHistoryDto> list = this.callApi(path, HttpMethod.GET, null, new ParameterizedTypeReference<List<DiceHistoryDto>>() {});
 
     if (list == null) {

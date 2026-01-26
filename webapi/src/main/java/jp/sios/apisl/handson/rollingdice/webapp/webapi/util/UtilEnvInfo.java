@@ -53,20 +53,9 @@ public final class UtilEnvInfo {
 
   // {{{ private static void logRequestWithLabel(String label, HttpServletRequest request)
   private static void logRequestWithLabel(final String label, final HttpServletRequest request) {
-    final String url = getCurrentUrl(request);
-    LOGGER.info("### {} ### {} ###", label, url);
-  }
-  // }}}
-
-  // {{{ public static String getCurrentUrl(HttpServletRequest request)
-  /**
-   * リクエストされているURLを取得します。.
-   *
-   * @param request 情報取得対象のHTTPリクエスト
-   * @return リクエストされたURLの文字列
-   */
-  public static String getCurrentUrl(final HttpServletRequest request) {
-    return request.getRequestURL().toString();
+    final String url = request.getRequestURL().toString();
+    final String method = request.getMethod();
+    LOGGER.info("### {} ### {}: {} ###", label, method, url);
   }
   // }}}
 

@@ -39,7 +39,7 @@ class WebApiControllerTest {
   /**
    * A constant representing the mock URL for the current request.
    */
-  private static final String MOCK_CURRENT_URL = "http://localhost:8080";
+  private static final String MOCK_CURRENT_URL = "http://localhost:8182/api/v1/dices";
 
   /**
    * Web API サービスのインスタンス。

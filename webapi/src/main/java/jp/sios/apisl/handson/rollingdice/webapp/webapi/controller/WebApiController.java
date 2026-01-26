@@ -39,7 +39,7 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Toshiharu Konuma
  */
 @RestController
-@RequestMapping("/api/dice/v1")
+@RequestMapping("/api/v1/dices")
 @Tag(name = "web-api-controller")
 @SuppressWarnings("PMD.CommentSize")
 public class WebApiController {
@@ -81,7 +81,7 @@ public class WebApiController {
    * @param optError  サイコロを振らずにエラーを発生させるフラグ（boolean、オプション）
    * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
-  @PostMapping({"/roll"})
+  @PostMapping
   @Operation(
       summary = "サイコロを振ります。", 
       description = "通常はサイコロを振った結果の出目を返却しますが、"
@@ -130,7 +130,7 @@ public class WebApiController {
    * @param request HTTPリクエスト情報
    * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
-  @GetMapping({"/list"})
+  @GetMapping
   @Operation(
       summary = "サイコロを振った履歴を一覧で取得します。",
       description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
