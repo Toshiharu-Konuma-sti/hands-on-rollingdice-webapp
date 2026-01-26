@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.ResponseEntity;
 
 /**
  * {@link WebApiController} の単体テストを行うクラスです。.
@@ -70,7 +69,6 @@ class WebApiControllerTest {
     MockitoAnnotations.openMocks(this);
   }
 
-/*
   @Test
   void testRollDice() {
     // Arrange
@@ -78,22 +76,19 @@ class WebApiControllerTest {
     final Optional<Integer> optSleep = Optional.of(3);
     final Optional<Integer> optLoop = Optional.of(5);
     final Optional<Boolean> optError = Optional.empty();
-    final Optional<Integer> optFixedValue = Optional.empty();
-    final DiceValueDto optFixedValue = null;
-    final String mockDice = "6";
-    final ResponseEntity<String> mockResponse = ResponseEntity.ok(mockDice);
+    final DiceValueDto mockResponse = new DiceValueDto(6);
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
-    when(service.rollDice(optSleep, optLoop, optError, optFixedValue)).thenReturn(mockResponse);
+    when(service.rollDice(optSleep, optLoop, optError, null)).thenReturn(mockResponse);
 
     // Act
-    final ResponseEntity<String> response = controller.rollDice(
+    final DiceValueDto response = controller.rollDice(
         request, null, optSleep, optLoop, optError);
 
     // Assert
-    assertEquals(mockDice, response.getBody(), 
-        "The response body should match the expected dice value");
-    verify(service, times(1)).rollDice(optSleep, optLoop, optError, optFixedValue);
+    assertEquals(6, response.value(), 
+        "The response value should match the expected dice value");
+    verify(service, times(1)).rollDice(optSleep, optLoop, optError, null);
   }
 
   @Test
@@ -104,21 +99,42 @@ class WebApiControllerTest {
     final Optional<Integer> optSleep = Optional.empty();
     final Optional<Integer> optLoop = Optional.empty();
     final Optional<Boolean> optError = Optional.empty();
-    final Optional<DiceValueDto> optFixedValue = Optional.of(requestBody);
-    final String mockDice = "4";
-    final ResponseEntity<String> mockResponse = ResponseEntity.ok(mockDice);
+    final DiceValueDto mockResponse = new DiceValueDto(4);
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
-    when(service.rollDice(optSleep, optLoop, optError, optFixedValue)).thenReturn(mockResponse);
+    when(service.rollDice(optSleep, optLoop, optError, requestBody)).thenReturn(mockResponse);
 
     // Act
-    final ResponseEntity<String> response = controller.rollDice(
+    final DiceValueDto response = controller.rollDice(
         request, requestBody, optSleep, optLoop, optError);
 
     // Assert
-    assertEquals(mockDice, response.getBody(), 
-        "The response body should match the fixed dice value from request body");
-    verify(service, times(1)).rollDice(optSleep, optLoop, optError, optFixedValue);
+    assertEquals(4, response.value(), 
+        "The response value should match the fixed dice value from request body");
+    verify(service, times(1)).rollDice(optSleep, optLoop, optError, requestBody);
+  }
+
+  @Test
+  void testRollDiceWithAllParameters() {
+    // Arrange
+    final String mockCurrentUrl = "http://localhost:8080";
+    final DiceValueDto requestBody = new DiceValueDto(2);
+    final Optional<Integer> optSleep = Optional.of(1);
+    final Optional<Integer> optLoop = Optional.of(2);
+    final Optional<Boolean> optError = Optional.of(false);
+    final DiceValueDto mockResponse = new DiceValueDto(2);
+
+    when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
+    when(service.rollDice(optSleep, optLoop, optError, requestBody)).thenReturn(mockResponse);
+
+    // Act
+    final DiceValueDto response = controller.rollDice(
+        request, requestBody, optSleep, optLoop, optError);
+
+    // Assert
+    assertEquals(2, response.value(), 
+        "The response value should match the expected dice value");
+    verify(service, times(1)).rollDice(optSleep, optLoop, optError, requestBody);
   }
 
   @Test
@@ -126,9 +142,9 @@ class WebApiControllerTest {
     // Arrange
     final String mockCurrentUrl = "http://localhost:8080";
     final List<DiceEntity> mockDiceList = List.of(
-        new DiceEntity(3, 1, LocalDateTime.of(2025, 3, 1, 12, 34, 56)), 
-        new DiceEntity(2, 3, LocalDateTime.of(2025, 2, 1, 12, 34, 56)), 
-        new DiceEntity(1, 5, LocalDateTime.of(2025, 1, 1, 12, 34, 56)));
+        new DiceEntity(3, 1, LocalDateTime.of(2026, 3, 1, 12, 34, 56)), 
+        new DiceEntity(2, 3, LocalDateTime.of(2026, 2, 1, 12, 34, 56)), 
+        new DiceEntity(1, 5, LocalDateTime.of(2026, 1, 1, 12, 34, 56)));
 
     when(request.getRequestURL()).thenReturn(new StringBuffer(mockCurrentUrl));
     when(service.listDice()).thenReturn(mockDiceList);
@@ -140,8 +156,5 @@ class WebApiControllerTest {
     assertEquals(3, result.size(), "The result list size should be 3");
     verify(service, times(1)).listDice();
   }
-*/
-
-
 
 }
