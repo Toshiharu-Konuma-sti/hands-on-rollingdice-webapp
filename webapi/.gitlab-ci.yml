@@ -22,7 +22,6 @@ variables:
 
 stages:
   - docs
-  - deploy
 
 # 4. ツール準備（JFrog CLI, yq のインストールと設定）
 before_script:
@@ -67,36 +66,3 @@ generate_docs_job:
     expire_in: 1 week
     paths:
       - build/docs/
-
-# このジョブ名は必ず "pages" である必要があります
-pages:
-  stage: deploy
-  dependencies:
-    - generate_docs_job
-  script:
-    - echo "--- Deploying to GitLab Pages ---"
-    - mkdir -p public
-    - cp -r build/docs/javadoc public/javadoc
-    - cp -r build/docs/swagger public/swagger
-    - cp -r build/docs/openapi public/openapi
-    - |
-      cat <<EOF > public/index.html
-      <!DOCTYPE html>
-      <html>
-      <head><title>API Documentation</title></head>
-      <body>
-        <h1>API Documentation</h1>
-        <ul>
-          <li><a href="javadoc/index.html">Javadoc</a></li>
-          <li><a href="swagger/index.html">Swagger UI (API Specification)</a></li>
-          <li><a href="openapi/openapi.yaml">OpenAPI YAML</a></li>
-          <li><a href="openapi/openapi.json">OpenAPI JSON</a></li>
-        </ul>
-      </body>
-      </html>
-      EOF
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "web"
