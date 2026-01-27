@@ -1,0 +1,70 @@
+
+# 1. 実行環境の指定
+image: eclipse-temurin:21-jdk
+
+# 2. 実行ルールの設定
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "web"
+
+# 3. 変数定義
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  BUILD_NAME: "hands-on-rollingdice-webapp-webapi"
+  BUILD_NUMBER: "$CI_PIPELINE_ID"
+  ARTIFACTORY_REPO: "hands-on-rollingdice-webapp-webapi"
+  ARTIFACTORY_VIRTUAL_REPO: "gradle-virtual"
+
+  # 将来的にVariablesへ移動推奨
+  JF_URL: "http://artifactory:8081"
+  JF_USER: "admin"
+  JF_PASSWORD: "password"
+
+stages:
+  - docs
+
+# 4. ツール準備（JFrog CLI, yq のインストールと設定）
+before_script:
+  - echo "--- Setup Tools ---"
+  - chmod +x gradlew
+  - curl -fL -o /usr/local/bin/jf https://releases.jfrog.io/artifactory/jfrog-cli/v2-jf/2.89.0/jfrog-cli-linux-amd64/jf
+  - chmod +x /usr/local/bin/jf
+
+  - |
+    if [ -n "$JF_URL" ]; then
+      jf c add --url=$JF_URL --user=$JF_USER --password=$JF_PASSWORD --interactive=false my-artifactory
+      jf gradle-config --repo-deploy $ARTIFACTORY_REPO --repo-resolve $ARTIFACTORY_VIRTUAL_REPO --use-wrapper
+    else
+      echo "WARNING: JF_URL variable is not set. JFrog configuration skipped."
+    fi
+
+  # yq (YAML変換ツール) のインストール
+  - curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o /usr/local/bin/yq && chmod +x /usr/local/bin/yq
+
+# 5. ドキュメント生成ジョブ
+generate_docs_job:
+  stage: docs
+  script:
+    - echo "--- Javadoc Generation ---"
+    # Javadoc生成 (Jenkins: jf "gradle javadoc ...")
+    - jf gradle javadoc -x cyclonedxBom --info --build-name=$BUILD_NAME --build-number=$BUILD_NUMBER
+
+    - echo "--- OpenAPI Generation ---"
+    # OpenAPI JSON & HTML生成
+    - jf gradle openApiGenerate -x cyclonedxBom --info --build-name=$BUILD_NAME --build-number=$BUILD_NUMBER
+
+    # JSON -> YAML 変換
+    - echo "--- Convert JSON to YAML ---"
+    - yq -P -o=yaml 'build/docs/openapi/openapi.json' > 'build/docs/openapi/openapi.yaml'
+
+    - echo "--- Show generated files ---"
+    - ls -R build/docs/
+
+  # 6. 生成物の保存（Artifacts）
+  artifacts:
+    when: always     # 成功/失敗に関わらず保存
+    expire_in: 1 week
+    paths:
+      - build/docs/javadoc/
+      - build/docs/openapi/
+      - build/docs/swagger/
