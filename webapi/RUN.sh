@@ -31,7 +31,8 @@ case "$1" in
 		;;
 	"doc")
 		start_banner
-		./gradlew generateOpenApiDocs --no-configuration-cache -x cyclonedxBom
+		# ./gradlew generateOpenApiDocs --no-configuration-cache -x cyclonedxBom
+		./gradlew generateOpenApiDocsNoServer -x cyclonedxBom
 		./gradlew openApiGenerate
 		./gradlew javadoc -x cyclonedxBom
         tree -L 2 build/docs/

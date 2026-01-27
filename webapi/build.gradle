@@ -129,3 +129,17 @@ tasks.withType(Pmd) {
 		html.required = true
 	}
 }
+
+tasks.register('generateOpenApiDocsNoServer', Test) {
+	description = 'Generates OpenAPI JSON using MockMvc test without starting the web server.'
+	group = 'documentation'
+	useJUnitPlatform()
+	filter {
+		includeTestsMatching "jp.sios.apisl.handson.rollingdice.webapp.webapi.OpenApiGeneratorTest"
+	}
+	outputs.upToDateWhen { false }
+}
+
+tasks.named('openApiGenerate') {
+	dependsOn 'generateOpenApiDocsNoServer'
+}
