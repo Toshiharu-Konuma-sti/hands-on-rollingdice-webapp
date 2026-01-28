@@ -1,15 +1,61 @@
 #!/bin/sh
 
+# {{{ show_usage()
+show_usage()
+{
+	cat << EOS
+Usage: $(basename $0) [options]
+
+Runs this project as a Spring Boot application. Also simplify execution
+of common Gradle tasks.
+
+Options:
+  assemble              Assembles the outputs of this project.
+  oas                   Generates the spring doc openapi file and
+                        convert from json to html.
+  javadoc               (Coming soon!!)
+
+EOS
+}
+# }}}
+
+S_TIME=$(date +%s)
 CUR_DIR=$(cd $(dirname $0); pwd)
 . $CUR_DIR/functions.sh
 
-start_banner
-install_jdk
+case "$1" in
+	"assemble")
+		start_banner
+		./gradlew assemble -x cyclonedxBom --info
+		finish_banner $S_TIME
+		;;
+	"doc")
+		start_banner
+		# ./gradlew generateOpenApiDocs --no-configuration-cache -x cyclonedxBom
+		# ./gradlew generateOpenApiDocsNoServer -x cyclonedxBom
+		./gradlew openApiGenerate -x cyclonedxBom
+		./gradlew javadoc -x cyclonedxBom
+        tree -L 2 build/docs/
+		finish_banner $S_TIME
+		;;
+	"test")
+		start_banner
+		./gradlew test -x cyclonedxBom
+		finish_banner $S_TIME
+		;;
+	"")
+		start_banner
+		install_jdk
 
-echo "Test URL:"
-echo "- http://localhost:8182/api/dice/v1/roll"
-echo "- http://localhost:8182/api/dice/v1/list" 
+		echo "Test URL:"
+		echo "- http://localhost:8182/api/v1/dices"
 
-export SPRING_PROFILES_ACTIVE=dev
-./gradlew clean
-./gradlew bootRun
+		export SPRING_PROFILES_ACTIVE=dev
+		./gradlew clean
+		./gradlew assemble -x cyclonedxBom
+        java -jar ./build/libs/apisl.handson.rollingdice.webapp.webapi-*-SNAPSHOT.jar --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
+		;;
+	*)
+		show_usage
+		;;
+esac

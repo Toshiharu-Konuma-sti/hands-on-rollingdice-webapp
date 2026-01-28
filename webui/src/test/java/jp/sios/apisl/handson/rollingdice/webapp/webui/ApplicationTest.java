@@ -25,7 +25,8 @@ import org.springframework.boot.SpringApplication;
  *
  * @author Toshiharu Konuma
  */
-@SuppressWarnings("PMD.AtLeastOneConstructor")
+@SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.CommentSize"})
+
 class ApplicationTest {
 
   @Test

@@ -9,12 +9,14 @@ import org.slf4j.LoggerFactory;
  *
  * <p>主に以下の機能を提供します:</p>
  * <ul>
- *   <li>リクエスト開始・終了時のURLログ出力</li>
- *   <li>クラス名・メソッド名のログ出力</li>
- *   <li>現在のリクエストURLの取得</li>
+ *   <li>リクエストの開始、および終了時にリクエスト情報のログ出力</li>
+ *   <li>リクエストされているURLの取得</li>
+ *   <li>実行中のクラス名・メソッド名のログ出力</li>
  * </ul>
- * ログ出力にはSLF4JのLoggerを利用しています。
+ *
+ * <p>このクラスはインスタンス化せず、すべてのメソッドはstaticとして利用します。</p>
  */
+@SuppressWarnings({"PMD.CommentSize"})
 public final class UtilEnvInfo {
 
   /**
@@ -28,18 +30,18 @@ public final class UtilEnvInfo {
   }
 
   /**
-   * リクエストの処理開始時に、"START"ラベル付きでリクエスト情報をログ出力します。.
+   * リクエストの開始時に、"START"ラベル付きでリクエスト情報をログに出力します。.
    *
-   * @param request ログ出力対象のHTTPリクエスト
+   * @param request 情報取得対象のHTTPリクエスト
    */
   public static void logStartRequest(final HttpServletRequest request) {
     logRequestWithLabel("START", request);
   }
 
   /**
-   * リクエストの処理完了時に、"FINISH"ラベル付きでリクエスト情報をログ出力します。.
+   * リクエストの完了時に、"FINISH"ラベル付きでリクエスト情報をログに出力します。.
    *
-   * @param request ログ出力対象のHTTPリクエスト
+   * @param request 情報取得対象のHTTPリクエスト
    */
   public static void logFinishRequest(final HttpServletRequest request) {
     logRequestWithLabel("FINISH", request);
@@ -51,9 +53,9 @@ public final class UtilEnvInfo {
   }
 
   /**
-   * 現在リクエストされているURLを取得します。.
+   * リクエストされているURLを取得します。.
    *
-   * @param request 現在のHTTPリクエスト
+   * @param request 情報取得対象のHTTPリクエスト
    * @return リクエストされたURLの文字列
    */
   public static String getCurrentUrl(final HttpServletRequest request) {
@@ -61,7 +63,10 @@ public final class UtilEnvInfo {
   }
 
   /**
-   * 現在実行中のクラス名とメソッド名をログに出力します。.
+   * 実行中のクラス名とメソッド名を取得し、ログに出力します。.
+   * 
+   * <p>ログは「>>> calling: クラス名#メソッド名()」の形式で出力されます。
+   * 主にデバッグやトレース目的でメソッドの開始時に呼び出してください。</p>
    */
   public static void logStartClassMethod() {
     final String className = getClassName();

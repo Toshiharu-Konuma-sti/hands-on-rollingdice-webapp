@@ -2,31 +2,39 @@ package jp.sios.apisl.handson.rollingdice.webapp.webapi.service;
 
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
-import org.springframework.http.ResponseEntity;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 
 /**
- * WebApiServiceインターフェースは、サイコロの操作に関するWeb APIサービスの機能を定義します。.
- * このインターフェースは、サイコロを振る処理やサイコロの一覧取得処理を提供します。
+ * サイコロの操作に関するサービスの定義クラスです。.
+ *
+ * <p>このインターフェースは、サイコロを振ったり履歴を一覧で返す定義を提供します。</p>
+ *
+ * @author Toshiharu Konuma
  */
+@SuppressWarnings("PMD.CommentSize")
 public interface WebApiService {
 
   /**
-   * サイコロを振る処理を実行します。.
+   * サイコロを振り出目を返します。.
    *
    * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
    * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
    * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
-   * @return サイコロの出目を含むレスポンスエンティティ
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceValueDto}オブジェクト
+   * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
-  ResponseEntity<String> rollDice(
-      Optional<Integer> optSleep, Optional<Integer> optLoop, Optional<Boolean> optError);
+  DiceValueDto rollDice(
+      Optional<Integer> optSleep,
+      Optional<Integer> optLoop,
+      Optional<Boolean> optError,
+      DiceValueDto fixedDiceRequest);
 
   /**
-   * サイコロ出目の一覧を取得します。.
+   * サイコロを振った履歴を一覧で返します。.
    *
-   * @return Diceオブジェクトのリスト
+   * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
-  List<Dice> listDice();
+  List<DiceEntity> listDice();
 
 }

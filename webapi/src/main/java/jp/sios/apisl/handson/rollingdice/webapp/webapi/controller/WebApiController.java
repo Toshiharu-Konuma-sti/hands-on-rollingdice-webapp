@@ -10,32 +10,36 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Optional;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.service.WebApiService;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * サイコロAPIのエンドポイントを提供するコントローラクラスです。.
+ * サイコロWeb APIのエンドポイントを管理するクラスです。.
  * 
  * <ul>
  *   <li>サイコロを振るAPI（/api/dice/v1/roll）</li>
- *   <li>サイコロの一覧を取得するAPI（/api/dice/v1/list）</li>
+ *   <li>サイコロを振った履歴を一覧で取得するAPI（/api/dice/v1/list）</li>
  * </ul>
  *
- * <p>各エンドポイントでリクエスト情報のログ出力や、サービス層への処理委譲を行います。
+ * <p>各エンドポイントではサービス層への処理委譲を行います。
  * </p>
  *
  * @author Toshiharu Konuma
  */
 @RestController
-@RequestMapping("/api/dice/v1")
+@RequestMapping("/api/v1/dices")
 @Tag(name = "web-api-controller")
 @SuppressWarnings("PMD.CommentSize")
 public class WebApiController {
@@ -64,77 +68,87 @@ public class WebApiController {
 
   // {{{ public ResponseEntity<Integer> rollDice(...)
   /**
-   * サイコロを振る処理を実行します。.
+   * サイコロを振る処理を扱います。.
    *
-   * <p>リクエストパラメータとして、sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）を受け取ります。
-   * これらのパラメータに基づき、サービス層でサイコロの値を生成し、結果をレスポンスとして返却します。
-   * </p>
+   * <p>通常はサイコロを振った結果の出目を返却しますが、リクエストボディに出目が指定されている場合には、
+   * 振らずにその値を出目として採用します。
+   * また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。</p>
    *
    * @param request   HTTPリクエスト情報
-   * @param optSleep  サイコロ処理前に意図的に遅延させる待機時間（秒、オプション）
-   * @param optLoop   サイコロ処理前に意図的に遅延させるループ時間（秒、オプション）
-   * @param optError  エラー発生フラグ（オプション）
-   * @return サイコロの出目（1～6の整数値）を含むResponseEntity
+   * @param requestBody サイコロの出目を強制する場合に使用するリクエストボディ
+   * @param optSleep  サイコロを振る前に意図的に遅延させる待機時間（秒、オプション）
+   * @param optLoop   サイコロを振る前に意図的に遅延させるループ時間（秒、オプション）
+   * @param optError  サイコロを振らずにエラーを発生させるフラグ（boolean、オプション）
+   * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
-  @GetMapping({"/roll"})
-  @Operation(summary = "サイコロを振ります。", 
-      description = "リクエストパラメータとして、"
-          + "sleep（待機時間）、loop（ループ時間）、error（エラー発生フラグ）を受け取ります。"
-          + "これらのパラメータに基づき、サイコロの値を生成し、結果をレスポンスとして返却します。")
+  @PostMapping
+  @Operation(
+      summary = "サイコロを振ります。", 
+      description = "通常はサイコロを振った結果の出目を返却しますが、"
+          + "リクエストボディに出目が指定されている場合には、振らずにその値を出目として採用します。"
+          + "また、リクエストパラメータ（sleep, loop, error）を指定することで処理の挙動を制御します。")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "サイコロの出目（1～6の整数値）",
-          content = @Content(mediaType = "text/plain",
-              schema = @Schema(implementation = Integer.class, example = "5"))),
-      @ApiResponse(responseCode = "500", description = "errorパラメータが指定された場合など、サーバ内部でエラーが発生",
+      @ApiResponse(
+          responseCode = "200", description = "リクエストが正常に処理",
+          content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = DiceValueDto.class))),
+      @ApiResponse(
+          responseCode = "500", description = "errorパラメータが指定されて例外が発生、もしくはサーバ内部でエラーが発生",
           content = @Content)
   })
-  public ResponseEntity<String> rollDice(
+  public DiceValueDto rollDice(
       final HttpServletRequest request,
-      @Parameter(description = "処理を意図的に遅延させる時間（秒）", example = "10")
+      @io.swagger.v3.oas.annotations.parameters.RequestBody(
+          description = "サイコロの出目を強制したい場合に送信", required = false)
+      @RequestBody(required = false) @Validated final DiceValueDto requestBody,
+      @Parameter(description = "サイコロを振る前に意図的に遅延させる待機時間（秒）", example = "10")
       @RequestParam(name = "sleep", required = false) final Optional<Integer> optSleep,
-      @Parameter(description = "処理を意図的に遅延させるループ時間（秒）", example = "15")
+      @Parameter(description = "サイコロを振る前に意図的に遅延させるループ時間（秒）", example = "15")
       @RequestParam(name = "loop", required = false) final Optional<Integer> optLoop,
-      @Parameter(description = "エラー発生フラグ", example = "true")
+      @Parameter(description = "サイコロを振らずにエラーを発生させるフラグ", example = "true")
       @RequestParam(name = "error", required = false) final Optional<Boolean> optError) {
 
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
-        "The received parameters are: sleep='{}', loop='{}' and error='{}'",
-        optSleep, optLoop, optError);
+        "The received parameters are: body='{}', sleep='{}', loop='{}' and error='{}'",
+        requestBody, optSleep, optLoop, optError);
 
-    final ResponseEntity<String> entity = service.rollDice(optSleep, optLoop, optError);
+    final DiceValueDto responseDto = service.rollDice(optSleep, optLoop, optError, requestBody);
 
     UtilEnvInfo.logFinishRequest(request);
-    return entity;
+    return responseDto;
   }
   // }}}
 
   // {{{ public List<Dice> listDice(HttpServletRequest request)
   /**
-   * サイコロのリストを取得します。.
+   * サイコロを振った履歴を一覧で取得する処理を扱います。.
    *
-   * <p>このメソッドは、サービス層からサイコロ（Dice）オブジェクトのリストを取得し、返却します。
-   * リクエストの開始と終了時にログを出力します。</p>
+   * <p>サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。</p>
    *
    * @param request HTTPリクエスト情報
-   * @return サイコロ（Dice）オブジェクトのリスト
+   * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
-  @GetMapping({"/list"})
-  @Operation(summary = "サイコロのリストを取得します。", description = "サイコロの出目リストを返却します。")
+  @GetMapping
+  @Operation(
+      summary = "サイコロを振った履歴を一覧で取得します。",
+      description = "サイコロの出目履歴を、振った日時が新しい順（降順）で返却します。")
   @ApiResponses({
-      @ApiResponse(responseCode = "200", description = "サイコロの出目リスト",
-          content = @Content(mediaType = "application/json",
-              schema = @Schema(implementation = Dice.class))),
-      @ApiResponse(responseCode = "500", description = "サーバ内部でエラーが発生",
+      @ApiResponse(
+          responseCode = "200", description = "リクエストが正常に処理",
+          content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
+              schema = @Schema(implementation = DiceEntity.class))),
+      @ApiResponse(
+          responseCode = "500", description = "サーバ内部でエラーが発生",
           content = @Content)
   })
-  public List<Dice> listDice(final HttpServletRequest request) {
+  public List<DiceEntity> listDice(final HttpServletRequest request) {
 
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
 
-    final List<Dice> list = service.listDice();
+    final List<DiceEntity> list = service.listDice();
 
     UtilEnvInfo.logFinishRequest(request);
     return list;

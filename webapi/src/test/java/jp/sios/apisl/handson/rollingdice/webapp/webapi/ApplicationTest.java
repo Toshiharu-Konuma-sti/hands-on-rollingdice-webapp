@@ -18,8 +18,7 @@ import org.springframework.boot.SpringApplication;
  *   <li>コンストラクタのテストによるカバレッジ向上</li>
  * </ul>
  *
- * <p>モックを利用して SpringApplication の静的メソッド呼び出しを検証しています。
- * </p>
+ * <p>モックを利用して SpringApplication の静的メソッド呼び出しを検証しています。</p>
  */
 @SuppressWarnings("PMD.CommentSize")
 class ApplicationTest {

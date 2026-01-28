@@ -218,11 +218,24 @@ $ vim src/main/java/jp/sios/apisl/handson/rollingdice/webapp/webapi/service/WebA
 Build the code to confirm there are no syntax errors.
 
 ```
-$ ./gradlew assemble
+$ ./gradlew assemble -x cyclonedxBom
  :
 BUILD SUCCESSFUL in 33s
 6 actionable tasks: 5 executed, 1 from cache
 Configuration cache entry stored.
+```
+
+### Verify the Changes
+
+Run the unit tests to ensure the changes work correctly.
+
+```
+$ ./gradlew test -x cyclonedxBom
+ :
+BUILD SUCCESSFUL in 533ms
+4 actionable tasks: 4 up-to-date
+Configuration cache entry reused.
+
 ```
 
 ### Run the Modified Component

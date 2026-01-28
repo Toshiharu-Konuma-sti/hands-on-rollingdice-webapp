@@ -8,36 +8,31 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
-import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.Dice;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 /**
- * WebApiServiceImplは、WebApiServiceインターフェースの実装クラスです。.
+ * サイコロの操作に関するサービスの実装クラスです。.
  *
- * <p>このクラスは、サイコロを振る処理、スリープやループによる遅延処理、例外発生のシミュレーション、
- * データベースへのサイコロ出目の保存および取得など、Web APIの主要なサービスロジックを提供します。
- * </p>
+ * <p>このクラスは、サイコロを振ったり履歴を一覧で返す処理を提供します。</p>
  * <ul>
  *   <li>rollDiceメソッドでサイコロを振り、結果をデータベースに保存します。</li>
  *   <li>sleepメソッドで指定時間のスリープを行います。</li>
  *   <li>loopメソッドで指定時間ループをしながらファイル読み込みを繰り返します。</li>
  *   <li>errorメソッドで意図的に例外を発生させます。</li>
- *   <li>listDiceメソッドで保存されたサイコロ出目の一覧を取得します。</li>
+ *   <li>listDiceメソッドで保存されたサイコロの出目履歴を一覧で取得します。</li>
  * </ul>
- *
- * <p>ロギングや例外処理も適切に実装されており、デバッグや運用時のトラブルシュートにも配慮されています。
- * </p>
+ * 
+ * <p>デバッグや運用時のトラブルシューティングを容易にするため、詳細なログ出力や例外制御を行っています。</p>
  *
  * @author Toshiharu Konuma
- * @version 1.0
  */
 @Service
 @SuppressWarnings("PMD.CommentSize")
@@ -47,6 +42,11 @@ public class WebApiServiceImpl implements WebApiService {
    * ループ内で使用される設定ファイル「application.yml」のパスを表す定数です。.
    */
   private static final String FILE_PATH_IN_LOOP = "application.yml";
+
+  /**
+   * 浮動小数点数を小数点以下2桁でフォーマットするための書式文字列です。.
+   */
+  private static final String FLOAT_FORMAT = "%.2f";
 
   /**
    * ログ出力を行うためのロガーインスタンスです。
@@ -74,42 +74,45 @@ public class WebApiServiceImpl implements WebApiService {
 
   // {{{ public ResponseEntity<Integer> rollDice(...)
   /**
-   * サイコロを振る処理を実行し、結果をレスポンスとして返します。.
+   * サイコロを振り出目を返します。.
    *
-   * <p>オプションでスリープ時間、ループ時間、エラー発生の有無を指定できます。
-   * 指定されたパラメータに基づき、スリープやループ処理、エラー発生処理を行います。
+   * <p>オプションでスリープ時間、ループ時間、エラー発生の有無を指定して処理の挙動を制御できます。
    * エラーが発生した場合はHTTP 500（INTERNAL_SERVER_ERROR）を返却し、
-   * 正常時はサイコロの出目（1～6）をHTTP 200（OK）で返却します。
+   * 正常時はサイコロを振って出た出目（1～6）をHTTP 200（OK）で返却します。
+   * なお、リクエストボディーで出目が指定された場合は、その値を出目に使用します。
    * </p>
    *
-   * @param optSleep スリープ時間（秒）を表すオプションの整数
-   * @param optLoop  ループ時間（秒）を表すオプションの整数
-   * @param optError エラー発生有無を表すオプションの真偽値
-   * @return サイコロの出目（1～6）またはエラー時は0を含むHTTPレスポンス
+   * @param optSleep サイコロを振る前にスリープする時間（秒）を指定するオプションの整数
+   * @param optLoop サイコロを振る前にループで遅延する時間（秒）を指定するオプションの整数
+   * @param optError エラーを発生させるかどうかを指定するオプションの真偽値
+   * @param fixedDiceRequest サイコロの出目を強制する情報を持つオプションの{@link DiceValueDto}オブジェクト
+   * @return サイコロの出目（1～6）を含む{@link DiceValueDto}オブジェクト
    */
   @Override
-  public ResponseEntity<String> rollDice(
+  public DiceValueDto rollDice(
       final Optional<Integer> optSleep, 
       final Optional<Integer> optLoop, 
-      final Optional<Boolean> optError) {
+      final Optional<Boolean> optError,
+      final DiceValueDto fixedDiceRequest) {
 
     UtilEnvInfo.logStartClassMethod();
     LOGGER.info(
-        "The received parameters are: sleep='{}', loop='{}' and error='{}'", 
-        optSleep, optLoop, optError);
+        "The received parameters are: sleep='{}', loop='{}', error='{}' and fixedDiceRequest='{}'", 
+        optSleep, optLoop, optError, fixedDiceRequest);
 
     this.sleep(optSleep);
     this.loop(optLoop);
-    try {
-      this.error(optError);
-    } catch (HandsOnException ex) {
-      LOGGER.error("The exception was happened with error()", ex);
-      return new ResponseEntity<>("0", HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+    this.error(optError);
 
-    final int value = this.roll();
-    this.insertDice(value);
-    return new ResponseEntity<>(String.valueOf(value), HttpStatus.OK);
+    final int resultValue;
+    if (fixedDiceRequest != null && fixedDiceRequest.value() != null) {
+      resultValue = fixedDiceRequest.value();
+      LOGGER.info("The fixed value of dice is: '{}'", resultValue);
+    } else {
+      resultValue = this.roll();
+    }
+    this.insertDice(resultValue);
+    return new DiceValueDto(resultValue);
   }
   // }}}
 
@@ -127,13 +130,16 @@ public class WebApiServiceImpl implements WebApiService {
             sleepSeconds);
         return;
       }
-      LOGGER.warn("!!! The sleep is: {} seconds !!!", String.format("%.2f", (double) sleepSeconds));
-      final long sleepMillis = sleepSeconds * 1000L;
+      LOGGER.warn("!!! Starting sleep for: {} seconds !!!",
+          String.format(FLOAT_FORMAT, (double) sleepSeconds));
       try {
+        final long sleepMillis = sleepSeconds * 1000L;
         Thread.sleep(sleepMillis);
-        LOGGER.warn("!!! The sleep has finnished !!!");
+        LOGGER.warn("!!! Sleep finished !!!");
       } catch (InterruptedException ex) {
         LOGGER.error("The exception was happened with sleep()", ex);
+        Thread.currentThread().interrupt();
+        throw new HandsOnException("Interrupted during sleep", ex);
       }
     });
   }
@@ -155,7 +161,8 @@ public class WebApiServiceImpl implements WebApiService {
       }
 
       final double totalSeconds = loopSeconds;
-      LOGGER.warn("!!! The loop is: {} seconds !!!", String.format("%.2f", totalSeconds));
+      LOGGER.warn("!!! Starting loop for: {} seconds !!!",
+          String.format(FLOAT_FORMAT, totalSeconds));
 
       final long durationMillis = loopSeconds * 1000L;
       final long startTime = System.currentTimeMillis();
@@ -176,14 +183,14 @@ public class WebApiServiceImpl implements WebApiService {
           final double elapsedSeconds = (currentTime - startTime) / 1000.0;
           LOGGER.warn(
               "The progress of loop is: {}/{} seconds (loop count: {})",
-              String.format("%.2f", elapsedSeconds),
-              String.format("%.2f", totalSeconds),
+              String.format(FLOAT_FORMAT, elapsedSeconds),
+              String.format(FLOAT_FORMAT, totalSeconds),
               String.format("%,d", executionCount));
           nextLogTime += logIntervalMillis;
         }
       }
       LOGGER.warn(
-          "!!! The loop has finnished !!! (Total executions: {}) : The read text is: '{}'",
+          "!!! Loop finished !!! (Total executions: {}) : The read text is: '{}'",
           String.format("%,d", executionCount), line);
 
     });
@@ -209,14 +216,14 @@ public class WebApiServiceImpl implements WebApiService {
   // }}}
 
   // {{{ private void error(Optional<Boolean> optError)
-  private void error(final Optional<Boolean> optError) throws HandsOnException {
+  private void error(final Optional<Boolean> optError) {
     UtilEnvInfo.logStartClassMethod();
 
     if (optError.isPresent() && optError.get()) {
       LOGGER.error(
-          "!!! It received a direction to occur an exception: '{}' !!!", 
+          "!!! Intentional exception triggered: '{}' !!!", 
           "HandsOnException");
-      throw new HandsOnException("It received a direction to occur an exception.");
+      throw new HandsOnException("Intentional error triggered by request parameter.");
     }
   }
   // }}}
@@ -252,24 +259,24 @@ public class WebApiServiceImpl implements WebApiService {
 
   // {{{ public List<Dice> listDice()
   /**
-   * データベースからサイコロ（Dice）の一覧を取得します。.
+   * サイコロを振った履歴を一覧で返します。.
    *
-   * <p>diceテーブルから全レコードを取得し、IDの降順で並べ替えたリストを返します。
-   * 各レコードはDiceオブジェクトに変換され、リストに格納されます。
+   * <p>diceテーブルから全レコードをIDの降順で取得し、
+   * {@link DiceEntity}オブジェクトのリストで返却します。
    * </p>
    *
-   * @return サイコロ（Dice）オブジェクトのリスト
+   * @return サイコロを振った履歴を保持する{@link DiceEntity}オブジェクトのリスト
    */
   @Override
   @SuppressWarnings("PMD.GuardLogStatement")
-  public List<Dice> listDice() {
+  public List<DiceEntity> listDice() {
     UtilEnvInfo.logStartClassMethod();
 
     final String sql = "SELECT id, value, updated_at FROM dice ORDER BY id DESC;";
     LOGGER.info("The sql to execute is '{}'", sql);
 
-    final List<Dice> list = this.jdbcTemplate.query(sql, (rs, rowNum) -> 
-        new Dice(
+    final List<DiceEntity> list = this.jdbcTemplate.query(sql, (rs, rowNum) -> 
+        new DiceEntity(
           rs.getInt("id"),
           rs.getInt("value"),
           rs.getObject("updated_at", LocalDateTime.class)
