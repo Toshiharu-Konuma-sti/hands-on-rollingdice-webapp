@@ -5,9 +5,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-
-import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceHistoryDto;
+import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,8 +15,9 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClient.RequestBodySpec;
+import org.springframework.web.client.RestClientException;
 
 /**
  * サイコロWebアプリケーションの制御に関するサービスの実装クラスです。.
@@ -31,6 +31,7 @@ import org.springframework.web.client.RestClient;
  * @author Toshiharu Konuma
  */
 @Service
+@SuppressWarnings("PMD.CommentSize")
 public class WebUiServiceImpl implements WebUiService {
 
   /**
@@ -61,7 +62,7 @@ public class WebUiServiceImpl implements WebUiService {
   }
   // }}}
 
-  // {{{ public String callRollDiceApi(Optional<String> optSleep, Optional<String> optLoop, Op ... )
+  // {{{ public String callRollDiceApi(Optional<String> optSleep, Optional<String> optLoop, ... )
   /**
    * サイコロWeb APIのRoll Diceを呼び出すメソッドです。.
    *
@@ -72,7 +73,7 @@ public class WebUiServiceImpl implements WebUiService {
    * @param optSleep スリープ時間（秒）を表すオプショナルな文字列
    * @param optLoop  ループ時間（秒）を表すオプショナルな文字列
    * @param optError エラー発生を示すオプショナルな文字列
-   * @param fixedValue サイコロの出目を強制するオプションの整数
+   * @param optValue サイコロの出目を強制するオプションの整数
    * @return サイコロを振った結果の出目（文字列）
    */
   @Override
@@ -80,9 +81,12 @@ public class WebUiServiceImpl implements WebUiService {
       final Optional<String> optSleep,
       final Optional<String> optLoop,
       final Optional<String> optError,
-      final Optional<Integer> fixedValue) {
+      final Optional<Integer> optValue) {
     UtilEnvInfo.logStartClassMethod();
-    LOGGER.info("The received request parameters are: sleep='{}', loop='{}', error='{}' and fixedValue='{}' ", optSleep, optLoop, optError, fixedValue);
+    LOGGER.info(
+        "The received request parameters are: "
+        + "sleep='{}', loop='{}', error='{}' and optValue='{}' ",
+        optSleep, optLoop, optError, optValue);
 
     final List<String> paramList = new ArrayList<>();
     optSleep.ifPresent(sleep -> paramList.add("sleep=" + sleep));
@@ -95,12 +99,13 @@ public class WebUiServiceImpl implements WebUiService {
     }
 
     DiceValueDto requestBody = null;
-    if (fixedValue.isPresent()) {
-      requestBody = new DiceValueDto(fixedValue.get());
+    if (optValue.isPresent()) {
+      requestBody = new DiceValueDto(optValue.get());
       LOGGER.info("The request body to send to the API is: '{}'", requestBody);
     }
 
-    final DiceValueDto response = this.callApi(path, HttpMethod.POST, requestBody, DiceValueDto.class);
+    final DiceValueDto response = this.callApi(
+        path, HttpMethod.POST, requestBody, DiceValueDto.class);
 
     String returnValue = "0";
     if (response != null && response.value() != null) {
@@ -126,7 +131,8 @@ public class WebUiServiceImpl implements WebUiService {
     UtilEnvInfo.logStartClassMethod();
 
     final String path = "/api/v1/dices";
-    List<DiceHistoryDto> list = this.callApi(path, HttpMethod.GET, null, new ParameterizedTypeReference<List<DiceHistoryDto>>() {});
+    List<DiceHistoryDto> list = this.callApi(
+        path, HttpMethod.GET, null, new ParameterizedTypeReference<>() {});
 
     if (list == null) {
       list = Collections.emptyList();
@@ -146,7 +152,11 @@ public class WebUiServiceImpl implements WebUiService {
    * @param responseType レスポンスをマッピングするクラス
    * @return APIから取得したレスポンスボディ
    */
-  private <T> T callApi(String path, HttpMethod method, Object requestBody, Class<T> responseType) {
+  private <T> T callApi(
+      final String path,
+      final HttpMethod method,
+      final Object requestBody,
+      final Class<T> responseType) {
     return callApi(path, method, requestBody, ParameterizedTypeReference.forType(responseType));
   }
   // }}}
@@ -173,14 +183,15 @@ public class WebUiServiceImpl implements WebUiService {
 
     T response = null;
     try {
-      var requestSpec = this.restClient.method(method).uri(url);
+      final RequestBodySpec requestSpec = this.restClient.method(method).uri(url);
       if (requestBody != null) {
         requestSpec.contentType(MediaType.APPLICATION_JSON).body(requestBody);
       }
       response = requestSpec.retrieve().body(responseType);
       LOGGER.info("The value recieved from the rolldice api is: '{}'", response);
     } catch (RestClientException ex) {
-      LOGGER.error("!!! Could not get a response from the API, because an exception was happened !!!", ex);
+      LOGGER.error(
+          "!!! Could not get a response from the API, because an exception was happened !!!", ex);
     }
 
     return response;

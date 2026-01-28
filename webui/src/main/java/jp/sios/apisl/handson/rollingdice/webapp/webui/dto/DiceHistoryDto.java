@@ -11,10 +11,11 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
  * @param value     サイコロの出目（1～6の整数）
  * @param updatedAt  サイコロを振った日時
  */
+@SuppressWarnings({"PMD.CommentSize"})
 @JsonIgnoreProperties(ignoreUnknown = true)
 public record DiceHistoryDto(
-  Integer id,
-  Integer value,
-  String updatedAt
+    Integer id,
+    Integer value,
+    String updatedAt
 ) {
 }

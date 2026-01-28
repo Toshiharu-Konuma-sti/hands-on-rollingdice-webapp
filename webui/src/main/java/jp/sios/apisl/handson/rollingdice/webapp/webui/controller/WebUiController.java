@@ -1,10 +1,8 @@
 package jp.sios.apisl.handson.rollingdice.webapp.webui.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
-
 import java.util.List;
 import java.util.Optional;
-
 import jp.sios.apisl.handson.rollingdice.webapp.webui.dto.DiceHistoryDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.service.WebUiService;
 import jp.sios.apisl.handson.rollingdice.webapp.webui.util.UtilEnvInfo;
@@ -28,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @author Toshiharu Konuma
  */
 @Controller
+@SuppressWarnings({"PMD.CommentSize"})
 public class WebUiController {
 
   /**
@@ -79,7 +78,9 @@ public class WebUiController {
 
     UtilEnvInfo.logStartRequest(request);
     UtilEnvInfo.logStartClassMethod();
-    LOGGER.info("The received request parameters are: sleep='{}', loop='{}', error='{}' and value='{}'", optSleep, optLoop, optError, optValue);
+    LOGGER.info(
+        "The received request parameters are: sleep='{}', loop='{}', error='{}' and value='{}'",
+        optSleep, optLoop, optError, optValue);
 
     final String dice = this.service.callRollDiceApi(optSleep, optLoop, optError, optValue);
     final List<DiceHistoryDto> diceList = this.service.callListDiceApi();

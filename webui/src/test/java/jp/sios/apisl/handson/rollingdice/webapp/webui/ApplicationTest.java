@@ -25,7 +25,8 @@ import org.springframework.boot.SpringApplication;
  *
  * @author Toshiharu Konuma
  */
-@SuppressWarnings("PMD.AtLeastOneConstructor")
+@SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.CommentSize"})
+
 class ApplicationTest {
 
   @Test
@@ -34,7 +35,7 @@ class ApplicationTest {
     // This method is intentionally empty.
     // The test passes if the application context loads successfully.
   }
-/*
+
   @Test
   void testMainRunsSpringApplication() {
     // Arrange
@@ -71,5 +72,5 @@ class ApplicationTest {
     final Application application = new Application();
     assertNotNull(application, "Application instance should not be null");
   }
-*/
+
 }

@@ -19,7 +19,7 @@ import org.springframework.web.client.RestClient;
  */
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.TooManyStaticImports"})
 class RestClientConfigTest {
-/*
+
   @Test
   void testRestClientBeanReturnsBuiltRestClient() {
     // Arrange
@@ -33,8 +33,10 @@ class RestClientConfigTest {
     final RestClient result = config.restClient(mockBuilder);
 
     // Assert
-    assertSame(mockRestClient, result, "The returned RestClient should be the same instance as the mockRestClient.");
+    assertSame(
+        mockRestClient, result,
+        "The returned RestClient should be the same instance as the mockRestClient.");
     verify(mockBuilder, times(1)).build();
   }
-*/
+
 }

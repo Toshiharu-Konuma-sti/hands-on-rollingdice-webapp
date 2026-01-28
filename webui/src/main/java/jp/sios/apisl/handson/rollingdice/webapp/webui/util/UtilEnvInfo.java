@@ -13,8 +13,10 @@ import org.slf4j.LoggerFactory;
  *   <li>リクエストされているURLの取得</li>
  *   <li>実行中のクラス名・メソッド名のログ出力</li>
  * </ul>
+ *
  * <p>このクラスはインスタンス化せず、すべてのメソッドはstaticとして利用します。</p>
  */
+@SuppressWarnings({"PMD.CommentSize"})
 public final class UtilEnvInfo {
 
   /**
