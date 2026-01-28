@@ -75,7 +75,7 @@ sequenceDiagram
     Note right of User: Query String<br>- sleep: milliseconds to sleep<br>- loop: number of times to loop<br>- error: flag to cause HTTP status error
     activate webui
 
-        webui->>webapi: http://localhost:8182/api/dice/v1/roll
+        webui->>webapi: POST http://localhost:8182/api/v1/dices
         activate webapi
 
             alt sleep != null
@@ -99,7 +99,7 @@ sequenceDiagram
             webapi-->>webui: Dice roll result
 
         deactivate webapi
-        webui->>webapi: http://localhost:8182/api/dice/v1/list
+        webui->>webapi: GET http://localhost:8182/api/v1/dices
         activate webapi
 
             webapi->>Database: SELECT dice roll history
