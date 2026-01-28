@@ -2,6 +2,7 @@ package jp.sios.apisl.handson.rollingdice.webapp.webapi.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.dto.DiceValueDto;
 import jp.sios.apisl.handson.rollingdice.webapp.webapi.entity.DiceEntity;
+import jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -146,8 +148,8 @@ class WebApiServiceImplTest {
     final Optional<Boolean> optError = Optional.of(true);
     final DiceValueDto fixedDiceRequest = null;
 
-    assertThat(org.junit.jupiter.api.Assertions.assertThrows(
-        jp.sios.apisl.handson.rollingdice.webapp.webapi.exception.HandsOnException.class,
+    assertThat(assertThrows(
+        HandsOnException.class,
         () -> webApiService.rollDice(optSleep, optLoop, optError, fixedDiceRequest)
     )).isNotNull();
   }

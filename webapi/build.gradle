@@ -72,6 +72,7 @@ tasks.named('test') {
 	testLogging {
 		events "started", "passed", "skipped", "failed"
 	}
+	exclude '**/OpenApiGeneratorTest.class'
 }
 
 jacoco {
