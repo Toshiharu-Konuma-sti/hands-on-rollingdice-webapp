@@ -11,5 +11,33 @@
 
 			<li class="li-spacing"><a th:href="${cUrl} + '?error=true'">Cause 5xx error at API</a></li>
 
-			<li><a href="#" id="simulate-error-link">Cause JS error at Browser</a></li>
+			<li class="li-spacing"><a href="#" id="simulate-error-link">Cause JS error at Browser</a></li>
+			<li>Force specific value
+				<div><span>0</span><input type="range" id="dice-slider" min="0" max="7" step="1" value="3" list="eyelist"><span>7</span>
+					<datalist id="eyelist">
+						<option value="0"></option>
+						<option value="1"></option>
+						<option value="2"></option>
+						<option value="3"></option>
+						<option value="4"></option>
+						<option value="5"></option>
+						<option value="6"></option>
+						<option value="7"></option>
+					</datalist>
+				</div>
+				<div><img id="dice-preview" src="/image/dice32_3.png"></div>
+			</li>
 		</ol>
+
+<script>
+function updateDiceImage(event) {
+	const image = document.getElementById('dice-preview');
+	const currentValue = event.target.value;
+	image.src = '/image/dice32_' + currentValue + '.png';
+}
+function initDicePage() {
+	const slider = document.getElementById('dice-slider');
+	slider.addEventListener('input', updateDiceImage);
+}
+document.addEventListener('DOMContentLoaded', initDicePage);
+</script>
