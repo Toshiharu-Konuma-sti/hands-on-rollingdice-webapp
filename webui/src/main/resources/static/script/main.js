@@ -5,8 +5,12 @@ function putLoadingImage()
 	const liElements = olElement.getElementsByTagName('li');
 	for (let i = 0; i < liElements.length; i++)
 	{
-		const aTag = liElements[i].querySelector('a');
-		aTag.classList.add('disabled-link');
+		const currentLi = liElements[i];
+		currentLi.classList.add('disabled-link');
+		const childNodes = currentLi.children;
+		for (let j = 0; j < childNodes.length; j++) {
+			childNodes[j].classList.add('disabled-link');
+		}
 	}
 	// turn it into an animated dice picture
 	let img = document.getElementById('img-dice64');

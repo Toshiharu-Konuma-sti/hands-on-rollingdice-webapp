@@ -13,7 +13,7 @@
 
 			<li class="li-spacing"><a href="#" id="simulate-error-link">Cause JS error at Browser</a></li>
 			<li>Force specific value
-				<div><span>0</span><input type="range" id="dice-slider" min="0" max="7" step="1" value="3" list="eyelist"><span>7</span>
+				<div><span>0</span><input type="range" id="dice-slider" th:value="${dice}" min="0" max="7" step="1" list="eyelist"><span>7</span>
 					<datalist id="eyelist">
 						<option value="0"></option>
 						<option value="1"></option>
@@ -25,15 +25,24 @@
 						<option value="7"></option>
 					</datalist>
 				</div>
-				<div><img id="dice-preview" src="/image/dice32_3.png"></div>
+				<div>
+					<a id="dice-link" class="dice-btn" th:href="${cUrl} + '?value=' + ${dice}" th:data-base-url="${cUrl}">
+						<span style="margin-right: 5px; vertical-align: middle;">Roll with:</span>
+						<img id="dice-preview" th:src="'/image/dice32_' + ${dice} + '.png'">
+					</a>
+				</div>
 			</li>
 		</ol>
 
 <script>
 function updateDiceImage(event) {
-	const image = document.getElementById('dice-preview');
 	const currentValue = event.target.value;
+	const image = document.getElementById('dice-preview');
+	const link = document.getElementById('dice-link');
+
 	image.src = '/image/dice32_' + currentValue + '.png';
+	const baseUrl = link.getAttribute('data-base-url');
+	link.href = baseUrl + '?value=' + currentValue;
 }
 function initDicePage() {
 	const slider = document.getElementById('dice-slider');
@@ -41,3 +50,46 @@ function initDicePage() {
 }
 document.addEventListener('DOMContentLoaded', initDicePage);
 </script>
+<style>
+/* ボタン風のデザイン */
+.dice-btn {
+    display: inline-flex;       /* 中身を横並びにして中央揃えしやすくする */
+    align-items: center;        /* 垂直方向の中央揃え */
+    justify-content: center;    /* 水平方向の中央揃え */
+    
+    text-decoration: none;      /* リンクの下線を消す */
+    background-color: #f0f0f0;  /* 背景色（薄いグレー） */
+    color: #333;                /* 文字色 */
+    border: 1px solid #ccc;     /* 枠線 */
+    border-radius: 4px;         /* 角丸 */
+    padding: 5px 15px;          /* 内側の余白（上下 左右） */
+    
+    cursor: pointer;            /* カーソルを指の形に */
+    box-shadow: 0 2px 2px rgba(0,0,0,0.1); /* 軽い影をつけて立体感を出す */
+    transition: all 0.2s;       /* ホバー時の変化を滑らかに */
+}
+
+/* マウスを乗せた時 */
+.dice-btn:hover {
+    background-color: #e0e0e0;  /* 背景を少し濃く */
+    box-shadow: 0 4px 4px rgba(0,0,0,0.15); /* 影を強調して浮いたように見せる */
+    transform: translateY(-1px); /* 1ピクセル上に移動 */
+}
+
+/* クリックした瞬間 */
+.dice-btn:active {
+    background-color: #d0d0d0;
+    box-shadow: none;           /* 影を消して押し込んだように見せる */
+    transform: translateY(1px); /* 1ピクセル下に移動 */
+}
+
+/* 以前作成した無効化クラスとの組み合わせ用 */
+/* 親のliにdisabled-linkがついた場合、このボタンも半透明にして操作不可にする */
+.disabled-link .dice-btn,
+.dice-btn.disabled-link {
+    pointer-events: none;
+    opacity: 0.6;
+    box-shadow: none;
+    cursor: default;
+}
+</style>
