@@ -24,11 +24,6 @@ table td {
 	text-align: center;
 }
 
-.disabled-link {
-	pointer-events: none;
-	color: gray;
-	text-decoration: none;
-}
 @keyframes rumble {
 	0%   { transform:translate(0); }
 	25%  { transform:translate(6px); }
@@ -39,8 +34,4 @@ table td {
 .shake {
 	animation:rumble 0.1s linear 4;
 	background-color: lightpink;
-}
-.negation {
-	text-decoration: line-through;
-	color: gray;
 }

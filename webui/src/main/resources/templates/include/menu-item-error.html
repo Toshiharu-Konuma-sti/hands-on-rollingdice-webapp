@@ -11,5 +11,32 @@
 
 			<li class="li-spacing"><span class="negation">Cause 5xx error at API</span></li>
 
-            <li><span class="negation">Cause JS error at Browser</span></li>
+            <li class="li-spacing"><span class="negation">Cause JS error at Browser</span></li>
+
+			<li>
+				<div class="compact-wrapper"><span class="negation">Force specific value</span>
+					<div class="force-val-container slider-row">
+						<span class="negation">0</span>
+						<input type="range" id="dice-slider" th:value="${dice}" min="0" max="7" step="1" list="eyelist" disabled>
+						<span class="negation">7</span>
+						<datalist id="eyelist">
+							<option value="0"></option>
+							<option value="1"></option>
+							<option value="2"></option>
+							<option value="3"></option>
+							<option value="4"></option>
+							<option value="5"></option>
+							<option value="6"></option>
+							<option value="7"></option>
+						</datalist>
+					</div>
+					<div class="force-val-container button-row">
+						<a id="dice-link" class="dice-btn disabled-link">
+							<span class="negation">Roll with:</span>
+							<img id="dice-preview" th:src="'/image/dice32_' + ${dice} + '.png'">
+						</a>
+					</div>
+				</div>
+			</li>
+
 		</ol>

@@ -4,6 +4,17 @@
 	margin-bottom: 15px;
 }
 
+.disabled-link {
+	pointer-events: none;
+	color: gray;
+	text-decoration: none;
+}
+
+.negation {
+	text-decoration: line-through;
+	color: gray;
+}
+
 /* テキストとコントロールを囲むラッパー */
 .compact-wrapper {
 	/* 中身（テキスト「Force specific value」）の幅に合わせて自身の幅を縮める */
@@ -42,7 +53,9 @@
 	justify-content: center;
 
 	text-decoration: none;
+	/*
 	background-color: #f0f0f0;
+	*/
 	color: #333;
 	border: 1px solid #ccc;
 	border-radius: 4px;
@@ -82,7 +95,15 @@
 .disabled-link .dice-btn,
 .dice-btn.disabled-link {
 	pointer-events: none;
-	opacity: 0.6;
-	box-shadow: none;
 	cursor: default;
+	box-shadow: none;
+	border: 1px solid #dcdcdc;
+	color: #aaa;
+}
+
+/* ボタンの中の画像だけを薄くする */
+.dice-btn.disabled-link img,
+.disabled-link .dice-btn img {
+    opacity: 0.4;              /* 画像を薄く */
+    filter: grayscale(100%);   /* お好みで：画像を白黒にする */
 }
