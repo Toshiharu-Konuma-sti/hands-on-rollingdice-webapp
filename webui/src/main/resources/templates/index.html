@@ -8,10 +8,10 @@
 			<h2>Roll a dice</h2>
 		</div>
 <th:block th:if="${dice} != '0'">
-		<div th:replace="~{include/menu-item}">title</div>
+<div th:replace="~{include/menu-item}">title</div>
 </th:block>
 <th:block th:if="${dice} == '0'">
-		<div th:replace="~{include/menu-item-error}">title</div>
+<div th:replace="~{include/menu-item-error}">title</div>
 </th:block>
 	</div>
 	<div class="content">

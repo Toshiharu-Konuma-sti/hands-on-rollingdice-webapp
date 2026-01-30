@@ -47,8 +47,12 @@ function updateDiceImage(event) {
 
 function initDicePage() {
 	const errorLink = document.getElementById('simulate-error-link');
-	errorLink.addEventListener('click', generateBrowserError);
+	if (errorLink) {
+		errorLink.addEventListener('click', generateBrowserError);
+	}	
 	const slider = document.getElementById('dice-slider');
-	slider.addEventListener('input', updateDiceImage);
+	if (slider) {
+		slider.addEventListener('input', updateDiceImage);
+	}
 }
 document.addEventListener('DOMContentLoaded', initDicePage);
