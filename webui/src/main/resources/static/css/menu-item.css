@@ -1,0 +1,88 @@
+@charset "UTF-8";
+
+.li-spacing {
+	margin-bottom: 15px;
+}
+
+/* テキストとコントロールを囲むラッパー */
+.compact-wrapper {
+	/* 中身（テキスト「Force specific value」）の幅に合わせて自身の幅を縮める */
+	width: fit-content;
+}
+
+/* 共通のコンテナ幅設定 */
+.force-val-container {
+	width: 100%;           /* 親要素に合わせる */
+	margin: 5px 0;         /* 上下の隙間 */
+	box-sizing: border-box;
+}
+
+/* スライダー行のデザイン */
+.slider-row {
+	display: flex;         /* 横並びにする */
+	align-items: center;   /* 縦方向の中央揃え */
+	justify-content: space-between; /* 両端揃え */
+	gap: 10px;             /* 数字とスライダーの隙間 */
+}
+
+/* スライダー本体 */
+#dice-slider {
+	flex-grow: 1;          /* 空きスペースいっぱいに広げる */
+	width: auto;           /* デフォルトの固定幅を解除 */
+	cursor: pointer;
+}
+
+/* ボタンのデザイン */
+.dice-btn {
+	display: flex;         /* flexにして幅いっぱい使う */
+	width: 100%;           /* コンテナ幅いっぱいに広げる */
+	box-sizing: border-box; /* paddingを含めて幅を計算する */
+
+	align-items: center;
+	justify-content: center;
+
+	text-decoration: none;
+	background-color: #f0f0f0;
+	color: #333;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	padding: 5px 15px;
+
+	cursor: pointer;
+	box-shadow: 0 2px 2px rgba(0,0,0,0.1);
+	transition: all 0.2s;
+}
+
+/* --- ボタン内のテキスト(span)のスタイル --- */
+.dice-btn span {
+	margin-right: 5px;      /* テキストと画像の間の隙間 */
+	vertical-align: middle; /* 垂直方向の位置合わせ */
+}
+
+/* --- ボタン内の画像(img)のスタイル --- */
+.dice-btn img {
+	vertical-align: middle; /* 垂直方向の位置合わせ */
+}
+
+/* マウスを乗せた時 */
+.dice-btn:hover {
+	background-color: #e0e0e0;  /* 背景を少し濃く */
+	box-shadow: 0 4px 4px rgba(0,0,0,0.15); /* 影を強調して浮いたように見せる */
+	transform: translateY(-1px); /* 1ピクセル上に移動 */
+}
+
+/* クリックした瞬間 */
+.dice-btn:active {
+	background-color: #d0d0d0;
+	box-shadow: none;           /* 影を消して押し込んだように見せる */
+	transform: translateY(1px); /* 1ピクセル下に移動 */
+}
+
+/* 親のliにdisabled-linkがついた場合、このボタンも半透明にして操作不可にする */
+.disabled-link .dice-btn,
+.dice-btn.disabled-link {
+	pointer-events: none;
+	opacity: 0.6;
+	box-shadow: none;
+	cursor: default;
+}
