@@ -92,9 +92,8 @@ show_url()
 /************************************************************
  * Information:
  * - Access to Monitored servers with the URL below.
- *   - webui:      http://localhost:8181
- *   - webapi:     http://localhost:8182/api/dice/v1/roll
- *   - webapi:     http://localhost:8182/api/dice/v1/list
+ *   - webui:               http://localhost:8181
+ *   - webapi(GET/POST):    http://localhost:8182/api/v1/dices
  *   - micrometer: http://localhost:8181/actuator for webui
  *   - micrometer: http://localhost:8182/actuator for webapi
  ***********************************************************/

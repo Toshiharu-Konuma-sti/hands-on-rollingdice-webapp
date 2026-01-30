@@ -1,1 +1,4 @@
 *.swp
+
+### VS Code ###
+.vscode/

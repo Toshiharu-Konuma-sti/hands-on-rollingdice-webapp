@@ -2,6 +2,13 @@
 
 This is a web application used at the application layer for various hands-on workshops, including DevOps (CI/CD, Observability).
 
+[![License](https://img.shields.io/github/license/Toshiharu-Konuma-sti/hands-on-rollingdice-webapp)](https://opensource.org/licenses/MIT)
+[![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://www.java.com)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.3-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![Gradle](https://img.shields.io/badge/Gradle-Build-02303A?style=flat-square&logo=gradle&logoColor=white)](https://gradle.org/)
+
+---
+
 ## Prerequisites
 
 To run this application in your local environment, you must have the following tools installed.
@@ -75,7 +82,7 @@ sequenceDiagram
     Note right of User: Query String<br>- sleep: milliseconds to sleep<br>- loop: number of times to loop<br>- error: flag to cause HTTP status error
     activate webui
 
-        webui->>webapi: http://localhost:8182/api/dice/v1/roll
+        webui->>webapi: POST http://localhost:8182/api/v1/dices
         activate webapi
 
             alt sleep != null
@@ -99,7 +106,7 @@ sequenceDiagram
             webapi-->>webui: Dice roll result
 
         deactivate webapi
-        webui->>webapi: http://localhost:8182/api/dice/v1/list
+        webui->>webapi: GET http://localhost:8182/api/v1/dices
         activate webapi
 
             webapi->>Database: SELECT dice roll history

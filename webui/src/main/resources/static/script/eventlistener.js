@@ -1,4 +1,23 @@
 
+function putLoadingImage()
+{
+	// disable all links on the menu
+	const olElement = document.getElementById('menu-roll');
+	const liElements = olElement.getElementsByTagName('li');
+	for (let i = 0; i < liElements.length; i++)
+	{
+		const currentLi = liElements[i];
+		currentLi.classList.add('disabled-link');
+		const childNodes = currentLi.children;
+		for (let j = 0; j < childNodes.length; j++) {
+			childNodes[j].classList.add('disabled-link');
+		}
+	}
+	// turn it into an animated dice picture
+	let img = document.getElementById('img-dice64');
+	img.src = '/image/dice64_x.gif';
+}
+
 function showToast(timestamp) {
 	const x = document.getElementById("toast");
 	x.innerHTML = `JavaScript exception occurred<br>Error triggered! ID: ${timestamp}`;
@@ -16,7 +35,24 @@ function generateBrowserError(event) {
 	throw new Error(`Handson Error: JavaScript error generated at ${timestamp}`);
 }
 
-const errorLink = document.getElementById('simulate-error-link');
-if (errorLink) {
-	errorLink.addEventListener('click', generateBrowserError);
+function updateDiceImage(event) {
+	const currentValue = event.target.value;
+	const image = document.getElementById('dice-preview');
+	const link = document.getElementById('dice-link');
+
+	image.src = '/image/dice32_' + currentValue + '.png';
+	const baseUrl = link.getAttribute('data-base-url');
+	link.href = baseUrl + '?value=' + currentValue;
 }
+
+function initDicePage() {
+	const errorLink = document.getElementById('simulate-error-link');
+	if (errorLink) {
+		errorLink.addEventListener('click', generateBrowserError);
+	}	
+	const slider = document.getElementById('dice-slider');
+	if (slider) {
+		slider.addEventListener('input', updateDiceImage);
+	}
+}
+document.addEventListener('DOMContentLoaded', initDicePage);

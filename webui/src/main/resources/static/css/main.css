@@ -1,3 +1,5 @@
+@charset "UTF-8";
+
 body {
 	font-family: 'Cascadia Code', sans-serif;
 }
@@ -21,15 +23,7 @@ table td {
 	padding: 5px;
 	text-align: center;
 }
-.li-spacing {
-	margin-bottom: 10px;
-}
 
-.disabled-link {
-	pointer-events: none;
-	color: gray;
-	text-decoration: none;
-}
 @keyframes rumble {
 	0%   { transform:translate(0); }
 	25%  { transform:translate(6px); }
@@ -40,8 +34,4 @@ table td {
 .shake {
 	animation:rumble 0.1s linear 4;
 	background-color: lightpink;
-}
-.negation {
-	text-decoration: line-through;
-	color: gray;
 }
