@@ -2,6 +2,13 @@
 
 This is a web application used at the application layer for various hands-on workshops, including DevOps (CI/CD, Observability).
 
+![License](https://img.shields.io/github/license/Toshiharu-Konuma-sti/hands-on-rollingdice-webapp)
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.3-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)
+![Gradle](https://img.shields.io/badge/Gradle-Build-02303A?style=flat-square&logo=gradle&logoColor=white)
+
+---
+
 ## Prerequisites
 
 To run this application in your local environment, you must have the following tools installed.
