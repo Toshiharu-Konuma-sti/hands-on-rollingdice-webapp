@@ -27,7 +27,7 @@ check_required_commands()
 {
 	echo "\n### START: Check required commands ##########"
 	local missing_cmds=""
-	for cmd in "$@"; do
+	for cmd in $*; do
 		if ! command -v "${cmd}" >/dev/null 2>&1; then
 			if [ -z "$missing_cmds" ]; then
 				missing_cmds="${cmd}"
