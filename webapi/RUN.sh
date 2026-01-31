@@ -1,27 +1,9 @@
 #!/bin/sh
 
-# {{{ show_usage()
-show_usage()
-{
-	cat << EOS
-Usage: $(basename $0) [options]
-
-Runs this project as a Spring Boot application. Also simplify execution
-of common Gradle tasks.
-
-Options:
-  assemble              Assembles the outputs of this project.
-  oas                   Generates the spring doc openapi file and
-                        convert from json to html.
-  javadoc               (Coming soon!!)
-
-EOS
-}
-# }}}
-
 S_TIME=$(date +%s)
 CUR_DIR=$(cd $(dirname $0); pwd)
-. $CUR_DIR/functions.sh
+. $CUR_DIR/common.sh
+. $CUR_DIR/custom.sh
 
 case "$1" in
 	"assemble")
@@ -31,8 +13,6 @@ case "$1" in
 		;;
 	"doc")
 		start_banner
-		# ./gradlew generateOpenApiDocs --no-configuration-cache -x cyclonedxBom
-		# ./gradlew generateOpenApiDocsNoServer -x cyclonedxBom
 		./gradlew openApiGenerate -x cyclonedxBom
 		./gradlew javadoc -x cyclonedxBom
         tree -L 2 build/docs/
@@ -56,6 +36,6 @@ case "$1" in
         java -jar ./build/libs/apisl.handson.rollingdice.webapp.webapi-*-SNAPSHOT.jar --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
 		;;
 	*)
-		show_usage
+		show_usage_webapi
 		;;
 esac
