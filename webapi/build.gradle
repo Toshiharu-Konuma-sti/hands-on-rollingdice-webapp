@@ -11,6 +11,7 @@ plugins {
 	id 'checkstyle'
 	id 'org.springdoc.openapi-gradle-plugin' version '1.9.0'
 	id 'org.openapi.generator' version '7.16.0'
+	id 'maven-publish'
 }
 
 group = 'jp.sios'
@@ -143,4 +144,25 @@ tasks.register('generateOpenApiDocsNoServer', Test) {
 
 tasks.named('openApiGenerate') {
 	dependsOn 'generateOpenApiDocsNoServer'
+}
+
+publishing {
+	publications {
+		maven(MavenPublication) {
+			from components.java
+		}
+	}
+	repositories {
+		maven {
+			url "${System.getenv('CI_API_V4_URL')}/projects/${System.getenv('CI_PROJECT_ID')}/packages/maven"
+			allowInsecureProtocol = true
+			credentials(HttpHeaderCredentials) {
+				name = 'Job-Token'
+				value = System.getenv('CI_JOB_TOKEN')
+			}
+			authentication {
+				header(HttpHeaderAuthentication)
+			}
+		}
+	}
 }
