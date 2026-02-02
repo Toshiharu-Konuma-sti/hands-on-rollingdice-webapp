@@ -1,96 +1,20 @@
 
-# 実行環境の指定
-image: gradle:8-jdk21
-
-# 実行ルールの設定
-workflow:
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "web"
-
-# 変数定義
-variables:
-  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
-
-cache:
-  key: "$CI_COMMIT_REF_SLUG"
-  paths:
-    - .gradle/wrapper
-    - .gradle/caches
-
+# .gitlab-ci.yml (メイン)
 stages:
-  - build
-  - test
-  - docs
-  - release
-  - deploy
+  - launchers
 
-# ツール準備（JFrog CLI のインストールと設定）
-before_script:
-  - echo "--- Setup Tools ---"
-  - chmod +x gradlew
+# 1. ビルド・リリースパイプラインの起動ボタン
+trigger-build-release:
+  stage: launchers
+  trigger:
+    include: .gitlab-ci/build-release.yml
+    strategy: depend
+  when: manual
 
-# ビルドジョブ
-build_job:
-  stage: build
-  script:
-    - ./gradlew clean assemble -x cyclonedxBom
-  artifacts:
-    when: always
-    expire_in: 1 week
-    paths:
-      - build/libs/*.jar
-
-# テストジョブ
-test_job:
-  stage: test
-  script:
-    - ./gradlew test spotbugsMain pmdMain checkstyleMain -x cyclonedxBom
-  artifacts:
-    when: always
-    expire_in: 1 week
-    paths:
-      - build/reports/
-    reports:
-      junit: build/test-results/test/**/TEST-*.xml
-
-# ドキュメント生成ジョブ
-doc_job:
-  stage: docs
-  script:
-    - echo "--- Install yq ---"
-    - curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o ./yq && chmod +x ./yq
-    - echo "--- Javadoc Generation ---"
-    - ./gradlew javadoc -x cyclonedxBom --info
-    - echo "--- OpenAPI Generation ---"
-    - ./gradlew generateOpenApiDocsNoServer -x cyclonedxBom --info
-    - ./gradlew openApiGenerate -x cyclonedxBom --info
-    - echo "--- Convert JSON to YAML ---"
-    - ./yq -P -o=yaml 'build/docs/openapi/openapi.json' > 'build/docs/openapi/openapi.yaml'
-    - echo "--- Show generated files ---"
-    - ls -R build/docs/
-  artifacts:
-    when: always
-    expire_in: 1 week
-    paths:
-      - build/docs/
-
-# リリースジョブ (Package Registryへの登録)
-publish_job:
-  stage: release
-  needs: ["build_job", "test_job"]
-  script:
-    - ./gradlew publish --no-configuration-cache
-
-# デプロイジョブ
-deploy_job:
-  stage: deploy
-  needs: ["publish_job"]
-  script:
-    - |
-      echo "### START: Deploy to Production (Skeleton) ###"
-      echo "Deployment logic placeholder"
-      echo "Simulating deployment..."
-      sleep 5
-      echo "### END: Deploy to Production ###"
+# 2. デプロイパイプラインの起動ボタン
+trigger-deploy:
+  stage: launchers
+  trigger:
+    include: .gitlab-ci/deploy.yml
+    strategy: depend
   when: manual

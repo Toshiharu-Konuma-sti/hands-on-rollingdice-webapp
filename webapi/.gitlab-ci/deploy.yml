@@ -1,0 +1,21 @@
+
+# 実行環境の指定
+image: alpine:latest
+
+stages:
+  - deploy
+
+# デプロイジョブ
+deploy_job:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - apk add --no-cache openssh-client
+  script:
+    - |
+      echo "### START: Deploy to Production (Skeleton) ###"
+      echo "Deployment logic placeholder"
+      echo "Simulating deployment..."
+      sleep 5
+      echo "### END: Deploy to Production ###"
