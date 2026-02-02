@@ -86,10 +86,11 @@ publish_job:
 deploy_job:
   stage: deploy
   needs: ["publish_job"]
-  script: |
-    echo "### START: Deploy to Production (Skeleton) ###"
-    echo "Deployment logic placeholder"
-    echo "Simulating deployment..."
-    sleep 5
-    echo "### END: Deploy to Production ###"
+  script:
+    - |
+      echo "### START: Deploy to Production (Skeleton) ###"
+      echo "Deployment logic placeholder"
+      echo "Simulating deployment..."
+      sleep 5
+      echo "### END: Deploy to Production ###"
   when: manual
