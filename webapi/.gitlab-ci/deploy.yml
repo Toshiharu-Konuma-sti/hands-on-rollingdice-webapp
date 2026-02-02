@@ -10,12 +10,30 @@ deploy_job:
   stage: deploy
   variables:
     GIT_STRATEGY: none
+    # ▼ ハンズオン用にここに記述します（本番ではSettings>CI/CD>Variablesへ移動推奨）
+    ANSIBLE_SERVER_HOST: "ansible"      # AnsibleサーバーのIP
+    ANSIBLE_SERVER_USER: "root"         # ログインユーザー
+    ANSIBLE_SERVER_PASSWORD: "password" # ログインパスワード
   before_script:
-    - apk add --no-cache openssh-client
+    - apk add --no-cache openssh-client sshpass
+    # 2. ホストキー確認の無効化（yes/noを聞かれないようにする）
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   script:
+    - echo "### START: Trigger Ansible Playbook via Password Auth ###"
+    # sshpass -p "パスワード" ssh ユーザー@ホスト "コマンド" の形式で実行
     - |
-      echo "### START: Deploy to Production (Skeleton) ###"
-      echo "Deployment logic placeholder"
-      echo "Simulating deployment..."
-      sleep 5
-      echo "### END: Deploy to Production ###"
+      sshpass -p "$ANSIBLE_SERVER_PASSWORD" ssh $ANSIBLE_SERVER_USER@$ANSIBLE_SERVER_HOST "
+        # 環境変数のセット
+        export ARTIFACTORY_USERNAME='gitlab-ci-token'
+        export ARTIFACTORY_PASSWORD='$CI_JOB_TOKEN'
+        export CI_API_V4_URL='$CI_API_V4_URL'
+        export CI_PROJECT_ID='$CI_PROJECT_ID'
+        
+        echo '--- 1. Deploying WebAPI ---'
+        ansible-playbook -i /root/ansible/playbook/inventory_webapi.ini /root/ansible/playbook/deploy_webapi.yml
+        
+        echo '--- 2. Deploying WebUI ---'
+        ansible-playbook -i /root/ansible/playbook/inventory_webui.ini /root/ansible/playbook/deploy_webui.yml
+      "
+    - echo "### END: Ansible Playbook Finished ###"
