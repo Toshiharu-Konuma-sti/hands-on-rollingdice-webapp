@@ -147,7 +147,8 @@ tasks.register('generateOpenApiDocsNoServer', Test) {
 publishing {
 	publications {
 		maven(MavenPublication) {
-			from components.java
+//			from components.java
+			artifact bootJar
 		}
 	}
 	repositories {
