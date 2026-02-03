@@ -19,21 +19,16 @@ deploy_job:
     # 2. ホストキー確認の無効化（yes/noを聞かれないようにする）
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
-  script:
-    - echo "### START: Trigger Ansible Playbook via Password Auth ###"
-    # sshpass -p "パスワード" ssh ユーザー@ホスト "コマンド" の形式で実行
-    - |
-      sshpass -p "$ANSIBLE_SERVER_PASSWORD" ssh $ANSIBLE_SERVER_USER@$ANSIBLE_SERVER_HOST "
-        # 環境変数のセット
-        export ARTIFACTORY_USERNAME='gitlab-ci-token'
-        export ARTIFACTORY_PASSWORD='$CI_JOB_TOKEN'
-        export CI_API_V4_URL='$CI_API_V4_URL'
-        export CI_PROJECT_ID='$CI_PROJECT_ID'
-        
-        echo '--- 1. Deploying WebAPI ---'
-        ansible-playbook -i /root/ansible/playbook/inventory_webapi.ini /root/ansible/playbook/deploy_webapi.yml
-        
-        echo '--- 2. Deploying WebUI ---'
-        ansible-playbook -i /root/ansible/playbook/inventory_webui.ini /root/ansible/playbook/deploy_webui.yml
-      "
-    - echo "### END: Ansible Playbook Finished ###"
+  script: |
+    echo "--- START: Trigger Ansible Playbook via Password Auth ---"
+    sshpass -p "$ANSIBLE_SERVER_PASSWORD" ssh $ANSIBLE_SERVER_USER@$ANSIBLE_SERVER_HOST "
+      echo '--- 0. Display a hostname and variable ---'
+      hostname
+      echo \"$CI_JOB_TOKEN\"
+      echo '--- 1. Deploying WebAPI ---'
+      ansible-playbook \
+        -i /root/ansible/playbook/inventory_webapi.ini \
+        /root/ansible/playbook/deploy_webapi-from_gitl.yml \
+        -e \"ci_job_token=$CI_JOB_TOKEN\"
+    "
+    echo "--- END: Ansible Playbook Finished ---"
