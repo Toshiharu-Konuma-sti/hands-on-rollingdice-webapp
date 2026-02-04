@@ -1,11 +1,9 @@
 
-# 実行環境の指定
 image: alpine:latest
 
 stages:
   - deploy
 
-# デプロイジョブ
 deploy_job:
   stage: deploy
   variables:
@@ -16,21 +14,20 @@ deploy_job:
     ANSIBLE_SERVER_PASSWORD: "password" # ログインパスワード
   before_script:
     - apk add --no-cache openssh-client sshpass
-    # 2. ホストキー確認の無効化（yes/noを聞かれないようにする）
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   script: |
     echo "--- START: Trigger Ansible Playbook via Password Auth ---"
-    sshpass -p "$ANSIBLE_SERVER_PASSWORD" ssh $ANSIBLE_SERVER_USER@$ANSIBLE_SERVER_HOST "
+    sshpass -p "${ANSIBLE_SERVER_PASSWORD}" ssh ${ANSIBLE_SERVER_USER}@${ANSIBLE_SERVER_HOST} "
       echo '--- 0. Display a hostname and variable ---'
       hostname
-      echo \"CI_JOB_TOKEN: $CI_JOB_TOKEN\"
-      echo \"CI_PROJECT_ID: $CI_PROJECT_ID\"
+      echo \"CI_JOB_TOKEN: ${CI_JOB_TOKEN}\"
+      echo \"CI_PROJECT_ID: ${CI_PROJECT_ID}\"
       echo '--- 1. Deploying WebAPI ---'
       ansible-playbook \
         -i /root/ansible/playbook/inventory_webapi.ini \
         /root/ansible/playbook/deploy_webapi-from_gitl.yml \
-        -e \"ci_job_token=$CI_JOB_TOKEN\" \
-        -e \"project_id=$CI_PROJECT_ID\"
+        -e \"ci_job_token=${CI_JOB_TOKEN}\" \
+        -e \"project_id=${CI_PROJECT_ID}\"
     "
     echo "--- END: Ansible Playbook Finished ---"

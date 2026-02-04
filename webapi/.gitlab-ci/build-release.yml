@@ -1,19 +1,12 @@
 
-# 実行環境の指定
 image: gradle:8-jdk21
 
-## 実行ルールの設定
-#workflow:
-#  rules:
-#    - if: $CI_PIPELINE_SOURCE == "web"
-
-# 変数定義
 variables:
   GRADLE_OPTS: "-Dorg.gradle.daemon=false"
-  GRADLE_USER_HOME: "$CI_PROJECT_DIR/.gradle"
+  GRADLE_USER_HOME: "${CI_PROJECT_DIR}/.gradle"
 
 cache:
-  key: "$CI_COMMIT_REF_SLUG"
+  key: "${CI_COMMIT_REF_SLUG}"
   paths:
     - .gradle/wrapper
     - .gradle/caches
@@ -24,7 +17,6 @@ stages:
   - doc
   - release
 
-# ツール準備（JFrog CLI のインストールと設定）
 before_script:
   - echo "--- Setup Tools ---"
   - chmod +x gradlew
