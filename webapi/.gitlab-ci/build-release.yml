@@ -73,4 +73,4 @@ publish_job:
   stage: release
   needs: ["build_job", "test_job"]
   script:
-    - ./gradlew publish --no-configuration-cache
+    - ./gradlew publish -x cyclonedxBom --no-configuration-cache
