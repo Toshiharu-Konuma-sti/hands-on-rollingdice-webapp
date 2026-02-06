@@ -26,7 +26,7 @@ deploy_job:
       echo '--- 1. Deploying WebAPI ---'
       ansible-playbook \
         -i /root/ansible/playbook/inventory_webapi.ini \
-        /root/ansible/playbook/deploy_webapi-from_gitl.yml \
+        /root/ansible/playbook/deploy_webapi-gitl.yml \
         -e \"ci_job_token=${CI_JOB_TOKEN}\" \
         -e \"project_id=${CI_PROJECT_ID}\"
     "
