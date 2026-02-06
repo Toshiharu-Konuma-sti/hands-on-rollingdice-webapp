@@ -1,9 +1,8 @@
 
-# .gitlab-ci.yml (メイン)
 stages:
   - launchers
 
-# 1. ビルド・リリースパイプラインの起動ボタン
+# 1. the button to run the build and release pipeline.
 trigger-build-release:
   stage: launchers
   trigger:
@@ -11,7 +10,7 @@ trigger-build-release:
     strategy: depend
   when: manual
 
-# 2. デプロイパイプラインの起動ボタン
+# 2. the button to run the deploy pipeline.
 trigger-deploy:
   stage: launchers
   trigger:

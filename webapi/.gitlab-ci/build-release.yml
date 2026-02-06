@@ -1,4 +1,3 @@
-
 image: gradle:8-jdk21
 
 variables:
@@ -21,7 +20,6 @@ before_script:
   - echo "--- Setup Tools ---"
   - chmod +x gradlew
 
-# ビルドジョブ
 build_job:
   stage: build
   script:
@@ -34,7 +32,6 @@ build_job:
     paths:
       - build/libs/*.jar
 
-# テストジョブ
 test_job:
   stage: test
   script:
@@ -47,7 +44,6 @@ test_job:
     reports:
       junit: build/test-results/test/**/TEST-*.xml
 
-# ドキュメント生成ジョブ
 doc_job:
   stage: doc
   script:
@@ -68,9 +64,9 @@ doc_job:
     paths:
       - build/docs/
 
-# リリースジョブ (Package Registryへの登録)
 publish_job:
   stage: release
   needs: ["build_job", "test_job"]
   script:
+    # upload to the package registory
     - ./gradlew publish -x cyclonedxBom --no-configuration-cache
