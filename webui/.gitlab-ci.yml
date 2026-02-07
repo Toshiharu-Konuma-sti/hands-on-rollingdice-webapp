@@ -1,0 +1,19 @@
+
+stages:
+  - launchers
+
+# 1. the button to run the build and release pipeline.
+trigger-build-release:
+  stage: launchers
+  trigger:
+    include: .gitlab-ci/build-release.yml
+    strategy: depend
+  when: manual
+
+# 2. the button to run the deploy pipeline.
+trigger-deploy:
+  stage: launchers
+  trigger:
+    include: .gitlab-ci/deploy.yml
+    strategy: depend
+  when: manual

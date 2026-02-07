@@ -23,15 +23,13 @@ java {
 	}
 }
 
-allprojects {
-	repositories {
-		all { repo ->
-			if (repo instanceof MavenArtifactRepository && repo.url.toString().startsWith('http://')) {
-				println "Allowing insecure protocol for repository: ${repo.url}"
-				repo.allowInsecureProtocol = true
-			}
+repositories {
+	mavenCentral()
+	all { repo ->
+		if (repo instanceof MavenArtifactRepository && repo.url.toString().startsWith('http://')) {
+			println "Allowing insecure protocol for repository: ${repo.url}"
+			repo.allowInsecureProtocol = true
 		}
-		mavenCentral()
 	}
 }
 
@@ -55,12 +53,9 @@ dependencies {
 	// library for Logging and Tracing in OpenTelemetry
 	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:2.12.0'
 
-//	// library for pyroscope
-//	implementation 'io.pyroscope:agent:0.18.0'
-
 	// libraties necessary to connect to a database
-	implementation 'com.mysql:mysql-connector-j:9.2.0'
 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+	runtimeOnly 'com.mysql:mysql-connector-j:9.2.0'
 
 	// library for generating OpenAPI document
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
@@ -80,8 +75,22 @@ jacoco {
 	toolVersion = "0.8.13"
 }
 
+tasks.withType(JacocoReport) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
 spotbugs {
 	ignoreFailures = true
+}
+
+tasks.withType(SpotBugsTask) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }
 
 pmd {
@@ -89,6 +98,13 @@ pmd {
 	ignoreFailures = true
 	ruleSetFiles = files("${rootProject.projectDir}/config/pmd/pmd-ruleset.xml")
 	sourceSets = [sourceSets.main, sourceSets.test]
+}
+
+tasks.withType(Pmd) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }
 
 checkstyle {
@@ -106,30 +122,8 @@ openApi {
 
 openApiGenerate {
 	generatorName = "html2"
-//	generatorName = "dynamic-html"
 	inputSpec.set("$buildDir/docs/openapi/openapi.json")
 	outputDir.set("$buildDir/docs/swagger")
-}
-
-tasks.withType(JacocoReport) {
-	reports {
-		xml.required = true
-		html.required = true
-	}
-}
-
-tasks.withType(SpotBugsTask) {
-	reports {
-		xml.required = true
-		html.required = true
-	}
-}
-
-tasks.withType(Pmd) {
-	reports {
-		xml.required = true
-		html.required = true
-	}
 }
 
 tasks.register('generateOpenApiDocsNoServer', Test) {
@@ -147,7 +141,6 @@ tasks.register('generateOpenApiDocsNoServer', Test) {
 publishing {
 	publications {
 		maven(MavenPublication) {
-//			from components.java
 			artifact bootJar
 		}
 	}

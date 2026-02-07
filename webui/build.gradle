@@ -9,6 +9,7 @@ plugins {
 	id 'com.github.spotbugs' version '6.4.2'
 	id 'pmd'
 	id 'checkstyle'
+	id 'maven-publish'
 }
 
 group = 'jp.sios'
@@ -20,15 +21,13 @@ java {
 	}
 }
 
-allprojects {
-	repositories {
-		all { repo ->
-			if (repo instanceof MavenArtifactRepository && repo.url.toString().startsWith('http://')) {
-				println "Allowing insecure protocol for repository: ${repo.url}"
-				repo.allowInsecureProtocol = true
-			}
+repositories {
+	mavenCentral()
+	all { repo ->
+		if (repo instanceof MavenArtifactRepository && repo.url.toString().startsWith('http://')) {
+			println "Allowing insecure protocol for repository: ${repo.url}"
+			repo.allowInsecureProtocol = true
 		}
-		mavenCentral()
 	}
 }
 
@@ -51,13 +50,9 @@ dependencies {
 	// library for Logging and Tracing in OpenTelemetry
 	implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter:2.12.0'
 
-//	// library for pyroscope
-//	implementation 'io.pyroscope:agent:0.18.0'
-
 	// libraries and so forth
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.json:json:20250107'
-
 }
 
 tasks.named('test') {
@@ -72,8 +67,22 @@ jacoco {
 	toolVersion = "0.8.13"
 }
 
+tasks.withType(JacocoReport) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
+}
+
 spotbugs {
 	ignoreFailures = true
+}
+
+tasks.withType(SpotBugsTask) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }
 
 pmd {
@@ -81,6 +90,13 @@ pmd {
 	ignoreFailures = true
 	ruleSetFiles = files("${rootProject.projectDir}/config/pmd/pmd-ruleset.xml")
 	sourceSets = [sourceSets.main, sourceSets.test]
+}
+
+tasks.withType(Pmd) {
+	reports {
+		xml.required = true
+		html.required = true
+	}
 }
 
 checkstyle {
@@ -91,23 +107,23 @@ checkstyle {
 	]
 }
 
-tasks.withType(JacocoReport) {
-	reports {
-		xml.required = true
-		html.required = true
+publishing {
+	publications {
+		maven(MavenPublication) {
+			artifact bootJar
+		}
 	}
-}
-
-tasks.withType(SpotBugsTask) {
-	reports {
-		xml.required = true
-		html.required = true
-	}
-}
-
-tasks.withType(Pmd) {
-	reports {
-		xml.required = true
-		html.required = true
+	repositories {
+		maven {
+			url "${System.getenv('CI_API_V4_URL')}/projects/${System.getenv('CI_PROJECT_ID')}/packages/maven"
+			allowInsecureProtocol = true
+			credentials(HttpHeaderCredentials) {
+				name = 'Job-Token'
+				value = System.getenv('CI_JOB_TOKEN')
+			}
+			authentication {
+				header(HttpHeaderAuthentication)
+			}
+		}
 	}
 }
