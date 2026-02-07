@@ -1,0 +1,72 @@
+image: gradle:8-jdk21
+
+variables:
+  GRADLE_OPTS: "-Dorg.gradle.daemon=false"
+  GRADLE_USER_HOME: "${CI_PROJECT_DIR}/.gradle"
+
+cache:
+  key: "${CI_COMMIT_REF_SLUG}"
+  paths:
+    - .gradle/wrapper
+    - .gradle/caches
+
+stages:
+  - build
+  - test
+  - doc
+  - release
+
+before_script:
+  - echo "--- Setup Tools ---"
+  - chmod +x gradlew
+
+build_job:
+  stage: build
+  script:
+    - ./gradlew clean assemble -x cyclonedxBom
+    - echo "--- Display the result of ls ---"
+    - ls -R build/libs/
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - build/libs/*.jar
+
+test_job:
+  stage: test
+  script:
+    - ./gradlew test spotbugsMain pmdMain checkstyleMain -x cyclonedxBom
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - build/reports/
+    reports:
+      junit: build/test-results/test/**/TEST-*.xml
+
+doc_job:
+  stage: doc
+  script:
+    - echo "--- Install yq ---"
+    - curl -L https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -o ./yq && chmod +x ./yq
+    - echo "--- Javadoc Generation ---"
+    - ./gradlew javadoc -x cyclonedxBom --info
+    - echo "--- OpenAPI Generation ---"
+    - ./gradlew generateOpenApiDocsNoServer -x cyclonedxBom --info
+    - ./gradlew openApiGenerate -x cyclonedxBom --info
+    - echo "--- Convert JSON to YAML ---"
+    - ./yq -P -o=yaml 'build/docs/openapi/openapi.json' > 'build/docs/openapi/openapi.yaml'
+    - echo "--- Show generated files ---"
+    - ls -R build/docs/
+  artifacts:
+    when: always
+    expire_in: 1 week
+    paths:
+      - build/docs/
+
+publish_job:
+  stage: release
+  needs: ["build_job", "test_job"]
+  script:
+    # upload to the package registory
+    - ./gradlew publish -x cyclonedxBom --no-configuration-cache

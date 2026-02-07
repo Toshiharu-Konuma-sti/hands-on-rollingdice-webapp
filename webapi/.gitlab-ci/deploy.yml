@@ -1,0 +1,29 @@
+
+image: alpine:latest
+
+stages:
+  - deploy
+
+deploy_job:
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  before_script:
+    - apk add --no-cache openssh-client sshpass
+    - mkdir -p ~/.ssh
+    - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  script: |
+    echo "--- START: Trigger Ansible Playbook via Password Auth ---"
+    sshpass -p "${ANSIBLE_SERVER_PASSWORD}" ssh ${ANSIBLE_SERVER_USER}@${ANSIBLE_SERVER_HOST} "
+      echo '--- 0. Display a hostname and variable ---'
+      hostname
+      echo \"CI_JOB_TOKEN: ${CI_JOB_TOKEN}\"
+      echo \"CI_PROJECT_ID: ${CI_PROJECT_ID}\"
+      echo '--- 1. Deploying WebAPI ---'
+      ansible-playbook \
+        -i /root/ansible/playbook/inventory_webapi.ini \
+        /root/ansible/playbook/deploy_webapi-gitl.yml \
+        -e \"ci_job_token=${CI_JOB_TOKEN}\" \
+        -e \"project_id=${CI_PROJECT_ID}\"
+    "
+    echo "--- END: Ansible Playbook Finished ---"
