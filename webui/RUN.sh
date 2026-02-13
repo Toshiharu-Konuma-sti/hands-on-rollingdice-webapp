@@ -32,7 +32,7 @@ case "$1" in
 	"doc")
 		start_banner
 		./gradlew javadoc -x cyclonedxBom
-        tree -L 2 build/docs/
+		command -v tree >/dev/null 2>&1 && tree -L 2 build/docs/
 		finish_banner $S_TIME
 		;;
 	"test")
