@@ -9,6 +9,7 @@ case "$1" in
 	"up")
 		clear
 		start_banner
+		check_required_commands "docker"
 		create_container $CUR_DIR
 		show_list_container
 		show_url
@@ -17,6 +18,7 @@ case "$1" in
 	"down")
 		clear
 		start_banner
+		check_required_commands "docker"
 		destory_container $CUR_DIR
 		remove_webapp_image
 		show_list_container
@@ -25,6 +27,7 @@ case "$1" in
 	"rebuild")
 		clear
 		start_banner
+		check_required_commands "docker"
 		rebuild_container $CUR_DIR $2
 		show_list_container
 		show_url
