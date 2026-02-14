@@ -8,22 +8,13 @@ services:
     container_name: webapp-webui
     hostname: webapp-webui
     build:
-      context: .
       dockerfile: Dockerfile-webui
-    image: webapp/webui:latest
     ports:
       - 8181:8181
     networks:
       - internal
       - external
     working_dir: /webui
-    command:
-      - /bin/bash
-      - -c
-      - |
-        java \
-          -jar build/libs/apisl.handson.rollingdice.webapp.webui-0.0.1-SNAPSHOT.jar \
-          --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     depends_on:
       webapp-webapi:
         condition: service_healthy
@@ -39,7 +30,6 @@ services:
     container_name: webapp-webapi
     hostname: webapp-webapi
     build:
-      context: .
       dockerfile: Dockerfile-webapi
     image: webapp/webapi:latest
     ports:
@@ -48,13 +38,6 @@ services:
       - internal
       - external
     working_dir: /webapi
-    command:
-      - /bin/bash
-      - -c
-      - |
-        java \
-          -jar build/libs/apisl.handson.rollingdice.webapp.webapi-0.0.1-SNAPSHOT.jar \
-          --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
     depends_on:
       webapp-mysql:
         condition: service_healthy
@@ -75,12 +58,7 @@ services:
     networks:
       - internal
       - external
-    volumes:
-      - ./mysql/config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
-      - ./mysql/init:/docker-entrypoint-initdb.d:ro
     command: mysqld
-    env_file:
-      - .env-webapp-mysql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 5s

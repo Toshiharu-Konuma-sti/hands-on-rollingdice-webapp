@@ -1,0 +1,32 @@
+services:
+
+  webapp-webui:
+    build:
+      context: .
+    image: webapp/webui:latest
+    command:
+      - /bin/bash
+      - -c
+      - |
+        java \
+          -jar build/libs/apisl.handson.rollingdice.webapp.webui-0.0.1-SNAPSHOT.jar \
+          --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
+
+  webapp-webapi:
+    build:
+      context: .
+    image: webapp/webapi:latest
+    command:
+      - /bin/bash
+      - -c
+      - |
+        java \
+          -jar build/libs/apisl.handson.rollingdice.webapp.webapi-0.0.1-SNAPSHOT.jar \
+          --management.otlp.metrics.export.enabled=false --otel.sdk.disabled=true
+
+  webapp-mysql:
+    volumes:
+      - ./mysql/config/my.cnf:/etc/mysql/conf.d/my.cnf:ro
+      - ./mysql/init:/docker-entrypoint-initdb.d:ro
+    env_file:
+      - .env-webapp-mysql
