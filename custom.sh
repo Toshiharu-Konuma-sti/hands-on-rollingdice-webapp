@@ -6,7 +6,8 @@ create_container()
 	CUR_DIR=$1
 	echo "\n### START: Create new containers ##########"
 	docker compose \
-		-f $CUR_DIR/docker-compose-webapp-dev.yml \
+		-f $CUR_DIR/docker-compose-webapp.base.yml \
+		-f $CUR_DIR/docker-compose-webapp.mode.dev.yml \
 		up -d -V --remove-orphans
 }
 # }}}
@@ -18,7 +19,8 @@ destory_container()
 	CUR_DIR=$1
 	echo "\n### START: Destory existing containers ##########"
 	docker compose \
-		-f $CUR_DIR/docker-compose-webapp-dev.yml \
+		-f $CUR_DIR/docker-compose-webapp.base.yml \
+		-f $CUR_DIR/docker-compose-webapp.mode.dev.yml \
 		down -v --remove-orphans
 }
 # }}}
@@ -46,7 +48,8 @@ rebuild_container()
 	docker rm $CONTAINER_NM
 	docker rmi $IMAGE_NM
 	docker compose \
-		-f $CUR_DIR/docker-compose-webapp-dev.yml \
+		-f $CUR_DIR/docker-compose-webapp.base.yml \
+		-f $CUR_DIR/docker-compose-webapp.mode.dev.yml \
 		up -d -V --build $CONTAINER_NM
 }
 # }}}
