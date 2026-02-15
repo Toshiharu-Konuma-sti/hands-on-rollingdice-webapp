@@ -1,22 +1,29 @@
 
-    // Initialize the Web SDK at the onLoad event of the script element so it is called when the library is loaded.
-    window.init = () => {
-      window.GrafanaFaroWebSdk.initializeFaro({
-        // Mandatory, the URL of the Grafana Cloud collector with embedded application key.
-        // Copy from the configuration page of your application in Grafana.
-        url: 'http://localhost:12347/collect',
+window.addEventListener('load', () => {
+  console.log("Faro: Initializing...");
 
-        // Mandatory, the identification label(s) of your application
-        app: {
-          name: 'my-faro',
-          version: '1.0.0', // Optional, but recommended
-        },
-//        transports: [new window.GrafanaFaroWebSdk.ConsoleTransport()],
-      });
-    };
+  if (!window.GrafanaFaroWebSdk || !window.GrafanaFaroWebTracing) {
+    console.error("Faro: Libraries not loaded correctly.");
+    return;
+  }
 
-    // Dynamically add the tracing instrumentation when the tracing bundle loads
-    window.addTracing = () => {
-        window.GrafanaFaroWebSdk.faro.instrumentations.add(new window.GrafanaFaroWebTracing.TracingInstrumentation());
-    };
+  const { initializeFaro, getWebInstrumentations } = window.GrafanaFaroWebSdk;
+  const { TracingInstrumentation } = window.GrafanaFaroWebTracing;
 
+  try {
+    initializeFaro({
+      url: 'http://localhost:12347/collect',
+      app: {
+        name: 'my-faro',
+        version: '1.0.0',
+      },
+      instrumentations: [
+        ...getWebInstrumentations(),
+        new TracingInstrumentation(),
+      ],
+    });
+    console.log("Faro: Initialization success!");
+  } catch (e) {
+    console.error("Faro: Initialization failed", e);
+  }
+});
