@@ -9,11 +9,9 @@
 			<li><a th:href="${cUrl} + '?loop=15'" onclick="putLoadingImage();">Loop 15 sec at API</a></li>
 			<li class="li-spacing"><a th:href="${cUrl} + '?loop=30'" onclick="putLoadingImage();">Loop 30 sec at API</a></li>
 
-			<li class="li-spacing"><a th:href="${cUrl} + '?error=true'">Cause 5xx error at API</a></li>
+			<li class="li-spacing"><a th:href="${cUrl} + '?error=true'">Trigger 5xx error at API</a></li>
 
-			<li class="li-spacing"><a href="#" id="simulate-error-link">Cause JS error at Browser</a></li>
-
-			<li>
+			<li class="li-spacing">
 				<div class="compact-wrapper">Force specific value
 					<div class="force-val-container slider-row">
 						<span>0</span>
@@ -37,5 +35,13 @@
 						</a>
 					</div>
 				</div>
+			</li>
+
+			<li>RUM Simulation at Browser
+				<ul class="sub-menu-list">
+					<li><a href="#" id="rum-js-error">Trigger JS error</a></li>
+					<li><a href="#" id="rum-fetch-normal">Fetch API: Normal</a></li>
+					<li><a href="#" id="rum-fetch-sleep">Fetch API: Sleep 2 sec</a></li>
+				</ul>
 			</li>
 		</ol>
