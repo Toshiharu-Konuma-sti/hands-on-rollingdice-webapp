@@ -15,6 +15,11 @@ spring:
   jpa:
     show-sql: true
 
+app:
+  # Origins that allow CORS (specify the URLs where Faro runs)
+  cors:
+    allowed-origins: http://localhost:8181,http://127.0.0.1:8181
+
 # variables for spring-boot-starter-actuator
 management:
   endpoint:
