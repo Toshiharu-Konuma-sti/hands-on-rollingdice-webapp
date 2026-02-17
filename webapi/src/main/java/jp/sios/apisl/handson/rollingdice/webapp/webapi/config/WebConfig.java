@@ -35,7 +35,7 @@ public class WebConfig implements WebMvcConfigurer {
    * @param registry CORSレジストリ
    */
   @Override
-  public void addCorsMappings(CorsRegistry registry) {
+  public void addCorsMappings(final CorsRegistry registry) {
     registry.addMapping("/**")
         .allowedOrigins(allowedOrigins)
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
