@@ -15,6 +15,7 @@ stages:
   - test
   - doc
   - release
+  - pages
 
 before_script:
   - echo "--- Setup Tools ---"
@@ -63,3 +64,41 @@ publish_job:
   script:
     # upload to the package registory
     - ./gradlew publish -x cyclonedxBom --no-configuration-cache
+
+pages:
+  stage: pages
+  needs:
+    - job: test_job
+      artifacts: true
+    - job: doc_job
+      artifacts: true
+  script:
+    - mkdir -p public/test-report public/spotbugs public/pmd public/checkstyle public/javadoc
+    - |
+      cat <<'EOF' > public/index.html
+      <!DOCTYPE html>
+      <html lang="ja">
+      <head><meta charset="UTF-8"><title>webapp-webui Report</title></head>
+      <body>
+        <h1>webapp-webui パイプライン成果物</h1>
+        <ul>
+          <li><a href="test-report/">テストレポート</a></li>
+          <li><a href="spotbugs/">SpotBugs レポート</a></li>
+          <li><a href="pmd/">PMD レポート</a></li>
+          <li><a href="checkstyle/">Checkstyle レポート</a></li>
+          <li><a href="javadoc/">Javadoc</a></li>
+        </ul>
+      </body>
+      </html>
+      EOF
+    - cp -r build/reports/tests/test/. public/test-report/ || true
+    - cp -r build/reports/spotbugs/. public/spotbugs/ || true
+    - cp build/reports/spotbugs/main.html public/spotbugs/index.html || true
+    - cp -r build/reports/pmd/. public/pmd/ || true
+    - cp build/reports/pmd/main.html public/pmd/index.html || true
+    - cp -r build/reports/checkstyle/. public/checkstyle/ || true
+    - cp build/reports/checkstyle/main.html public/checkstyle/index.html || true
+    - cp -r build/docs/javadoc/. public/javadoc/ || true
+  artifacts:
+    paths:
+      - public
