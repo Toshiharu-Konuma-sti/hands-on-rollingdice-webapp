@@ -23,6 +23,13 @@ java {
 
 repositories {
 	mavenCentral()
+//	maven {
+//		url "http://localhost:8082/artifactory/maven-central-remote/"
+//		credentials {
+//			username = 'admin'
+//			password = 'password'
+//		}
+//	}
 	all { repo ->
 		if (repo instanceof MavenArtifactRepository && repo.url.toString().startsWith('http://')) {
 			println "Allowing insecure protocol for repository: ${repo.url}"
