@@ -7,6 +7,10 @@ if (!window.GrafanaFaroWebSdk || !window.GrafanaFaroWebTracing) {
   const { initializeFaro, getWebInstrumentations } = window.GrafanaFaroWebSdk;
   const { TracingInstrumentation } = window.GrafanaFaroWebTracing;
 
+  const instrumentationOptions = {
+    propagateTraceHeaderCorsUrls: [new RegExp('http://localhost:8182/.*')],
+  };
+
   try {
     initializeFaro({
       url: 'http://localhost:12347/collect',
@@ -16,7 +20,7 @@ if (!window.GrafanaFaroWebSdk || !window.GrafanaFaroWebTracing) {
       },
       instrumentations: [
         ...getWebInstrumentations(),
-        new TracingInstrumentation(),
+        new TracingInstrumentation({ instrumentationOptions }),
       ],
     });
     console.log("Faro: Initialization success!");
