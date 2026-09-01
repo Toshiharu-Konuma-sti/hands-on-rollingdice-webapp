@@ -6,6 +6,34 @@ This is a web application used at the application layer for various hands-on wor
 [![Java](https://img.shields.io/badge/Java-21-ED8B00?style=flat-square&logo=openjdk&logoColor=white)](https://www.java.com)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.4.3-6DB33F?style=flat-square&logo=spring-boot&logoColor=white)](https://spring.io/projects/spring-boot)
 [![Gradle](https://img.shields.io/badge/Gradle-Build-02303A?style=flat-square&logo=gradle&logoColor=white)](https://gradle.org/)
+[![Thymeleaf](https://img.shields.io/badge/Thymeleaf-Template_Engine-005F0F?style=flat-square&logo=thymeleaf&logoColor=white)](https://www.thymeleaf.org)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-4479A1?style=flat-square&logo=mysql&logoColor=white)](https://www.mysql.com)
+[![Docker](https://img.shields.io/badge/Docker-Container-2496ED?style=flat-square&logo=docker&logoColor=white)](https://www.docker.com)
+[![OpenTelemetry](https://img.shields.io/badge/OpenTelemetry-2.12.0-F5A800?style=flat-square&logo=opentelemetry&logoColor=white)](https://opentelemetry.io)
+[![Micrometer](https://img.shields.io/badge/Micrometer-Metrics-4CAF50?style=flat-square)](https://micrometer.io)
+
+---
+
+## Table of Contents
+
+- [Prerequisites](#prerequisites)
+- [Technology Stack](#technology-stack)
+  - [webui (Presentation Layer)](#️-webapi-application-layer)
+  - [webapi (Application Layer)](#️-webapi-application-layer)
+  - [Database (Data Layer)](#️-database-data-layer)
+  - [Build & Runtime Environment](#️-build--runtime-environment)
+- [Web Application Architecture](#web-application-architecture)
+  - [Sequence Diagram](#sequence-diagram)
+  - [Project Initialization](#project-initialization)
+    - [Spring Initializr Settings](#spring-initializr-settings)
+    - [Additional Libraries](#additional-libraries)
+- [How to Modify the Source Code](#how-to-modify-the-source-code)
+  - [Start the Web Application](#start-the-web-application)
+  - [Stop the Target Component](#stop-the-target-component)
+  - [Modify the Source Code](#modify-the-source-code)
+  - [Verify the Changes](#verify-the-changes)
+  - [Run the Modified Component](#run-the-modified-component)
+  - [Restart the Modified Component as a Container](#restart-the-modified-component-as-a-container)
 
 ---
 
@@ -148,15 +176,15 @@ In addition to the dependencies configured via Spring Initializr, the following 
 **Common (webapp-webui & webapp-webapi):**
 
 * `implementation 'org.springframework.boot:spring-boot-starter-actuator'`
-    * Exposes health check endpoints at `http://{spring-boot:port}/actuator` for metrics.
+    * Spring Boot Actuator's core metric collection engine (JVM, CPU, HTTP requests, etc.). Powered by Micrometer to collect, manage, and expose application metrics.
 * `runtimeOnly 'io.micrometer:micrometer-registry-otlp'`
-    * Enables sending metrics via OTLP through Micrometer.
+    * OTLP exporter plugin for Actuator. Takes metrics collected by Actuator and pushes them to the OpenTelemetry Collector via OTLP.
 * `runtimeOnly 'io.micrometer:micrometer-registry-prometheus'`
-    * Enables scraping metrics via Prometheus through Micrometer.
+    * Prometheus exporter plugin for Actuator. Formats metrics collected by Actuator into Prometheus text format and exposes them at Actuator's `/actuator/prometheus` endpoint for scraping.
 * `implementation 'io.micrometer:micrometer-tracing-bridge-otel'`
-    * Enables Exemplars to attach Trace IDs and Span IDs to `http_server_requests_seconds_bucket` metrics.
+    * Bridges Micrometer metrics and OpenTelemetry Tracing to enable Exemplars (attaches Trace/Span IDs to `http_server_requests_seconds_bucket` metrics).
 * `implementation 'io.opentelemetry.instrumentation:opentelemetry-spring-boot-starter'`
-    * Enables sending logs and traces via OTLP.
+    * OpenTelemetry Java Agent auto-instrumentation starter. Automatically exports application logs and traces via OTLP.
 
 **webapp-webui only:**
 
