@@ -1,12 +1,9 @@
 
-window.addEventListener('load', () => {
-  console.log("Faro: Initializing...");
+console.log("Faro: Initializing...");
 
-  if (!window.GrafanaFaroWebSdk || !window.GrafanaFaroWebTracing) {
-    console.error("Faro: Libraries not loaded correctly.");
-    return;
-  }
-
+if (!window.GrafanaFaroWebSdk || !window.GrafanaFaroWebTracing) {
+  console.error("Faro: Libraries not loaded correctly.");
+} else {
   const { initializeFaro, getWebInstrumentations } = window.GrafanaFaroWebSdk;
   const { TracingInstrumentation } = window.GrafanaFaroWebTracing;
 
@@ -26,4 +23,4 @@ window.addEventListener('load', () => {
   } catch (e) {
     console.error("Faro: Initialization failed", e);
   }
-});
+}
